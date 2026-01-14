@@ -50,9 +50,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           const parsed = JSON.parse(storedUser);
-          // Validate user object structure
-          if (parsed && parsed.id && parsed.email && parsed.name && parsed.role) {
+          // Validate user object structure and types
+          if (
+            parsed &&
+            typeof parsed.id === "string" &&
+            typeof parsed.email === "string" &&
+            typeof parsed.name === "string" &&
+            typeof parsed.role === "string" &&
+            (parsed.role === "ADMIN" || parsed.role === "STAFF")
+          ) {
             return parsed as User;
+          } else {
+            console.warn("Invalid user data in localStorage");
+            localStorage.removeItem("user");
           }
         }
       } catch (error) {

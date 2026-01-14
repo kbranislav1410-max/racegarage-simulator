@@ -26,17 +26,12 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "Invalid email or password" },
-        { status: 401 }
-      );
-    }
+    // Always perform password comparison to prevent timing attacks
+    // Use a dummy hash if user not found
+    const passwordHash = user?.password || "$2a$10$dummyhashtopreventtimingattack1234567890";
+    const isValidPassword = await bcrypt.compare(inputPassword, passwordHash);
 
-    // Verify password
-    const isValidPassword = await bcrypt.compare(inputPassword, user.password);
-
-    if (!isValidPassword) {
+    if (!user || !isValidPassword) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
