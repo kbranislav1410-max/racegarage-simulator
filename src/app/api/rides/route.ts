@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { rideSessionSchema } from "@/lib/validations/ride";
 import { createAuditLog } from "@/lib/audit";
+import { sendRideCompletionEmail } from "@/lib/email/service";
 
 // GET /api/rides - List rides with optional date filter
 export async function GET(request: NextRequest) {
@@ -117,6 +118,14 @@ export async function POST(request: NextRequest) {
       minutes: data.minutes,
       source: data.source,
     });
+
+    // Send ride completion email (async, don't wait for it)
+    // Email failures won't affect the response
+    sendRideCompletionEmail(data.customerId, ride.id, data.minutes).catch(
+      (error) => {
+        console.error("Background email error:", error);
+      }
+    );
 
     return NextResponse.json(ride, { status: 201 });
   } catch (error) {
