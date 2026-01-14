@@ -1,0 +1,211 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model for staff members
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // Should be hashed
+  name      String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+// Customer model
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String
+  lastName  String
+  street    String?
+  city      String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  rideSessions      RideSession[]
+  challengeAttempts ChallengeAttempt[]
+  reservations      Reservation[]
+  paymentRecords    PaymentRecord[]
+  redeemedVouchers  Voucher[]
+
+  @@map("customers")
+}
+
+// RideSession model
+model RideSession {
+  id         String            @id @default(cuid())
+  customerId String
+  customer   Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  startAt    DateTime
+  endAt      DateTime?
+  minutes    Int
+  source     RideSessionSource
+  notes      String?
+  createdAt  DateTime          @default(now())
+
+  // Relations
+  challengeAttempts ChallengeAttempt[]
+  paymentRecords    PaymentRecord[]
+
+  @@map("ride_sessions")
+}
+
+enum RideSessionSource {
+  ON_SITE
+  RESERVATION
+  VOUCHER
+  PREPAID
+}
+
+// ChallengeMonth model
+model ChallengeMonth {
+  id        String   @id @default(cuid())
+  year      Int
+  month     Int
+  trackName String
+  carName   String
+  createdAt DateTime @default(now())
+
+  // Relations
+  challengeAttempts ChallengeAttempt[]
+
+  @@unique([year, month])
+  @@map("challenge_months")
+}
+
+// ChallengeAttempt model
+model ChallengeAttempt {
+  id               String        @id @default(cuid())
+  customerId       String
+  customer         Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  challengeMonthId String
+  challengeMonth   ChallengeMonth @relation(fields: [challengeMonthId], references: [id], onDelete: Cascade)
+  lapTimeMs        Int
+  recordedAt       DateTime      @default(now())
+  sessionId        String?
+  session          RideSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@map("challenge_attempts")
+}
+
+// Reservation model
+model Reservation {
+  id               String            @id @default(cuid())
+  customerId       String?
+  customer         Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  // Guest fields when customer is not registered
+  guestEmail       String?
+  guestName        String?
+  guestStreet      String?
+  guestCity        String?
+  scheduledAt      DateTime
+  durationMinutes  Int
+  status           ReservationStatus
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Relations
+  paymentRecords PaymentRecord[]
+
+  @@map("reservations")
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+// PaymentRecord model
+model PaymentRecord {
+  id            String        @id @default(cuid())
+  customerId    String?
+  customer      Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  sessionId     String?
+  session       RideSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  reservationId String?
+  reservation   Reservation?  @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  amountCents   Int
+  currency      String        @default("EUR")
+  method        PaymentMethod
+  receiver      PaymentReceiver
+  createdAt     DateTime      @default(now())
+
+  @@map("payment_records")
+}
+
+enum PaymentMethod {
+  CASH_ON_SITE
+  CARD_ON_SITE
+  VOUCHER_PORTAL
+  PREPAID
+}
+
+enum PaymentReceiver {
+  FRIEND
+  ME
+}
+
+// Voucher model
+model Voucher {
+  id                  String        @id @default(cuid())
+  code                String        @unique
+  minutes             Int // Using minutes as specified
+  status              VoucherStatus
+  soldToEmail         String
+  soldToName          String
+  createdAt           DateTime      @default(now())
+  redeemedAt          DateTime?
+  redeemedByCustomerId String?
+  redeemedByCustomer  Customer?     @relation(fields: [redeemedByCustomerId], references: [id], onDelete: SetNull)
+
+  @@map("vouchers")
+}
+
+enum VoucherStatus {
+  NEW
+  SENT
+  REDEEMED
+  EXPIRED
+  CANCELLED
+}
+
+// AuditLog model
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  entity    String
+  entityId  String?
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
