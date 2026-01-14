@@ -235,7 +235,7 @@ export async function sendReservationEmail(
     }
 
     const provider = getEmailProvider();
-    const success = await provider.sendEmail({
+    const success = await provider.send({
       to: email,
       subject,
       html: htmlContent,
@@ -244,16 +244,16 @@ export async function sendReservationEmail(
 
     // Log email attempt to audit log
     try {
-      await createAuditLog({
-        action: "SEND_EMAIL",
-        entity: "Reservation",
-        entityId: email,
-        payload: {
+      await createAuditLog(
+        "SEND_EMAIL",
+        "Reservation",
+        email,
+        {
           type: `reservation_${type}`,
           email,
           success,
-        },
-      });
+        }
+      );
     } catch (auditError) {
       console.error("Failed to create audit log for reservation email:", auditError);
     }

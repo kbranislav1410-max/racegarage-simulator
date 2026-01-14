@@ -52,8 +52,15 @@ export default function BookPage() {
       const customers = await response.json();
 
       // Find exact email match
+      interface CustomerSearchResult {
+        email: string;
+        firstName: string;
+        lastName: string;
+        street?: string;
+        city?: string;
+      }
       const customer = customers.find(
-        (c: unknown) => c.email.toLowerCase() === email.toLowerCase()
+        (c: CustomerSearchResult) => c.email.toLowerCase() === email.toLowerCase()
       );
 
       if (customer) {
@@ -122,7 +129,7 @@ export default function BookPage() {
 
       setSuccess(true);
     } catch (err: unknown) {
-      setError(err.message || "Failed to create reservation");
+      setError((err as Error).message || "Failed to create reservation");
     } finally {
       setLoading(false);
     }

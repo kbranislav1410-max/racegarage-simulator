@@ -125,16 +125,16 @@ export async function POST(request: NextRequest) {
     });
 
     // Audit log
-    await createAuditLog({
-      action: "CREATE",
-      entity: "PaymentRecord",
-      entityId: payment.id,
-      payload: {
+    await createAuditLog(
+      "CREATE",
+      "PaymentRecord",
+      payment.id,
+      {
         amountCents: payment.amountCents,
         method: payment.method,
         receiver: payment.receiver,
-      },
-    });
+      }
+    );
 
     return NextResponse.json(payment, { status: 201 });
   } catch (error) {

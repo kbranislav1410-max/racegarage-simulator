@@ -152,9 +152,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error creating public reservation:", error);
 
-    if (error.name === "ZodError") {
+    if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(
-        { error: "Invalid reservation data", details: error.errors },
+        { error: "Invalid reservation data", details: (error as { errors: unknown }).errors },
         { status: 400 }
       );
     }

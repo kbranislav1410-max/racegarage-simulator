@@ -6,11 +6,12 @@ import { sendReservationEmail } from "@/lib/email/service";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const reservation = await prisma.reservation.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         customer: {
           select: {
@@ -45,14 +46,15 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const validatedData = updateReservationStatusSchema.parse(body);
 
     const existingReservation = await prisma.reservation.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         customer: true,
       },
@@ -66,7 +68,7 @@ export async function PATCH(
     }
 
     const updatedReservation = await prisma.reservation.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: validatedData.status,
         notes: validatedData.notes,
@@ -83,16 +85,16 @@ export async function PATCH(
     });
 
     // Create audit log
-    await createAuditLog({
-      action: "UPDATE_RESERVATION_STATUS",
-      entity: "Reservation",
-      entityId: params.id,
-      payload: {
+    await createAuditLog(
+      "UPDATE_RESERVATION_STATUS",
+      "Reservation",
+      id,
+      {
         oldStatus: existingReservation.status,
         newStatus: validatedData.status,
         email: existingReservation.customer?.email || existingReservation.guestEmail,
-      },
-    });
+      }
+    );
 
     // Send email notification based on status change
     const email = existingReservation.customer?.email || existingReservation.guestEmail;
@@ -129,9 +131,9 @@ export async function PATCH(
   } catch (error) {
     console.error("Error updating reservation:", error);
 
-    if (error.name === "ZodError") {
+    if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(
-        { error: "Invalid data", details: error.errors },
+        { error: "Invalid data", details: (error as { errors: unknown }).errors },
         { status: 400 }
       );
     }
@@ -145,11 +147,12 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const reservation = await prisma.reservation.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         customer: true,
       },
@@ -163,19 +166,19 @@ export async function DELETE(
     }
 
     await prisma.reservation.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     // Create audit log
-    await createAuditLog({
-      action: "DELETE",
-      entity: "Reservation",
-      entityId: params.id,
-      payload: {
+    await createAuditLog(
+      "DELETE",
+      "Reservation",
+      id,
+      {
         email: reservation.customer?.email || reservation.guestEmail,
         scheduledAt: reservation.scheduledAt,
-      },
-    });
+      }
+    );
 
     return NextResponse.json({ message: "Reservation deleted successfully" });
   } catch (error) {
