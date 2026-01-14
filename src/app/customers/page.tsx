@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { Search, Plus, Eye, Trash2, X } from "lucide-react";
+import { formatAddress, formatDate, formatDateTime } from "@/lib/format";
 
 interface Customer {
   id: string;
@@ -301,9 +302,7 @@ export default function CustomersPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-slate-600">
-                          {customer.street || customer.city
-                            ? `${customer.street || ""}, ${customer.city || ""}`.replace(/^,\s*/, "").replace(/,\s*$/, "")
-                            : "-"}
+                          {formatAddress(customer.street, customer.city)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -550,9 +549,7 @@ export default function CustomersPage() {
                     <div>
                       <p className="text-sm text-slate-600">Address</p>
                       <p className="font-medium">
-                        {selectedCustomer.street || selectedCustomer.city
-                          ? `${selectedCustomer.street || ""}, ${selectedCustomer.city || ""}`.replace(/^,\s*/, "").replace(/,\s*$/, "")
-                          : "-"}
+                        {formatAddress(selectedCustomer.street, selectedCustomer.city)}
                       </p>
                     </div>
                     <div>
@@ -579,9 +576,7 @@ export default function CustomersPage() {
                   <div className="bg-purple-50 rounded-lg p-4">
                     <p className="text-sm text-purple-600 mb-1">Last Ride</p>
                     <p className="text-sm font-medium text-purple-900">
-                      {customerSummary.lastRide
-                        ? new Date(customerSummary.lastRide).toLocaleDateString()
-                        : "Never"}
+                      {formatDate(customerSummary.lastRide)}
                     </p>
                   </div>
                 </div>
@@ -601,7 +596,7 @@ export default function CustomersPage() {
                           <div className="flex justify-between items-start">
                             <div>
                               <p className="font-medium text-slate-800">
-                                {new Date(ride.startAt).toLocaleString()}
+                                {formatDateTime(ride.startAt)}
                               </p>
                               <p className="text-sm text-slate-600">
                                 Duration: {ride.minutes} minutes • Source: {ride.source}

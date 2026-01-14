@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { customerSchema } from "@/lib/validations/customer";
+import { createAuditLog } from "@/lib/audit";
 
 // GET /api/customers - List customers with pagination and search
 export async function GET(request: NextRequest) {
@@ -108,32 +109,11 @@ export async function POST(request: NextRequest) {
     });
 
     // Create audit log
-    // Note: In a real app, get userId from authenticated session
-    // For now, we'll skip the audit log or use a system user
-    try {
-      const systemUser = await prisma.user.findFirst({
-        where: { role: "ADMIN" },
-      });
-
-      if (systemUser) {
-        await prisma.auditLog.create({
-          data: {
-            userId: systemUser.id,
-            action: "CREATE",
-            entity: "Customer",
-            entityId: customer.id,
-            payload: {
-              email: customer.email,
-              firstName: customer.firstName,
-              lastName: customer.lastName,
-            },
-          },
-        });
-      }
-    } catch (auditError) {
-      console.error("Failed to create audit log:", auditError);
-      // Don't fail the request if audit log fails
-    }
+    await createAuditLog("CREATE", "Customer", customer.id, {
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+    });
 
     return NextResponse.json(customer, { status: 201 });
   } catch (error) {

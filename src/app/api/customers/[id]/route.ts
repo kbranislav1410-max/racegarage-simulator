@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { customerUpdateSchema } from "@/lib/validations/customer";
+import { createAuditLog } from "@/lib/audit";
 
 // GET /api/customers/[id] - Get customer with ride history and summary
 export async function GET(
@@ -128,25 +129,7 @@ export async function PUT(
     });
 
     // Create audit log
-    try {
-      const systemUser = await prisma.user.findFirst({
-        where: { role: "ADMIN" },
-      });
-
-      if (systemUser) {
-        await prisma.auditLog.create({
-          data: {
-            userId: systemUser.id,
-            action: "UPDATE",
-            entity: "Customer",
-            entityId: customer.id,
-            payload: data,
-          },
-        });
-      }
-    } catch (auditError) {
-      console.error("Failed to create audit log:", auditError);
-    }
+    await createAuditLog("UPDATE", "Customer", customer.id, data);
 
     return NextResponse.json(customer);
   } catch (error) {
@@ -184,29 +167,11 @@ export async function DELETE(
     });
 
     // Create audit log
-    try {
-      const systemUser = await prisma.user.findFirst({
-        where: { role: "ADMIN" },
-      });
-
-      if (systemUser) {
-        await prisma.auditLog.create({
-          data: {
-            userId: systemUser.id,
-            action: "DELETE",
-            entity: "Customer",
-            entityId: id,
-            payload: {
-              email: customer.email,
-              firstName: customer.firstName,
-              lastName: customer.lastName,
-            },
-          },
-        });
-      }
-    } catch (auditError) {
-      console.error("Failed to create audit log:", auditError);
-    }
+    await createAuditLog("DELETE", "Customer", id, {
+      email: customer.email,
+      firstName: customer.firstName,
+      lastName: customer.lastName,
+    });
 
     return NextResponse.json({ message: "Customer deleted successfully" });
   } catch (error) {
