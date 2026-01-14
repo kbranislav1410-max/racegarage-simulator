@@ -12,6 +12,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Search customers by name, email, or address
+    // Note: For large datasets, consider implementing PostgreSQL full-text search
+    // or adding indexes on firstName, lastName, email, street, city columns
     const customers = await prisma.customer.findMany({
       where: {
         OR: [

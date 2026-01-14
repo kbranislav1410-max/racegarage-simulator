@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Generate CSV
+    // Generate CSV with consistent date formatting
     const headers = [
       "Date",
       "Start Time",
@@ -55,10 +55,13 @@ export async function GET(request: NextRequest) {
     const csvRows = [headers.join(",")];
 
     rides.forEach((ride) => {
+      const startDate = new Date(ride.startAt);
+      const endDate = ride.endAt ? new Date(ride.endAt) : null;
+      
       const row = [
-        new Date(ride.startAt).toLocaleDateString(),
-        new Date(ride.startAt).toLocaleTimeString(),
-        ride.endAt ? new Date(ride.endAt).toLocaleTimeString() : "",
+        startDate.toISOString().split("T")[0], // YYYY-MM-DD
+        startDate.toISOString().split("T")[1].split(".")[0], // HH:MM:SS
+        endDate ? endDate.toISOString().split("T")[1].split(".")[0] : "",
         `"${ride.customer.firstName} ${ride.customer.lastName}"`,
         ride.customer.email,
         ride.minutes.toString(),

@@ -506,9 +506,12 @@ export default function RidesPage() {
                         min="1"
                         step="1"
                         value={rideFormData.minutes}
-                        onChange={(e) =>
-                          setRideFormData({ ...rideFormData, minutes: parseInt(e.target.value) || 0 })
-                        }
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          if (!isNaN(value) && value > 0) {
+                            setRideFormData({ ...rideFormData, minutes: value });
+                          }
+                        }}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                         required
                       />
