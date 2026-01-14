@@ -1,56 +1,122 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
+type UserRole = "ADMIN" | "STAFF";
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+}
+
 interface AuthContextType {
+  user: User | null;
   isAuthenticated: boolean;
-  login: (username: string, password: string) => void;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  hasAccess: (route: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Define which routes each role can access
+const roleAccess: Record<UserRole, string[]> = {
+  STAFF: [
+    "/dashboard",
+    "/customers",
+    "/rides",
+    "/reservations",
+    "/challenge",
+    "/vouchers",
+  ],
+  ADMIN: [
+    "/dashboard",
+    "/customers",
+    "/rides",
+    "/reservations",
+    "/challenge",
+    "/vouchers",
+    "/payments",
+    "/settings",
+  ],
+};
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+  const [user, setUser] = useState<User | null>(() => {
     // Initialize from localStorage if available
     if (typeof window !== "undefined") {
-      return localStorage.getItem("isAuthenticated") === "true";
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
     }
-    return false;
+    return null;
   });
   const router = useRouter();
   const pathname = usePathname();
+
+  const isAuthenticated = !!user;
+
+  const hasAccess = useCallback((route: string): boolean => {
+    if (!user) return false;
+    const allowedRoutes = roleAccess[user.role] || [];
+    return allowedRoutes.includes(route);
+  }, [user]);
 
   useEffect(() => {
     // Redirect to login if not authenticated and not on login page
     if (!isAuthenticated && pathname !== "/login") {
       router.push("/login");
+      return;
     }
-  }, [isAuthenticated, pathname, router]);
 
-  const login = (username: string, password: string) => {
-    // PLACEHOLDER: Simple authentication logic for demonstration only
-    // WARNING: In production, implement proper authentication with:
-    // - Secure backend API authentication
-    // - Password hashing and validation
-    // - JWT tokens or session management
-    // - HTTPS/TLS encryption
-    if (username && password) {
-      setIsAuthenticated(true);
-      localStorage.setItem("isAuthenticated", "true");
+    // Check if user has access to current route
+    if (isAuthenticated && pathname !== "/login") {
+      const hasRouteAccess = hasAccess(pathname);
+      if (!hasRouteAccess) {
+        // Redirect to dashboard if user doesn't have access
+        router.push("/dashboard");
+      }
+    }
+  }, [isAuthenticated, pathname, router, user, hasAccess]);
+
+  const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { success: false, error: data.error || "Login failed" };
+      }
+
+      // Store user data
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      
       router.push("/dashboard");
+      return { success: true };
+    } catch (error) {
+      console.error("Login error:", error);
+      return { success: false, error: "An error occurred during login" };
     }
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("isAuthenticated");
+    setUser(null);
+    localStorage.removeItem("user");
     router.push("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, hasAccess }}>
       {children}
     </AuthContext.Provider>
   );
