@@ -4,9 +4,10 @@ import prisma from "@/lib/prisma/client";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const body = await request.json();
+    const { email, password: inputPassword } = body;
 
-    if (!email || !password) {
+    if (!email || !inputPassword) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await bcrypt.compare(inputPassword, user.password);
 
     if (!isValidPassword) {
       return NextResponse.json(
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     // Return user data without password
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _password, ...userWithoutPassword } = user;
+    const { password, ...userWithoutPassword } = user;
 
     return NextResponse.json({
       user: userWithoutPassword,

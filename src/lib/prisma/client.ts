@@ -14,7 +14,7 @@ const pool = new pg.Pool({
 // Create Prisma adapter
 const adapter = new PrismaPg(pool);
 
-export const prisma =
+const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
@@ -23,4 +23,5 @@ export const prisma =
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
+export { prisma };
 export default prisma;

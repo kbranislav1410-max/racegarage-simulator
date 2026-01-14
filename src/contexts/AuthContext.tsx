@@ -23,33 +23,42 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Define which routes each role can access
+const STAFF_ROUTES = [
+  "/dashboard",
+  "/customers",
+  "/rides",
+  "/reservations",
+  "/challenge",
+  "/vouchers",
+];
+
+const ADMIN_ONLY_ROUTES = [
+  "/payments",
+  "/settings",
+];
+
 const roleAccess: Record<UserRole, string[]> = {
-  STAFF: [
-    "/dashboard",
-    "/customers",
-    "/rides",
-    "/reservations",
-    "/challenge",
-    "/vouchers",
-  ],
-  ADMIN: [
-    "/dashboard",
-    "/customers",
-    "/rides",
-    "/reservations",
-    "/challenge",
-    "/vouchers",
-    "/payments",
-    "/settings",
-  ],
+  STAFF: STAFF_ROUTES,
+  ADMIN: [...STAFF_ROUTES, ...ADMIN_ONLY_ROUTES],
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(() => {
     // Initialize from localStorage if available
     if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          const parsed = JSON.parse(storedUser);
+          // Validate user object structure
+          if (parsed && parsed.id && parsed.email && parsed.name && parsed.role) {
+            return parsed as User;
+          }
+        }
+      } catch (error) {
+        console.error("Failed to parse user from localStorage:", error);
+        localStorage.removeItem("user");
+      }
     }
     return null;
   });
@@ -79,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         router.push("/dashboard");
       }
     }
-  }, [isAuthenticated, pathname, router, user, hasAccess]);
+  }, [isAuthenticated, pathname, router, hasAccess]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
