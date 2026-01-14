@@ -66,6 +66,9 @@ export default function RidesPage() {
     minutes: 30,
     source: "ON_SITE" as "ON_SITE" | "RESERVATION" | "VOUCHER" | "PREPAID",
     notes: "",
+    // Payment fields
+    amount: "",
+    paymentMethod: "CASH_ON_SITE" as "CASH_ON_SITE" | "CARD_ON_SITE" | "VOUCHER_PORTAL" | "PREPAID",
   });
   const [rideFormErrors, setRideFormErrors] = useState<Record<string, string>>({});
   const [rideFormSubmitting, setRideFormSubmitting] = useState(false);
@@ -187,7 +190,8 @@ export default function RidesPage() {
     setRideFormSubmitting(true);
 
     try {
-      const response = await fetch("/api/rides", {
+      // Create ride session
+      const rideResponse = await fetch("/api/rides", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -199,8 +203,8 @@ export default function RidesPage() {
         }),
       });
 
-      if (!response.ok) {
-        const error = await response.json();
+      if (!rideResponse.ok) {
+        const error = await rideResponse.json();
         if (error.details) {
           const errors: Record<string, string> = {};
           Object.keys(error.details).forEach((key) => {
@@ -215,6 +219,34 @@ export default function RidesPage() {
         return;
       }
 
+      const ride = await rideResponse.json();
+
+      // Create payment record if amount is provided
+      if (rideFormData.amount && parseFloat(rideFormData.amount) > 0) {
+        const amountCents = Math.round(parseFloat(rideFormData.amount) * 100);
+        
+        // Determine receiver based on payment method
+        let receiver: "FRIEND" | "ME";
+        if (rideFormData.paymentMethod === "CASH_ON_SITE" || rideFormData.paymentMethod === "CARD_ON_SITE") {
+          receiver = "FRIEND";
+        } else {
+          receiver = "ME";
+        }
+
+        await fetch("/api/payments", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amountCents,
+            currency: "EUR",
+            method: rideFormData.paymentMethod,
+            receiver,
+            customerId: selectedCustomer.id,
+            sessionId: ride.id,
+          }),
+        });
+      }
+
       // Reset and close modal
       setShowRecordModal(false);
       setStep("search");
@@ -224,6 +256,8 @@ export default function RidesPage() {
         minutes: 30,
         source: "ON_SITE",
         notes: "",
+        amount: "",
+        paymentMethod: "CASH_ON_SITE",
       });
       
       // Refresh rides list
@@ -253,6 +287,8 @@ export default function RidesPage() {
       minutes: 30,
       source: "ON_SITE",
       notes: "",
+      amount: "",
+      paymentMethod: "CASH_ON_SITE",
     });
   };
 
@@ -554,6 +590,52 @@ export default function RidesPage() {
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                         placeholder="Optional notes about this ride..."
                       />
+                    </div>
+
+                    {/* Payment Section */}
+                    <div className="border-t border-slate-200 pt-4 mt-4">
+                      <h3 className="text-sm font-medium text-slate-700 mb-4">Payment</h3>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Amount (EUR)
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={rideFormData.amount}
+                            onChange={(e) =>
+                              setRideFormData({ ...rideFormData, amount: e.target.value })
+                            }
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                            placeholder="0.00"
+                          />
+                          <p className="text-xs text-slate-500 mt-1">Leave empty if no payment</p>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Payment Method
+                          </label>
+                          <select
+                            value={rideFormData.paymentMethod}
+                            onChange={(e) =>
+                              setRideFormData({
+                                ...rideFormData,
+                                paymentMethod: e.target.value as typeof rideFormData.paymentMethod,
+                              })
+                            }
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                          >
+                            <option value="CASH_ON_SITE">Cash (→ Friend)</option>
+                            <option value="CARD_ON_SITE">Card (→ Friend)</option>
+                            <option value="VOUCHER_PORTAL">Voucher (→ Me)</option>
+                            <option value="PREPAID">Prepaid (→ Me)</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Actions */}

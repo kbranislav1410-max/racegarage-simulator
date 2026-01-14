@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import {
-  Calendar,
   CheckCircle,
   XCircle,
   Ban,
@@ -57,11 +56,7 @@ export default function ReservationsPage() {
   const [actionInProgress, setActionInProgress] = useState(false);
   const [actionNotes, setActionNotes] = useState("");
 
-  useEffect(() => {
-    fetchReservations();
-  }, [statusFilter, dateFilter]);
-
-  const fetchReservations = async () => {
+  const fetchReservations = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -80,7 +75,11 @@ export default function ReservationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, dateFilter]);
+
+  useEffect(() => {
+    fetchReservations();
+  }, [fetchReservations]);
 
   const handleStatusChange = async (
     reservationId: string,

@@ -126,7 +126,7 @@ export async function PATCH(
     }
 
     return NextResponse.json(updatedReservation);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error updating reservation:", error);
 
     if (error.name === "ZodError") {

@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
         status: reservation.status,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error creating public reservation:", error);
 
     if (error.name === "ZodError") {

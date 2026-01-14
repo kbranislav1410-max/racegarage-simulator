@@ -15,7 +15,13 @@ const DURATION_OPTIONS = [
 export default function BookPage() {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
-  const [existingCustomer, setExistingCustomer] = useState<any>(null);
+  const [existingCustomer, setExistingCustomer] = useState<{
+    id: string;
+    firstName: string;
+    lastName: string;
+    street: string | null;
+    city: string | null;
+  } | null>(null);
   const [formData, setFormData] = useState({
     scheduledDate: "",
     scheduledTime: "",
@@ -47,7 +53,7 @@ export default function BookPage() {
 
       // Find exact email match
       const customer = customers.find(
-        (c: any) => c.email.toLowerCase() === email.toLowerCase()
+        (c: unknown) => c.email.toLowerCase() === email.toLowerCase()
       );
 
       if (customer) {
@@ -71,7 +77,7 @@ export default function BookPage() {
       }
 
       setStep(2);
-    } catch (err) {
+    } catch {
       setError("Failed to check email. Please try again.");
     } finally {
       setCheckingEmail(false);
@@ -115,7 +121,7 @@ export default function BookPage() {
       }
 
       setSuccess(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.message || "Failed to create reservation");
     } finally {
       setLoading(false);
