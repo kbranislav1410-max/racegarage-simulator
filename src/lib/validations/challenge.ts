@@ -19,15 +19,19 @@ export type ChallengeAttemptInput = z.infer<typeof challengeAttemptSchema>;
 
 // Helper function to parse lap time from various formats
 export function parseLapTime(input: string): number | null {
+  // Trim whitespace
+  const trimmed = input.trim();
+  
   // Try to parse as direct milliseconds (e.g., "65432")
-  const directMs = parseInt(input);
-  if (!isNaN(directMs) && directMs > 0) {
+  // Use Number to ensure entire string is parsed
+  const directMs = Number(trimmed);
+  if (Number.isInteger(directMs) && directMs > 0) {
     return directMs;
   }
 
   // Try to parse as mm:ss.mmm format (e.g., "01:05.432")
   const timeRegex = /^(\d{1,2}):(\d{2})\.(\d{3})$/;
-  const match = input.match(timeRegex);
+  const match = trimmed.match(timeRegex);
   
   if (match) {
     const minutes = parseInt(match[1]);

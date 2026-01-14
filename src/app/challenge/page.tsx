@@ -262,6 +262,8 @@ export default function ChallengePage() {
     "July", "August", "September", "October", "November", "December"
   ];
 
+  const YEAR_RANGE = 3; // Number of years to show in dropdown
+
   return (
     <ProtectedLayout>
       <div className="space-y-6">
@@ -306,9 +308,9 @@ export default function ChallengePage() {
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
             >
-              {[0, 1, 2].map((offset) => (
-                <option key={currentDate.getFullYear() - offset} value={currentDate.getFullYear() - offset}>
-                  {currentDate.getFullYear() - offset}
+              {Array.from({ length: YEAR_RANGE }, (_, i) => currentDate.getFullYear() - i).map((year) => (
+                <option key={year} value={year}>
+                  {year}
                 </option>
               ))}
             </select>

@@ -68,6 +68,7 @@ export async function GET(request: NextRequest) {
           lastAttemptAt: attempt.recordedAt,
         });
       } else {
+        // Not a better time, just increment count and update timestamp if newer
         existing.attemptCount++;
         if (attempt.recordedAt > existing.lastAttemptAt) {
           existing.lastAttemptAt = attempt.recordedAt;
