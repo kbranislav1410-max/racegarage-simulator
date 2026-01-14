@@ -1,5 +1,5 @@
 /**
- * Email service for sending ride completion notifications
+ * Email service for sending ride completion and reservation notifications
  */
 
 import prisma from "@/lib/prisma/client";
@@ -7,9 +7,13 @@ import { getEmailProvider } from "./provider";
 import {
   generateRideCompletionHTML,
   generateRideCompletionText,
+  generateReservationHTML,
+  generateReservationText,
   type RideCompletionData,
+  type ReservationData,
 } from "./templates";
 import { createAuditLog } from "@/lib/audit";
+import { formatDateTime } from "@/lib/format";
 
 /**
  * Send ride completion email to customer
@@ -185,5 +189,82 @@ export async function sendRideCompletionEmail(
   } catch (error) {
     // Don't throw error - we don't want email failures to fail ride creation
     console.error("Error in sendRideCompletionEmail:", error);
+  }
+}
+
+/**
+ * Send reservation notification email to customer
+ * @param email Customer email
+ * @param customerName Customer name
+ * @param type Email type: confirmed, rejected, or cancelled
+ * @param reservationDetails Reservation details
+ */
+export async function sendReservationEmail(
+  email: string,
+  customerName: string,
+  type: "confirmed" | "rejected" | "cancelled",
+  reservationDetails: {
+    scheduledAt: Date;
+    durationMinutes: number;
+    notes?: string | null;
+  }
+): Promise<void> {
+  try {
+    const emailData: ReservationData = {
+      customerName,
+      scheduledAt: formatDateTime(reservationDetails.scheduledAt),
+      durationMinutes: reservationDetails.durationMinutes,
+      status: type,
+      notes: reservationDetails.notes,
+    };
+
+    const htmlContent = generateReservationHTML(emailData);
+    const textContent = generateReservationText(emailData);
+
+    let subject: string;
+    switch (type) {
+      case "confirmed":
+        subject = "Reservation Confirmed - Racing Simulator";
+        break;
+      case "rejected":
+        subject = "Reservation Update - Racing Simulator";
+        break;
+      case "cancelled":
+        subject = "Reservation Cancelled - Racing Simulator";
+        break;
+    }
+
+    const provider = getEmailProvider();
+    const success = await provider.sendEmail({
+      to: email,
+      subject,
+      html: htmlContent,
+      text: textContent,
+    });
+
+    // Log email attempt to audit log
+    try {
+      await createAuditLog({
+        action: "SEND_EMAIL",
+        entity: "Reservation",
+        entityId: email,
+        payload: {
+          type: `reservation_${type}`,
+          email,
+          success,
+        },
+      });
+    } catch (auditError) {
+      console.error("Failed to create audit log for reservation email:", auditError);
+    }
+
+    if (success) {
+      console.log(`Reservation ${type} email sent to ${email}`);
+    } else {
+      console.error(`Failed to send reservation ${type} email to ${email}`);
+    }
+  } catch (error) {
+    // Don't throw error - we don't want email failures to fail reservation updates
+    console.error("Error in sendReservationEmail:", error);
   }
 }
