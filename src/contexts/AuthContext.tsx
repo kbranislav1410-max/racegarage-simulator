@@ -30,7 +30,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [isAuthenticated, pathname, router]);
 
   const login = (username: string, password: string) => {
-    // Simple authentication logic (placeholder)
+    // PLACEHOLDER: Simple authentication logic for demonstration only
+    // WARNING: In production, implement proper authentication with:
+    // - Secure backend API authentication
+    // - Password hashing and validation
+    // - JWT tokens or session management
+    // - HTTPS/TLS encryption
     if (username && password) {
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
