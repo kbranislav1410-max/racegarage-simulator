@@ -16,14 +16,14 @@ import {
 } from "lucide-react";
 
 const menuItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["STAFF", "ADMIN"] },
-  { href: "/customers", label: "Customers", icon: Users, roles: ["STAFF", "ADMIN"] },
-  { href: "/rides", label: "Rides", icon: Car, roles: ["STAFF", "ADMIN"] },
-  { href: "/reservations", label: "Reservations", icon: Calendar, roles: ["STAFF", "ADMIN"] },
-  { href: "/challenge", label: "Challenge", icon: Trophy, roles: ["STAFF", "ADMIN"] },
-  { href: "/payments", label: "Payments", icon: CreditCard, roles: ["ADMIN"] },
-  { href: "/vouchers", label: "Vouchers", icon: Ticket, roles: ["STAFF", "ADMIN"] },
-  { href: "/settings", label: "Settings", icon: Settings, roles: ["ADMIN"] },
+  { href: "/dashboard", label: "Prehľad", icon: LayoutDashboard, roles: ["STAFF", "ADMIN"] },
+  { href: "/customers", label: "Zákazníci", icon: Users, roles: ["STAFF", "ADMIN"] },
+  { href: "/rides", label: "Jazdy", icon: Car, roles: ["STAFF", "ADMIN"] },
+  { href: "/reservations", label: "Rezervácie", icon: Calendar, roles: ["STAFF", "ADMIN"] },
+  { href: "/challenge", label: "Výzva", icon: Trophy, roles: ["STAFF", "ADMIN"] },
+  { href: "/payments", label: "Platby", icon: CreditCard, roles: ["ADMIN"] },
+  { href: "/vouchers", label: "Vouchery", icon: Ticket, roles: ["STAFF", "ADMIN"] },
+  { href: "/settings", label: "Nastavenia", icon: Settings, roles: ["ADMIN"] },
 ];
 
 export function Sidebar() {
