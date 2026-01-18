@@ -43,95 +43,39 @@ const roleAccess: Record<UserRole, string[]> = {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    // Initialize from localStorage if available
-    if (typeof window !== "undefined") {
-      try {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-          const parsed = JSON.parse(storedUser);
-          // Validate user object structure and types
-          if (
-            parsed &&
-            typeof parsed.id === "string" &&
-            typeof parsed.email === "string" &&
-            typeof parsed.name === "string" &&
-            typeof parsed.role === "string" &&
-            (parsed.role === "ADMIN" || parsed.role === "STAFF")
-          ) {
-            return parsed as User;
-          } else {
-            console.warn("Invalid user data in localStorage");
-            localStorage.removeItem("user");
-          }
-        }
-      } catch (error) {
-        console.error("Failed to parse user from localStorage:", error);
-        localStorage.removeItem("user");
-      }
-    }
-    return null;
+  // Default mock user with ADMIN role - authentication disabled
+  const [user] = useState<User>({
+    id: "mock-user-id",
+    email: "user@racegarage.com",
+    name: "Guest User",
+    role: "ADMIN",
   });
   const router = useRouter();
   const pathname = usePathname();
 
-  const isAuthenticated = !!user;
+  const isAuthenticated = true; // Always authenticated
 
   const hasAccess = useCallback((route: string): boolean => {
-    if (!user) return false;
-    const allowedRoutes = roleAccess[user.role] || [];
-    return allowedRoutes.includes(route);
-  }, [user]);
+    // All routes accessible without authentication
+    return true;
+  }, []);
 
   useEffect(() => {
-    // Redirect to login if not authenticated and not on login page
-    if (!isAuthenticated && pathname !== "/login") {
-      router.push("/login");
-      return;
+    // Redirect from login page to dashboard if someone tries to access it
+    if (pathname === "/login") {
+      router.push("/dashboard");
     }
-
-    // Check if user has access to current route
-    if (isAuthenticated && pathname !== "/login") {
-      const hasRouteAccess = hasAccess(pathname);
-      if (!hasRouteAccess) {
-        // Redirect to dashboard if user doesn't have access
-        router.push("/dashboard");
-      }
-    }
-  }, [isAuthenticated, pathname, router, hasAccess]);
+  }, [pathname, router]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return { success: false, error: data.error || "Login failed" };
-      }
-
-      // Store user data
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      
-      router.push("/dashboard");
-      return { success: true };
-    } catch (error) {
-      console.error("Login error:", error);
-      return { success: false, error: "An error occurred during login" };
-    }
+    // Authentication disabled - always return success
+    router.push("/dashboard");
+    return { success: true };
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
-    router.push("/login");
+    // Authentication disabled - just redirect to dashboard
+    router.push("/dashboard");
   };
 
   return (
