@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
-import { logAudit } from "@/lib/audit";
+import prisma from "@/lib/prisma/client";
+import { createAuditLog } from "@/lib/audit";
 
 // Validation schema
 const createVoucherSchema = z.object({
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Log audit
-    await logAudit({
+    await createAuditLog({
       action: "CREATE",
       entity: "VOUCHER",
       entityId: voucher.id,
