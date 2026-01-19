@@ -7,7 +7,7 @@ export async function GET() {
     const totalCustomers = await prisma.customer.count();
 
     // Get total rides
-    const totalRides = await prisma.ride.count();
+    const totalRides = await prisma.rideSession.count();
 
     // Get active reservations (PENDING or CONFIRMED)
     const activeReservations = await prisma.reservation.count({
@@ -24,7 +24,7 @@ export async function GET() {
       new Date().getMonth(),
       1
     );
-    const payments = await prisma.payment.findMany({
+    const payments = await prisma.paymentRecord.findMany({
       where: {
         createdAt: {
           gte: startOfMonth,
@@ -33,9 +33,9 @@ export async function GET() {
     });
 
     const monthlyRevenue = payments.reduce(
-      (sum: number, payment: typeof payments[0]) => sum + payment.amount,
+      (sum: number, payment: typeof payments[0]) => sum + payment.amountCents,
       0
-    );
+    ) / 100; // Convert cents to euros
 
     return NextResponse.json({
       totalCustomers,
