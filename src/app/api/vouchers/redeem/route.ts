@@ -63,21 +63,21 @@ export async function POST(request: NextRequest) {
     });
 
     // Log audit
-    await createAuditLog({
-      action: "REDEEM",
-      entity: "VOUCHER",
-      entityId: updatedVoucher.id,
-      payload: {
+    await createAuditLog(
+      "REDEEM",
+      "VOUCHER",
+      updatedVoucher.id,
+      {
         code: updatedVoucher.code,
         customerId: validatedData.customerId,
-      },
-    });
+      }
+    );
 
     return NextResponse.json(updatedVoucher);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid redemption data", details: error.errors },
+        { error: "Invalid redemption data", details: error.issues },
         { status: 400 }
       );
     }

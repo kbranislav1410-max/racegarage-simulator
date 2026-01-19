@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma/client";
 import { updateReservationStatusSchema } from "@/lib/validations/reservation";
 import { createAuditLog } from "@/lib/audit";
 import { sendReservationEmail } from "@/lib/email/service";
+import { ZodError } from "zod";
 
 export async function GET(
   request: NextRequest,
@@ -131,9 +132,9 @@ export async function PATCH(
   } catch (error) {
     console.error("Error updating reservation:", error);
 
-    if (error instanceof Error && error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Invalid data", details: (error as { errors: unknown }).errors },
+        { error: "Invalid data", details: error.issues },
         { status: 400 }
       );
     }

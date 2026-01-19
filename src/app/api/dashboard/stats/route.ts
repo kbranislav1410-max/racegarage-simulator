@@ -33,7 +33,7 @@ export async function GET() {
     });
 
     const monthlyRevenue = payments.reduce(
-      (sum, payment) => sum + payment.amount,
+      (sum: number, payment: typeof payments[0]) => sum + payment.amount,
       0
     );
 

@@ -59,18 +59,18 @@ export async function POST(request: NextRequest) {
     });
 
     // Log audit
-    await createAuditLog({
-      action: "CREATE",
-      entity: "VOUCHER",
-      entityId: voucher.id,
-      payload: { code: voucher.code, minutes: voucher.minutes },
-    });
+    await createAuditLog(
+      "CREATE",
+      "VOUCHER",
+      voucher.id,
+      { code: voucher.code, minutes: voucher.minutes }
+    );
 
     return NextResponse.json(voucher, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid voucher data", details: error.errors },
+        { error: "Invalid voucher data", details: error.issues },
         { status: 400 }
       );
     }

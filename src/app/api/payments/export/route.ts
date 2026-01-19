@@ -41,13 +41,14 @@ export async function GET(request: NextRequest) {
     });
 
     // Calculate totals
+    type PaymentType = typeof payments[0];
     const sumFriend = payments
-      .filter((p) => p.receiver === "FRIEND")
-      .reduce((sum, p) => sum + p.amountCents, 0);
+      .filter((p: PaymentType) => p.receiver === "FRIEND")
+      .reduce((sum: number, p: PaymentType) => sum + p.amountCents, 0);
 
     const sumMe = payments
-      .filter((p) => p.receiver === "ME")
-      .reduce((sum, p) => sum + p.amountCents, 0);
+      .filter((p: PaymentType) => p.receiver === "ME")
+      .reduce((sum: number, p: PaymentType) => sum + p.amountCents, 0);
 
     const friendOwesMe = (sumFriend - sumMe) / 2;
 

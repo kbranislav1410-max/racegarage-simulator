@@ -54,7 +54,8 @@ export async function GET(request: NextRequest) {
 
     const csvRows = [headers.join(",")];
 
-    rides.forEach((ride) => {
+    type RideType = typeof rides[0];
+    rides.forEach((ride: RideType) => {
       const startDate = new Date(ride.startAt);
       const endDate = ride.endAt ? new Date(ride.endAt) : null;
       

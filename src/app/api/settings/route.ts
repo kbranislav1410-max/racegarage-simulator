@@ -22,7 +22,8 @@ export async function GET() {
     
     // Build cache
     settingsCache = {};
-    settings.forEach((setting) => {
+    type SettingType = typeof settings[0];
+    settings.forEach((setting: SettingType) => {
       settingsCache[setting.key] = setting.value;
     });
     cacheTimestamp = now;
@@ -134,7 +135,7 @@ export async function PUT(request: NextRequest) {
     settingsCache = {};
 
     // Create audit log
-    await createAuditLog("UPDATE", "Settings", null, validated);
+    await createAuditLog("UPDATE", "Settings", "settings", validated);
 
     return NextResponse.json({ success: true });
   } catch (error) {

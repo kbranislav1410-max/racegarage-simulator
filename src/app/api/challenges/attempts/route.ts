@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       lastAttemptAt: Date;
     }>();
 
-    attempts.forEach((attempt) => {
+    attempts.forEach((attempt: typeof attempts[0]) => {
       const existing = customerBestTimes.get(attempt.customerId);
       const customerName = `${attempt.customer.firstName} ${attempt.customer.lastName}`;
       

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma/client";
 import { createPublicReservationSchema } from "@/lib/validations/reservation";
+import { ZodError } from "zod";
 
 // Check for time conflicts
 async function checkTimeConflict(
@@ -152,9 +153,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error creating public reservation:", error);
 
-    if (error instanceof Error && error.name === "ZodError") {
+    if (error instanceof ZodError) {
       return NextResponse.json(
-        { error: "Invalid reservation data", details: (error as { errors: unknown }).errors },
+        { error: "Invalid reservation data", details: error.issues },
         { status: 400 }
       );
     }

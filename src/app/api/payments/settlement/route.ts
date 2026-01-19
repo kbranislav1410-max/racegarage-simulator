@@ -43,13 +43,14 @@ export async function GET(request: NextRequest) {
     });
 
     // Calculate totals
+    type PaymentType = typeof payments[0];
     const sumFriend = payments
-      .filter((p) => p.receiver === "FRIEND")
-      .reduce((sum, p) => sum + p.amountCents, 0);
+      .filter((p: PaymentType) => p.receiver === "FRIEND")
+      .reduce((sum: number, p: PaymentType) => sum + p.amountCents, 0);
 
     const sumMe = payments
-      .filter((p) => p.receiver === "ME")
-      .reduce((sum, p) => sum + p.amountCents, 0);
+      .filter((p: PaymentType) => p.receiver === "ME")
+      .reduce((sum: number, p: PaymentType) => sum + p.amountCents, 0);
 
     // Calculate 50/50 split settlement
     // If sumFriend > sumMe: Friend owes me (sumFriend - sumMe) / 2
@@ -57,7 +58,7 @@ export async function GET(request: NextRequest) {
     const friendOwesMe = (sumFriend - sumMe) / 2;
 
     // Group payments by method
-    const byMethod = payments.reduce((acc, p) => {
+    const byMethod = payments.reduce((acc: Record<string, { count: number; total: number }>, p: PaymentType) => {
       if (!acc[p.method]) {
         acc[p.method] = { count: 0, total: 0 };
       }
