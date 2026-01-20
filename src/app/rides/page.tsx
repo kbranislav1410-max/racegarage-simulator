@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
-import { Search, Plus, X, Download, Calendar } from "lucide-react";
+import { Search, Plus, X, Download, Calendar, Trash2 } from "lucide-react";
 import { formatAddress } from "@/lib/format";
 
 interface Customer {
@@ -286,6 +286,24 @@ export default function RidesPage() {
     window.open(`/api/rides/export?date=${selectedDate}`, "_blank");
   };
 
+  // Handle delete ride
+  const handleDeleteRide = async (rideId: string) => {
+    if (!confirm("Naozaj chcete odstrániť túto jazdu?")) return;
+
+    try {
+      const response = await fetch(`/api/rides/${rideId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete ride");
+
+      fetchRides();
+    } catch (err) {
+      setError("Nepodarilo sa odstrániť jazdu");
+      console.error(err);
+    }
+  };
+
   // Reset modal
   const resetModal = () => {
     setShowRecordModal(false);
@@ -376,18 +394,21 @@ export default function RidesPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Poznámky
                   </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Akcie
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-slate-200">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                       Načítavam...
                     </td>
                   </tr>
                 ) : rides.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                       Žiadne jazdy pre {selectedDate}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
                     </td>
                   </tr>
@@ -415,6 +436,15 @@ export default function RidesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-slate-600">{ride.notes || "-"}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <button
+                          onClick={() => handleDeleteRide(ride.id)}
+                          className="text-red-600 hover:text-red-800 transition-colors"
+                          title="Odstrániť jazdu"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
                       </td>
                     </tr>
                   ))

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
-import { Download, Calendar, Euro } from "lucide-react";
+import { Download, Calendar, Euro, Trash2 } from "lucide-react";
 
 interface PaymentRecord {
   id: string;
@@ -104,6 +104,47 @@ export default function PaymentsPage() {
     return receiver === "FRIEND"
       ? "bg-blue-100 text-blue-800"
       : "bg-indigo-100 text-indigo-800";
+  };
+
+  // Handle delete payment
+  const handleDeletePayment = async (paymentId: string) => {
+    if (!confirm("Naozaj chcete odstrániť túto platbu?")) return;
+
+    try {
+      const response = await fetch(`/api/payments/${paymentId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete payment");
+
+      // Refresh settlement data
+      const fetchSettlement = async () => {
+        try {
+          setLoading(true);
+          setError("");
+          const response = await fetch(
+            `/api/payments/settlement?year=${selectedYear}&month=${selectedMonth}`
+          );
+          
+          if (!response.ok) {
+            throw new Error("Failed to fetch settlement data");
+          }
+
+          const data = await response.json();
+          setSettlement(data);
+        } catch (err) {
+          setError("Failed to load settlement data");
+          console.error(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchSettlement();
+    } catch (err) {
+      setError("Nepodarilo sa odstrániť platbu");
+      console.error(err);
+    }
   };
 
   return (
@@ -302,6 +343,9 @@ export default function PaymentsPage() {
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                           Ride
                         </th>
+                        <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          Akcie
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
@@ -362,6 +406,15 @@ export default function PaymentsPage() {
                               ) : (
                                 <span className="text-sm text-slate-500">-</span>
                               )}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right">
+                              <button
+                                onClick={() => handleDeletePayment(payment.id)}
+                                className="text-red-600 hover:text-red-800 transition-colors"
+                                title="Odstrániť platbu"
+                              >
+                                <Trash2 className="w-5 h-5" />
+                              </button>
                             </td>
                           </tr>
                         );
