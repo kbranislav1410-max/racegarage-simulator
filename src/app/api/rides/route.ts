@@ -118,10 +118,10 @@ export async function POST(request: NextRequest) {
       await prisma.paymentRecord.create({
         data: {
           customerId: data.customerId,
-          rideSessionId: ride.id,
+          sessionId: ride.id,
           amountCents: Math.round(data.amountEur * 100),
-          paymentMethod: data.paymentMethod,
-          notes: `Platba za jazdu ${data.minutes} minút`,
+          method: data.paymentMethod,
+          receiver: "ME", // Default to ME for direct ride payments
         },
       });
     }
