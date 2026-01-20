@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jazdci - Race Garage Simulator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 10px;
+    }
+    nav {
+      background-color: #007bff;
+      padding: 15px;
+      margin: -30px -30px 30px -30px;
+      border-radius: 8px 8px 0 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 20px;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #0056b3;
+    }
+    form {
+      background-color: #f8f9fa;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="/">Prehľad</a>
+      <a href="/riders">Jazdci</a>
+      <a href="/rides">Jazdy</a>
+      <a href="/payments">Platby</a>
+    </nav>
+
+    <h1>Správa jazdcov</h1>
+
+    <form method="POST" action="/riders">
+      <div class="form-group">
+        <label for="name">Meno *</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email">
+      </div>
+      <div class="form-group">
+        <label for="phone">Telefón</label>
+        <input type="tel" id="phone" name="phone">
+      </div>
+      <button type="submit">Pridať jazdca</button>
+    </form>
+
+    <% if (riders && riders.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Meno</th>
+            <th>Email</th>
+            <th>Telefón</th>
+            <th>Vytvorené</th>
+            <th>Akcie</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% riders.forEach(rider => { %>
+            <tr>
+              <td><%= rider.id %></td>
+              <td><%= rider.name %></td>
+              <td><%= rider.email || 'N/A' %></td>
+              <td><%= rider.phone || 'N/A' %></td>
+              <td><%= new Date(rider.created_at).toLocaleDateString('sk-SK') %></td>
+              <td>
+                <form method="POST" action="/riders/<%= rider.id %>/delete" style="display: inline; padding: 0; margin: 0; background: none; border: none;">
+                  <button type="submit" class="delete-btn" onclick="return confirm('Naozaj chcete odstrániť tohto jazdca?')">Odstrániť</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="no-data">Žiadni jazdci zatiaľ neboli pridaní.</p>
+    <% } %>
+  </div>
+</body>
+</html>

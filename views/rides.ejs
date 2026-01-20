@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jazdy - Race Garage Simulator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 10px;
+    }
+    nav {
+      background-color: #007bff;
+      padding: 15px;
+      margin: -30px -30px 30px -30px;
+      border-radius: 8px 8px 0 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 20px;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #0056b3;
+    }
+    form {
+      background-color: #f8f9fa;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+    .amount {
+      font-weight: bold;
+      color: #28a745;
+    }
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-style: italic;
+    }
+    .warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="/">Prehľad</a>
+      <a href="/riders">Jazdci</a>
+      <a href="/rides">Jazdy</a>
+      <a href="/payments">Platby</a>
+    </nav>
+
+    <h1>Správa jázd</h1>
+
+    <div class="warning">
+      <strong>⚠️ Upozornenie:</strong> Odstránenie jazdy automaticky odstráni aj súvisiacu platbu!
+    </div>
+
+    <form method="POST" action="/rides">
+      <div class="form-group">
+        <label for="rider_id">Jazdec *</label>
+        <select id="rider_id" name="rider_id" required>
+          <option value="">Vyberte jazdca</option>
+          <% riders.forEach(rider => { %>
+            <option value="<%= rider.id %>"><%= rider.name %></option>
+          <% }); %>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="date">Dátum *</label>
+        <input type="datetime-local" id="date" name="date" required>
+      </div>
+      <div class="form-group">
+        <label for="track">Trať *</label>
+        <input type="text" id="track" name="track" required>
+      </div>
+      <div class="form-group">
+        <label for="duration">Trvanie (minúty)</label>
+        <input type="number" id="duration" name="duration">
+      </div>
+      <div class="form-group">
+        <label for="notes">Poznámky</label>
+        <textarea id="notes" name="notes"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="amount">Suma (€)</label>
+        <input type="number" id="amount" name="amount" step="0.01">
+      </div>
+      <div class="form-group">
+        <label for="payment_method">Spôsob platby</label>
+        <select id="payment_method" name="payment_method">
+          <option value="cash">Hotovosť</option>
+          <option value="card">Karta</option>
+          <option value="transfer">Prevod</option>
+        </select>
+      </div>
+      <button type="submit">Pridať jazdu</button>
+    </form>
+
+    <% if (rides && rides.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Dátum</th>
+            <th>Jazdec</th>
+            <th>Trať</th>
+            <th>Trvanie (min)</th>
+            <th>Poznámky</th>
+            <th class="amount">Suma</th>
+            <th>Platba</th>
+            <th>Akcie</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rides.forEach(ride => { %>
+            <tr>
+              <td><%= ride.id %></td>
+              <td><%= new Date(ride.date).toLocaleDateString('sk-SK') %></td>
+              <td><%= ride.rider_name || 'N/A' %></td>
+              <td><%= ride.track %></td>
+              <td><%= ride.duration || 'N/A' %></td>
+              <td><%= ride.notes || '-' %></td>
+              <td class="amount"><%= ride.amount ? ride.amount.toFixed(2) + ' €' : '-' %></td>
+              <td><%= ride.payment_method || '-' %></td>
+              <td>
+                <form method="POST" action="/rides/<%= ride.id %>/delete" style="display: inline; padding: 0; margin: 0; background: none; border: none;">
+                  <button type="submit" class="delete-btn" onclick="return confirm('Naozaj chcete odstrániť túto jazdu? Platba bude tiež odstránená!')">Odstrániť</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="no-data">Žiadne jazdy zatiaľ neboli zaznamenané.</p>
+    <% } %>
+  </div>
+</body>
+</html>

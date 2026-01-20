@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platby - Race Garage Simulator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 10px;
+    }
+    nav {
+      background-color: #007bff;
+      padding: 15px;
+      margin: -30px -30px 30px -30px;
+      border-radius: 8px 8px 0 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-right: 20px;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      color: #333;
+    }
+    tr:hover {
+      background-color: #f8f9fa;
+    }
+    .amount {
+      font-weight: bold;
+      color: #28a745;
+    }
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+      font-style: italic;
+    }
+    .warning {
+      background-color: #fff3cd;
+      border: 1px solid #ffc107;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      color: #856404;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="/">Prehľad</a>
+      <a href="/riders">Jazdci</a>
+      <a href="/rides">Jazdy</a>
+      <a href="/payments">Platby</a>
+    </nav>
+
+    <h1>Správa platieb</h1>
+
+    <div class="warning">
+      <strong>⚠️ Upozornenie:</strong> Odstránenie platby automaticky odstráni aj súvisiacu jazdu!
+    </div>
+
+    <% if (payments && payments.length > 0) { %>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Dátum jazdy</th>
+            <th>Jazdec</th>
+            <th>Trať</th>
+            <th class="amount">Suma</th>
+            <th>Spôsob platby</th>
+            <th>Dátum platby</th>
+            <th>Akcie</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% payments.forEach(payment => { %>
+            <tr>
+              <td><%= payment.id %></td>
+              <td><%= payment.ride_date ? new Date(payment.ride_date).toLocaleDateString('sk-SK') : 'N/A' %></td>
+              <td><%= payment.rider_name || 'N/A' %></td>
+              <td><%= payment.track || 'N/A' %></td>
+              <td class="amount"><%= payment.amount.toFixed(2) %> €</td>
+              <td><%= payment.payment_method || 'N/A' %></td>
+              <td><%= new Date(payment.payment_date).toLocaleDateString('sk-SK') %></td>
+              <td>
+                <form method="POST" action="/payments/<%= payment.id %>/delete" style="display: inline; padding: 0; margin: 0; background: none; border: none;">
+                  <button type="submit" class="delete-btn" onclick="return confirm('Naozaj chcete odstrániť túto platbu? Jazda bude tiež odstránená!')">Odstrániť</button>
+                </form>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="no-data">Žiadne platby zatiaľ neboli zaznamenané.</p>
+    <% } %>
+  </div>
+</body>
+</html>

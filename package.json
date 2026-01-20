@@ -1,0 +1,19 @@
+{
+  "name": "racegarage-simulator",
+  "version": "1.0.0",
+  "description": "Race Garage Simulator - Management system for riders, rides, and payments",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["race", "garage", "simulator", "management"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7"
+  }
+}
