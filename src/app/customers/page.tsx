@@ -13,6 +13,7 @@ interface Customer {
   street: string | null;
   city: string | null;
   phone: string | null;
+  newsletter: boolean;
   createdAt: string;
 }
 
@@ -69,6 +70,7 @@ export default function CustomersPage() {
     street: "",
     city: "",
     phone: "",
+    newsletter: false,
   });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formSubmitting, setFormSubmitting] = useState(false);
@@ -147,6 +149,7 @@ export default function CustomersPage() {
         street: "",
         city: "",
         phone: "",
+        newsletter: false,
       });
       setShowCreateModal(false);
       fetchCustomers();
@@ -491,6 +494,21 @@ export default function CustomersPage() {
                       }
                       className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                     />
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
+                    <input
+                      type="checkbox"
+                      id="newsletter"
+                      checked={formData.newsletter}
+                      onChange={(e) =>
+                        setFormData({ ...formData, newsletter: e.target.checked })
+                      }
+                      className="w-4 h-4 text-slate-800 border-slate-300 rounded focus:ring-2 focus:ring-slate-500"
+                    />
+                    <label htmlFor="newsletter" className="text-sm text-slate-700 cursor-pointer">
+                      Zákazník má záujem o newsletter (propagačné materiály a novinky)
+                    </label>
                   </div>
 
                   <div className="flex gap-3 pt-4">

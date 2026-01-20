@@ -7,6 +7,7 @@ export const customerSchema = z.object({
   street: z.string().optional(),
   city: z.string().optional(),
   phone: z.string().optional(),
+  newsletter: z.boolean().optional(),
 });
 
 export const customerUpdateSchema = customerSchema.partial();

@@ -3,7 +3,8 @@
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { useState, useEffect } from "react";
 import { WorkingHours } from "@/lib/validations/settings";
-import { Clock, Mail, DollarSign, Calendar } from "lucide-react";
+import { Clock, Mail, DollarSign, Calendar, Users, Download, X } from "lucide-react";
+import { formatDate } from "@/lib/format";
 
 const DAYS = [
   "monday",
@@ -32,6 +33,10 @@ export default function SettingsPage() {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  const [showNewsletterModal, setShowNewsletterModal] = useState(false);
+  const [newsletterSubscribers, setNewsletterSubscribers] = useState<any[]>([]);
+  const [loadingSubscribers, setLoadingSubscribers] = useState(false);
 
   const [workingHours, setWorkingHours] = useState<WorkingHours>({
     monday: { from: "10:00", to: "22:00", enabled: true },
@@ -121,6 +126,30 @@ export default function SettingsPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  const loadNewsletterSubscribers = async () => {
+    setLoadingSubscribers(true);
+    try {
+      const response = await fetch("/api/newsletter-subscribers");
+      if (!response.ok) throw new Error("Failed to load newsletter subscribers");
+      const data = await response.json();
+      setNewsletterSubscribers(data.subscribers);
+    } catch (error) {
+      console.error("Failed to load newsletter subscribers:", error);
+      setMessage({ type: "error", text: "Failed to load newsletter subscribers" });
+    } finally {
+      setLoadingSubscribers(false);
+    }
+  };
+
+  const handleExportSubscribers = () => {
+    window.location.href = "/api/newsletter-subscribers/export";
+  };
+
+  const handleShowNewsletterModal = () => {
+    setShowNewsletterModal(true);
+    loadNewsletterSubscribers();
   };
 
   if (loading) {
@@ -354,6 +383,26 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* Newsletter Subscribers */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-slate-700" />
+              <h2 className="text-xl font-bold text-slate-800">Newsletter</h2>
+            </div>
+            <button
+              onClick={handleShowNewsletterModal}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+            >
+              <Users className="w-4 h-4" />
+              Zobraziť odberateľov
+            </button>
+          </div>
+          <p className="text-sm text-slate-600">
+            Zoznam zákazníkov, ktorí majú záujem o newsletter a propagačné materiály
+          </p>
+        </div>
+
         <div className="flex justify-end">
           <button
             onClick={handleSave}
@@ -364,6 +413,113 @@ export default function SettingsPage() {
           </button>
         </div>
       </div>
+
+      {/* Newsletter Subscribers Modal */}
+      {showNewsletterModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-slate-800">
+                  Odberatelia Newslettera
+                </h2>
+                <button
+                  onClick={() => setShowNewsletterModal(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-slate-600">
+                  Celkový počet odberateľov: <span className="font-semibold">{newsletterSubscribers.length}</span>
+                </p>
+                <button
+                  onClick={handleExportSubscribers}
+                  disabled={newsletterSubscribers.length === 0}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Download className="w-4 h-4" />
+                  Exportovať CSV
+                </button>
+              </div>
+
+              {loadingSubscribers ? (
+                <div className="text-center py-8 text-slate-600">
+                  Načítavam...
+                </div>
+              ) : newsletterSubscribers.length === 0 ? (
+                <div className="text-center py-8 text-slate-600">
+                  Zatiaľ nemáte žiadnych odberateľov newslettera.
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-slate-50 border-b border-slate-200">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          Meno
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          Email
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          Mesto
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          Telefón
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                          Registrovaný
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-slate-200">
+                      {newsletterSubscribers.map((subscriber: any) => (
+                        <tr key={subscriber.id} className="hover:bg-slate-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-slate-900">
+                              {subscriber.firstName} {subscriber.lastName}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-600">{subscriber.email}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-600">
+                              {subscriber.city || "-"}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-600">
+                              {subscriber.phone || "-"}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-slate-600">
+                              {formatDate(subscriber.createdAt)}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowNewsletterModal(false)}
+                  className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                >
+                  Zavrieť
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </ProtectedLayout>
   );
 }

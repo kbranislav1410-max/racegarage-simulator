@@ -105,6 +105,7 @@ export async function POST(request: NextRequest) {
         street: data.street || null,
         city: data.city || null,
         phone: data.phone || null,
+        newsletter: data.newsletter || false,
       },
     });
 
