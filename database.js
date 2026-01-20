@@ -4,6 +4,9 @@ const path = require('path');
 const dbPath = path.join(__dirname, 'racegarage.db');
 const db = new sqlite3.Database(dbPath);
 
+// Enable foreign key constraints (disabled by default in SQLite)
+db.run('PRAGMA foreign_keys = ON');
+
 // Initialize database schema
 db.serialize(() => {
   // Create Riders table
@@ -34,6 +37,7 @@ db.serialize(() => {
   `);
 
   // Create Payments table with cascade delete dependency on Rides
+  // When a ride is deleted, its payment is automatically deleted via ON DELETE CASCADE
   db.run(`
     CREATE TABLE IF NOT EXISTS payments (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,26 +49,6 @@ db.serialize(() => {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (ride_id) REFERENCES rides(id) ON DELETE CASCADE
     )
-  `);
-
-  // Create trigger to delete payment when ride is deleted
-  db.run(`
-    CREATE TRIGGER IF NOT EXISTS delete_payment_on_ride_delete
-    BEFORE DELETE ON rides
-    FOR EACH ROW
-    BEGIN
-      DELETE FROM payments WHERE ride_id = OLD.id;
-    END
-  `);
-
-  // Create trigger to delete ride when payment is deleted
-  db.run(`
-    CREATE TRIGGER IF NOT EXISTS delete_ride_on_payment_delete
-    BEFORE DELETE ON payments
-    FOR EACH ROW
-    BEGIN
-      DELETE FROM rides WHERE id = OLD.ride_id;
-    END
   `);
 });
 

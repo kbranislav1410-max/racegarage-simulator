@@ -7,11 +7,15 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["race", "garage", "simulator", "management"],
+  "keywords": [
+    "race",
+    "garage",
+    "simulator",
+    "management"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^2.2.2",
     "ejs": "^4.0.1",
     "express": "^5.2.1",
     "sqlite3": "^5.1.7"

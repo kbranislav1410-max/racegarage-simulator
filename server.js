@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('./database');
 
@@ -9,8 +8,8 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static('public'));
 
 // Overview page - showing last activities for rides and riders
@@ -202,13 +201,26 @@ app.get('/payments', (req, res) => {
 
 app.post('/payments/:id/delete', (req, res) => {
   const { id } = req.params;
-  // This will cascade delete the associated ride due to the trigger
-  db.run('DELETE FROM payments WHERE id = ?', [id], (err) => {
+  
+  // First get the ride_id associated with this payment
+  db.get('SELECT ride_id FROM payments WHERE id = ?', [id], (err, payment) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Database error');
     }
-    res.redirect('/payments');
+    
+    if (!payment) {
+      return res.status(404).send('Payment not found');
+    }
+    
+    // Delete the ride, which will cascade delete the payment via foreign key constraint
+    db.run('DELETE FROM rides WHERE id = ?', [payment.ride_id], (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Database error');
+      }
+      res.redirect('/payments');
+    });
   });
 });
 
