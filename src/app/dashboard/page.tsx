@@ -7,8 +7,21 @@ import { Plus, Search, X, Calendar } from "lucide-react";
 interface DashboardStats {
   totalCustomers: number;
   totalRides: number;
-  activeReservations: number;
+  totalMinutes: number;
+  newRidersThisMonth: number;
+  returningRidersThisMonth: number;
   monthlyRevenue: number;
+  monthlyRevenueChange: number;
+  monthlyRevenueChangePercent: number;
+  yearlyRevenue: number;
+  yearlyRevenueChange: number;
+  yearlyRevenueChangePercent: number;
+  activeReservations: number;
+  recentActivity: Array<{
+    type: "ride" | "customer" | "payment";
+    description: string;
+    timestamp: string;
+  }>;
 }
 
 interface Customer {
@@ -25,8 +38,17 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
     totalCustomers: 0,
     totalRides: 0,
-    activeReservations: 0,
+    totalMinutes: 0,
+    newRidersThisMonth: 0,
+    returningRidersThisMonth: 0,
     monthlyRevenue: 0,
+    monthlyRevenueChange: 0,
+    monthlyRevenueChangePercent: 0,
+    yearlyRevenue: 0,
+    yearlyRevenueChange: 0,
+    yearlyRevenueChangePercent: 0,
+    activeReservations: 0,
+    recentActivity: [],
   });
   const [loading, setLoading] = useState(true);
 
@@ -258,44 +280,173 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-slate-600">
-              Celkový počet zákazníkov
-            </h3>
-            <p className="text-3xl font-bold text-slate-800 mt-2">
-              {loading ? "..." : stats.totalCustomers}
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-slate-600">Celkový počet jázd</h3>
-            <p className="text-3xl font-bold text-slate-800 mt-2">
-              {loading ? "..." : stats.totalRides}
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-slate-600">
-              Aktívne rezervácie
-            </h3>
-            <p className="text-3xl font-bold text-slate-800 mt-2">
-              {loading ? "..." : stats.activeReservations}
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-slate-600">
-              Mesačný príjem
-            </h3>
-            <p className="text-3xl font-bold text-slate-800 mt-2">
-              {loading ? "..." : `€${stats.monthlyRevenue.toFixed(2)}`}
-            </p>
+        {/* All-time Statistics */}
+        <div>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">Celková štatistika</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Celkový počet jazdcov
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.totalCustomers}
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Celkový počet jázd
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.totalRides}
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Celkový počet odjazdených minút
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.totalMinutes.toLocaleString()}
+              </p>
+              {!loading && stats.totalMinutes > 0 && (
+                <p className="text-sm text-slate-500 mt-1">
+                  {(stats.totalMinutes / 60).toFixed(1)} hodín
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
+        {/* Monthly Statistics */}
+        <div>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">Tento mesiac</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Noví jazdci
+              </h3>
+              <p className="text-3xl font-bold text-green-600 mt-2">
+                {loading ? "..." : stats.newRidersThisMonth}
+              </p>
+              <p className="text-sm text-slate-500 mt-1">
+                Prvýkrát jazdili tento mesiac
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Vracajúci sa jazdci
+              </h3>
+              <p className="text-3xl font-bold text-blue-600 mt-2">
+                {loading ? "..." : stats.returningRidersThisMonth}
+              </p>
+              <p className="text-sm text-slate-500 mt-1">
+                Jazdili viac ako raz celkovo
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Aktívne rezervácie
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.activeReservations}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Revenue Statistics */}
+        <div>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">Príjmy</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Príjem za tento mesiac
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : `€${stats.monthlyRevenue.toFixed(2)}`}
+              </p>
+              {!loading && stats.monthlyRevenueChange !== 0 && (
+                <div className="mt-2 flex items-center gap-2">
+                  <span className={`text-sm font-medium ${stats.monthlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                    {stats.monthlyRevenueChange > 0 ? "+" : ""}
+                    €{Math.abs(stats.monthlyRevenueChange).toFixed(2)}
+                  </span>
+                  <span className={`text-sm ${stats.monthlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                    ({stats.monthlyRevenueChange > 0 ? "+" : ""}
+                    {stats.monthlyRevenueChangePercent.toFixed(1)}%)
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    oproti minulému mesiacu
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Príjem za tento rok
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : `€${stats.yearlyRevenue.toFixed(2)}`}
+              </p>
+              {!loading && stats.yearlyRevenueChange !== 0 && (
+                <div className="mt-2 flex items-center gap-2">
+                  <span className={`text-sm font-medium ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                    {stats.yearlyRevenueChange > 0 ? "+" : ""}
+                    €{Math.abs(stats.yearlyRevenueChange).toFixed(2)}
+                  </span>
+                  <span className={`text-sm ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                    ({stats.yearlyRevenueChange > 0 ? "+" : ""}
+                    {stats.yearlyRevenueChangePercent.toFixed(1)}%)
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    oproti minulému roku
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-bold text-slate-800 mb-4">
             Nedávna aktivita
           </h2>
-          <p className="text-slate-600">Žiadna nedávna aktivita na zobrazenie</p>
+          {loading ? (
+            <p className="text-slate-600">Načítavam...</p>
+          ) : stats.recentActivity.length === 0 ? (
+            <p className="text-slate-600">Žiadna nedávna aktivita na zobrazenie</p>
+          ) : (
+            <div className="space-y-3">
+              {stats.recentActivity.map((activity, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 p-3 rounded-md hover:bg-slate-50 border border-slate-100"
+                >
+                  <div className={`mt-1 w-2 h-2 rounded-full ${
+                    activity.type === "ride" 
+                      ? "bg-blue-500" 
+                      : activity.type === "customer" 
+                      ? "bg-green-500" 
+                      : "bg-purple-500"
+                  }`} />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-800">
+                      {activity.description}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {new Date(activity.timestamp).toLocaleString("sk-SK", {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
