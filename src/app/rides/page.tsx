@@ -62,9 +62,12 @@ export default function RidesPage() {
 
   // Ride Form
   const [rideFormData, setRideFormData] = useState({
-    startAt: new Date().toISOString().slice(0, 16),
+    date: new Date().toISOString().split("T")[0],
+    time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
     minutes: 30,
-    source: "ON_SITE" as "ON_SITE" | "RESERVATION" | "VOUCHER" | "PREPAID",
+    source: "RESERVATION" as "RESERVATION" | "CAFE_CUSTOMER" | "VOUCHER_PARTNER" | "VOUCHER",
+    partner: "" as "" | "ZLAVOMAT" | "ADROP" | "NAJZAZITKY",
+    voucherCode: "",
     notes: "",
     // Payment fields
     amount: "",
@@ -190,15 +193,20 @@ export default function RidesPage() {
     setRideFormSubmitting(true);
 
     try {
+      // Combine date and time to create startAt datetime
+      const startAt = new Date(`${rideFormData.date}T${rideFormData.time}`).toISOString();
+
       // Create ride session
       const rideResponse = await fetch("/api/rides", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerId: selectedCustomer.id,
-          startAt: new Date(rideFormData.startAt).toISOString(),
+          startAt,
           minutes: rideFormData.minutes,
           source: rideFormData.source,
+          partner: rideFormData.source === "VOUCHER_PARTNER" && rideFormData.partner ? rideFormData.partner : undefined,
+          voucherCode: (rideFormData.source === "VOUCHER_PARTNER" || rideFormData.source === "VOUCHER") && rideFormData.voucherCode ? rideFormData.voucherCode : undefined,
           notes: rideFormData.notes || undefined,
         }),
       });
@@ -252,9 +260,12 @@ export default function RidesPage() {
       setStep("search");
       setSelectedCustomer(null);
       setRideFormData({
-        startAt: new Date().toISOString().slice(0, 16),
+        date: new Date().toISOString().split("T")[0],
+        time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
         minutes: 30,
-        source: "ON_SITE",
+        source: "RESERVATION",
+        partner: "",
+        voucherCode: "",
         notes: "",
         amount: "",
         paymentMethod: "CASH_ON_SITE",
@@ -283,9 +294,12 @@ export default function RidesPage() {
     setSearchQuery("");
     setSearchResults([]);
     setRideFormData({
-      startAt: new Date().toISOString().slice(0, 16),
+      date: new Date().toISOString().split("T")[0],
+      time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
       minutes: 30,
-      source: "ON_SITE",
+      source: "RESERVATION",
+      partner: "",
+      voucherCode: "",
       notes: "",
       amount: "",
       paymentMethod: "CASH_ON_SITE",
@@ -299,10 +313,10 @@ export default function RidesPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">
-              Simulator Rides
+              Jazdy
             </h1>
             <p className="text-slate-600 mt-2">
-              Track and manage simulator ride sessions
+              Sledovanie a správa jázd simulátora
             </p>
           </div>
           <button
@@ -310,7 +324,7 @@ export default function RidesPage() {
             className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Record Ride
+            Záznam jazdy
           </button>
         </div>
 
@@ -330,7 +344,7 @@ export default function RidesPage() {
             className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
           >
             <Download className="w-4 h-4" />
-            Export CSV
+            Exportovať CSV
           </button>
         </div>
 
@@ -348,19 +362,19 @@ export default function RidesPage() {
               <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Time
+                    Čas
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Customer
+                    Zákazník
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Minutes
+                    Minúty
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Source
+                    Zdroj
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Notes
+                    Poznámky
                   </th>
                 </tr>
               </thead>
@@ -368,13 +382,13 @@ export default function RidesPage() {
                 {loading ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                      Loading...
+                      Načítavam...
                     </td>
                   </tr>
                 ) : rides.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
-                      No rides recorded for {selectedDate}. Click &quot;Record Ride&quot; to add one.
+                      Žiadne jazdy pre {selectedDate}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
                     </td>
                   </tr>
                 ) : (
@@ -417,7 +431,7 @@ export default function RidesPage() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-slate-800">
-                    {step === "search" ? "Select Customer" : "Record Ride"}
+                    {step === "search" ? "Výber zákazníka" : "Záznam jazdy"}
                   </h2>
                   <button
                     onClick={resetModal}
@@ -434,7 +448,7 @@ export default function RidesPage() {
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                       <input
                         type="text"
-                        placeholder="Search by name, email, or address..."
+                        placeholder="Hľadať podľa mena, emailu, alebo adresy..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
@@ -445,7 +459,7 @@ export default function RidesPage() {
                     {/* Search Results */}
                     {searchLoading && (
                       <div className="text-center py-4 text-slate-500">
-                        Searching...
+                        Hľadám...
                       </div>
                     )}
 
@@ -473,19 +487,19 @@ export default function RidesPage() {
 
                     {!searchLoading && searchQuery.length >= 2 && searchResults.length === 0 && (
                       <div className="text-center py-8">
-                        <p className="text-slate-600 mb-4">No customers found</p>
+                        <p className="text-slate-600 mb-4">Nenašli sa žiadni zákazníci</p>
                         <button
                           onClick={() => setShowCreateCustomerModal(true)}
                           className="px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
                         >
-                          Create New Customer
+                          Vytvoriť nového zákazníka
                         </button>
                       </div>
                     )}
 
                     {searchQuery.length < 2 && (
                       <div className="text-center py-8 text-slate-500">
-                        Start typing to search for customers...
+                        Začnite písať pre vyhľadanie zákazníkov...
                       </div>
                     )}
                   </div>
@@ -493,7 +507,7 @@ export default function RidesPage() {
                   <form onSubmit={handleRecordRide} className="space-y-4">
                     {/* Selected Customer */}
                     <div className="bg-slate-50 rounded-lg p-4 mb-4">
-                      <p className="text-sm text-slate-600 mb-1">Customer</p>
+                      <p className="text-sm text-slate-600 mb-1">Zákazník</p>
                       <p className="font-medium text-slate-900">
                         {selectedCustomer?.firstName} {selectedCustomer?.lastName}
                       </p>
@@ -506,7 +520,7 @@ export default function RidesPage() {
                         }}
                         className="text-sm text-slate-600 hover:text-slate-800 mt-2"
                       >
-                        Change customer
+                        Zmeniť zákazníka
                       </button>
                     </div>
 
@@ -516,26 +530,157 @@ export default function RidesPage() {
                       </div>
                     )}
 
-                    {/* Date/Time */}
+                    {/* Date and Time in separate fields */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          Dátum *
+                        </label>
+                        <input
+                          type="date"
+                          value={rideFormData.date}
+                          onChange={(e) =>
+                            setRideFormData({ ...rideFormData, date: e.target.value })
+                          }
+                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          Čas jazdy *
+                        </label>
+                        <input
+                          type="time"
+                          value={rideFormData.time}
+                          onChange={(e) =>
+                            setRideFormData({ ...rideFormData, time: e.target.value })
+                          }
+                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* Source */}
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Date & Time *
+                        Zdroj *
                       </label>
-                      <input
-                        type="datetime-local"
-                        value={rideFormData.startAt}
+                      <select
+                        value={rideFormData.source}
                         onChange={(e) =>
-                          setRideFormData({ ...rideFormData, startAt: e.target.value })
+                          setRideFormData({
+                            ...rideFormData,
+                            source: e.target.value as typeof rideFormData.source,
+                            partner: "",
+                            voucherCode: "",
+                          })
                         }
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                         required
-                      />
+                      >
+                        <option value="RESERVATION">Rezervácia</option>
+                        <option value="CAFE_CUSTOMER">Zákazník kaviarne</option>
+                        <option value="VOUCHER_PARTNER">Voucher partner</option>
+                        <option value="VOUCHER">Voucher</option>
+                      </select>
+                    </div>
+
+                    {/* Partner selection - shown only for VOUCHER_PARTNER */}
+                    {rideFormData.source === "VOUCHER_PARTNER" && (
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          Partner *
+                        </label>
+                        <select
+                          value={rideFormData.partner}
+                          onChange={(e) =>
+                            setRideFormData({
+                              ...rideFormData,
+                              partner: e.target.value as typeof rideFormData.partner,
+                            })
+                          }
+                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                          required
+                        >
+                          <option value="">Vyberte partnera...</option>
+                          <option value="ZLAVOMAT">Zľavomat</option>
+                          <option value="ADROP">Adrop</option>
+                          <option value="NAJZAZITKY">Najzážitky</option>
+                        </select>
+                      </div>
+                    )}
+
+                    {/* Voucher Code - shown for VOUCHER_PARTNER and VOUCHER */}
+                    {(rideFormData.source === "VOUCHER_PARTNER" || rideFormData.source === "VOUCHER") && (
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                          Kód voucheru *
+                        </label>
+                        <input
+                          type="text"
+                          value={rideFormData.voucherCode}
+                          onChange={(e) =>
+                            setRideFormData({ ...rideFormData, voucherCode: e.target.value })
+                          }
+                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                          placeholder="Zadajte kód voucheru"
+                          required
+                        />
+                      </div>
+                    )}
+
+                    {/* Payment Section */}
+                    <div className="border-t border-slate-200 pt-4 mt-4">
+                      <h3 className="text-sm font-medium text-slate-700 mb-4">Platba</h3>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Suma (€)
+                          </label>
+                          <input
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={rideFormData.amount}
+                            onChange={(e) =>
+                              setRideFormData({ ...rideFormData, amount: e.target.value })
+                            }
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                            placeholder="0.00"
+                          />
+                          <p className="text-xs text-slate-500 mt-1">Nechajte prázdne ak nebola platba</p>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Metóda platby
+                          </label>
+                          <select
+                            value={rideFormData.paymentMethod}
+                            onChange={(e) =>
+                              setRideFormData({
+                                ...rideFormData,
+                                paymentMethod: e.target.value as typeof rideFormData.paymentMethod,
+                              })
+                            }
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                          >
+                            <option value="CASH_ON_SITE">Hotovosť (→ Kamarát)</option>
+                            <option value="CARD_ON_SITE">Karta (→ Kamarát)</option>
+                            <option value="VOUCHER_PORTAL">Voucher portál (→ Ja)</option>
+                            <option value="PREPAID">Predplatené (→ Ja)</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Minutes */}
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Minutes *
+                        Minúty *
                       </label>
                       <input
                         type="number"
@@ -553,33 +698,10 @@ export default function RidesPage() {
                       />
                     </div>
 
-                    {/* Source */}
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Source *
-                      </label>
-                      <select
-                        value={rideFormData.source}
-                        onChange={(e) =>
-                          setRideFormData({
-                            ...rideFormData,
-                            source: e.target.value as typeof rideFormData.source,
-                          })
-                        }
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                        required
-                      >
-                        <option value="ON_SITE">On Site</option>
-                        <option value="RESERVATION">Reservation</option>
-                        <option value="VOUCHER">Voucher</option>
-                        <option value="PREPAID">Prepaid</option>
-                      </select>
-                    </div>
-
                     {/* Notes */}
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Notes
+                        Poznámka
                       </label>
                       <textarea
                         value={rideFormData.notes}
@@ -588,54 +710,8 @@ export default function RidesPage() {
                         }
                         rows={3}
                         className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                        placeholder="Optional notes about this ride..."
+                        placeholder="Voliteľná poznámka k jazde..."
                       />
-                    </div>
-
-                    {/* Payment Section */}
-                    <div className="border-t border-slate-200 pt-4 mt-4">
-                      <h3 className="text-sm font-medium text-slate-700 mb-4">Payment</h3>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Amount (EUR)
-                          </label>
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={rideFormData.amount}
-                            onChange={(e) =>
-                              setRideFormData({ ...rideFormData, amount: e.target.value })
-                            }
-                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                            placeholder="0.00"
-                          />
-                          <p className="text-xs text-slate-500 mt-1">Leave empty if no payment</p>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">
-                            Payment Method
-                          </label>
-                          <select
-                            value={rideFormData.paymentMethod}
-                            onChange={(e) =>
-                              setRideFormData({
-                                ...rideFormData,
-                                paymentMethod: e.target.value as typeof rideFormData.paymentMethod,
-                              })
-                            }
-                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                          >
-                            <option value="CASH_ON_SITE">Cash (→ Friend)</option>
-                            <option value="CARD_ON_SITE">Card (→ Friend)</option>
-                            <option value="VOUCHER_PORTAL">Voucher (→ Me)</option>
-                            <option value="PREPAID">Prepaid (→ Me)</option>
-                          </select>
-                        </div>
-                      </div>
                     </div>
 
                     {/* Actions */}
@@ -645,14 +721,14 @@ export default function RidesPage() {
                         disabled={rideFormSubmitting}
                         className="flex-1 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        {rideFormSubmitting ? "Recording..." : "Record Ride"}
+                        {rideFormSubmitting ? "Ukladám..." : "Zaznamenať jazdu"}
                       </button>
                       <button
                         type="button"
                         onClick={resetModal}
                         className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
                       >
-                        Cancel
+                        Zrušiť
                       </button>
                     </div>
                   </form>
@@ -668,7 +744,7 @@ export default function RidesPage() {
             <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-slate-800">Create Customer</h2>
+                  <h2 className="text-2xl font-bold text-slate-800">Vytvoriť zákazníka</h2>
                   <button
                     onClick={() => setShowCreateCustomerModal(false)}
                     className="text-slate-400 hover:text-slate-600"
@@ -687,7 +763,7 @@ export default function RidesPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
-                        First Name *
+                        Meno *
                       </label>
                       <input
                         type="text"
@@ -707,7 +783,7 @@ export default function RidesPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Last Name *
+                        Priezvisko *
                       </label>
                       <input
                         type="text"
@@ -748,7 +824,7 @@ export default function RidesPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Street
+                      Ulica
                     </label>
                     <input
                       type="text"
@@ -762,7 +838,7 @@ export default function RidesPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      City
+                      Mesto
                     </label>
                     <input
                       type="text"
@@ -776,7 +852,7 @@ export default function RidesPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-2">
-                      Phone
+                      Telefón
                     </label>
                     <input
                       type="tel"
@@ -794,14 +870,14 @@ export default function RidesPage() {
                       disabled={customerFormSubmitting}
                       className="flex-1 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {customerFormSubmitting ? "Creating..." : "Create & Select"}
+                      {customerFormSubmitting ? "Vytváram..." : "Vytvoriť a vybrať"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowCreateCustomerModal(false)}
                       className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
                     >
-                      Cancel
+                      Zrušiť
                     </button>
                   </div>
                 </form>

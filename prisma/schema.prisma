@@ -55,15 +55,17 @@ model Customer {
 
 // RideSession model
 model RideSession {
-  id         String            @id @default(cuid())
-  customerId String
-  customer   Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  startAt    DateTime
-  endAt      DateTime?
-  minutes    Int
-  source     RideSessionSource
-  notes      String?
-  createdAt  DateTime          @default(now())
+  id          String            @id @default(cuid())
+  customerId  String
+  customer    Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  startAt     DateTime
+  endAt       DateTime?
+  minutes     Int
+  source      RideSessionSource
+  partner     VoucherPartner?
+  voucherCode String?
+  notes       String?
+  createdAt   DateTime          @default(now())
 
   // Relations
   challengeAttempts ChallengeAttempt[]
@@ -73,10 +75,16 @@ model RideSession {
 }
 
 enum RideSessionSource {
-  ON_SITE
   RESERVATION
+  CAFE_CUSTOMER
+  VOUCHER_PARTNER
   VOUCHER
-  PREPAID
+}
+
+enum VoucherPartner {
+  ZLAVOMAT
+  ADROP
+  NAJZAZITKY
 }
 
 // ChallengeMonth model

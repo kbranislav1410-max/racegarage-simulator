@@ -97,6 +97,8 @@ export async function POST(request: NextRequest) {
         endAt,
         minutes: data.minutes,
         source: data.source,
+        partner: data.partner || null,
+        voucherCode: data.voucherCode || null,
         notes: data.notes || null,
       },
       include: {
