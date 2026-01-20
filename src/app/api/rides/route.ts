@@ -113,6 +113,19 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Create payment record if amount is provided
+    if (data.amountEur && data.paymentMethod) {
+      await prisma.paymentRecord.create({
+        data: {
+          customerId: data.customerId,
+          rideSessionId: ride.id,
+          amountCents: Math.round(data.amountEur * 100),
+          paymentMethod: data.paymentMethod,
+          notes: `Platba za jazdu ${data.minutes} minút`,
+        },
+      });
+    }
+
     // Create audit log
     await createAuditLog("CREATE", "RideSession", ride.id, {
       customerId: data.customerId,

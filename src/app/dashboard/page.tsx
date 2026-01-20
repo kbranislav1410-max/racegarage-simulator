@@ -176,7 +176,7 @@ export default function DashboardPage() {
       }
 
       const createdCustomer = await response.json();
-      setSelectedCustomer(createdCustomer.customer);
+      setSelectedCustomer(createdCustomer);
       setRecordStep("record-ride");
     } catch (error) {
       console.error("Failed to create customer:", error);

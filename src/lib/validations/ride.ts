@@ -8,6 +8,8 @@ export const rideSessionSchema = z.object({
   partner: z.enum(["ZLAVOMAT", "ADROP", "NAJZAZITKY"]).optional(),
   voucherCode: z.string().optional(),
   notes: z.string().optional(),
+  amountEur: z.number().positive("Amount must be positive").optional(),
+  paymentMethod: z.enum(["CASH_ON_SITE", "CARD_ON_SITE", "VOUCHER_PORTAL", "PREPAID"]).optional(),
 });
 
 export type RideSessionInput = z.infer<typeof rideSessionSchema>;
