@@ -12,6 +12,7 @@ interface Voucher {
   soldToEmail: string;
   soldToName: string;
   createdAt: string;
+  expiresAt: string;
   redeemedAt: string | null;
   redeemedByCustomer: {
     id: string;
@@ -238,6 +239,43 @@ export default function VouchersPage() {
                         }
                       )}
                     </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Platnosť do</p>
+                    <p className="font-semibold">
+                      {new Date(checkedVoucher.expiresAt).toLocaleDateString(
+                        "sk-SK",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }
+                      )}
+                    </p>
+                    {checkedVoucher.status !== "REDEEMED" && checkedVoucher.status !== "CANCELLED" && (
+                      <p className="text-sm text-slate-600 mt-1">
+                        {(() => {
+                          const now = new Date();
+                          const expires = new Date(checkedVoucher.expiresAt);
+                          const diffTime = expires.getTime() - now.getTime();
+                          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                          
+                          if (diffDays < 0) {
+                            return <span className="text-red-600 font-semibold">Expirovaný</span>;
+                          } else if (diffDays === 0) {
+                            return <span className="text-orange-600 font-semibold">Platný ešte dnes</span>;
+                          } else if (diffDays === 1) {
+                            return <span className="text-orange-600 font-semibold">Platný ešte 1 deň</span>;
+                          } else if (diffDays < 30) {
+                            return <span className="text-orange-600 font-semibold">Platný ešte {diffDays} dní</span>;
+                          } else {
+                            const diffMonths = Math.floor(diffDays / 30);
+                            return <span className="text-green-600 font-semibold">Platný ešte {diffMonths} {diffMonths === 1 ? 'mesiac' : diffMonths < 5 ? 'mesiace' : 'mesiacov'}</span>;
+                          }
+                        })()}
+                      </p>
+                    )}
                   </div>
 
                   {checkedVoucher.status === "REDEEMED" && checkedVoucher.redeemedAt && (

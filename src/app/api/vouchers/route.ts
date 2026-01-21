@@ -48,6 +48,10 @@ export async function POST(request: NextRequest) {
     // Generate unique voucher code
     const code = generateVoucherCode();
 
+    // Set expiration to 6 months from now
+    const expiresAt = new Date();
+    expiresAt.setMonth(expiresAt.getMonth() + 6);
+
     const voucher = await prisma.voucher.create({
       data: {
         code,
@@ -55,6 +59,7 @@ export async function POST(request: NextRequest) {
         soldToEmail: validatedData.soldToEmail,
         soldToName: validatedData.soldToName,
         status: "NEW",
+        expiresAt,
       },
     });
 

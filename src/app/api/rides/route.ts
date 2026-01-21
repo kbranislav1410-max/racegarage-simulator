@@ -113,6 +113,30 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // If voucher code was used, mark it as redeemed
+    if (data.voucherCode) {
+      const voucher = await prisma.voucher.findUnique({
+        where: { code: data.voucherCode.toUpperCase() },
+      });
+
+      if (voucher && voucher.status !== "REDEEMED") {
+        await prisma.voucher.update({
+          where: { code: data.voucherCode.toUpperCase() },
+          data: {
+            status: "REDEEMED",
+            redeemedAt: new Date(),
+            redeemedByCustomerId: data.customerId,
+          },
+        });
+
+        // Log voucher redemption
+        await createAuditLog("UPDATE", "VOUCHER", voucher.id, {
+          status: "REDEEMED",
+          redeemedBy: `${customer.firstName} ${customer.lastName}`,
+        });
+      }
+    }
+
     // Create payment record if amount is provided
     if (data.amountEur && data.paymentMethod) {
       await prisma.paymentRecord.create({
