@@ -17,8 +17,13 @@ interface DashboardStats {
   yearlyRevenueChange: number;
   yearlyRevenueChangePercent: number;
   activeReservations: number;
-  recentActivity: Array<{
-    type: "ride" | "customer" | "payment";
+  recentRidesActivity: Array<{
+    type: "ride";
+    description: string;
+    timestamp: string;
+  }>;
+  recentCustomersActivity: Array<{
+    type: "customer";
     description: string;
     timestamp: string;
   }>;
@@ -48,7 +53,8 @@ export default function DashboardPage() {
     yearlyRevenueChange: 0,
     yearlyRevenueChangePercent: 0,
     activeReservations: 0,
-    recentActivity: [],
+    recentRidesActivity: [],
+    recentCustomersActivity: [],
   });
   const [loading, setLoading] = useState(true);
 
@@ -406,29 +412,60 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Rides Activity */}
         <div className="bg-white p-6 rounded-lg shadow">
           <h2 className="text-xl font-bold text-slate-800 mb-4">
-            Nedávna aktivita
+            Posledné jazdy
           </h2>
           {loading ? (
             <p className="text-slate-600">Načítavam...</p>
-          ) : stats.recentActivity.length === 0 ? (
-            <p className="text-slate-600">Žiadna nedávna aktivita na zobrazenie</p>
+          ) : stats.recentRidesActivity.length === 0 ? (
+            <p className="text-slate-600">Žiadne jazdy na zobrazenie</p>
           ) : (
             <div className="space-y-3">
-              {stats.recentActivity.map((activity, index) => (
+              {stats.recentRidesActivity.map((activity, index) => (
                 <div
                   key={index}
                   className="flex items-start gap-3 p-3 rounded-md hover:bg-slate-50 border border-slate-100"
                 >
-                  <div className={`mt-1 w-2 h-2 rounded-full ${
-                    activity.type === "ride" 
-                      ? "bg-blue-500" 
-                      : activity.type === "customer" 
-                      ? "bg-green-500" 
-                      : "bg-purple-500"
-                  }`} />
+                  <div className="mt-1 w-2 h-2 rounded-full bg-blue-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-800">
+                      {activity.description}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {new Date(activity.timestamp).toLocaleString("sk-SK", {
+                        day: "numeric",
+                        month: "numeric",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Recent Customers Activity */}
+        <div className="bg-white p-6 rounded-lg shadow">
+          <h2 className="text-xl font-bold text-slate-800 mb-4">
+            Noví jazdci
+          </h2>
+          {loading ? (
+            <p className="text-slate-600">Načítavam...</p>
+          ) : stats.recentCustomersActivity.length === 0 ? (
+            <p className="text-slate-600">Žiadni noví jazdci na zobrazenie</p>
+          ) : (
+            <div className="space-y-3">
+              {stats.recentCustomersActivity.map((activity, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 p-3 rounded-md hover:bg-slate-50 border border-slate-100"
+                >
+                  <div className="mt-1 w-2 h-2 rounded-full bg-green-500" />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-slate-800">
                       {activity.description}

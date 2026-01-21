@@ -150,9 +150,9 @@ export async function GET() {
       },
     });
 
-    // Get recent activity (last 10 activities)
+    // Get recent rides (last 10)
     const recentRides = await prisma.rideSession.findMany({
-      take: 5,
+      take: 10,
       orderBy: { createdAt: "desc" },
       include: {
         customer: {
@@ -161,11 +161,17 @@ export async function GET() {
             lastName: true,
           },
         },
+        paymentRecords: {
+          select: {
+            amountCents: true,
+          },
+        },
       },
     });
 
+    // Get recent customers (last 10)
     const recentCustomers = await prisma.customer.findMany({
-      take: 5,
+      take: 10,
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -175,39 +181,26 @@ export async function GET() {
       },
     });
 
-    const recentPayments = await prisma.paymentRecord.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      include: {
-        customer: {
-          select: {
-            firstName: true,
-            lastName: true,
-          },
-        },
-      },
+    // Format recent rides with amounts
+    const recentRidesActivity = recentRides.map((ride) => {
+      const totalAmount = ride.paymentRecords.reduce(
+        (sum: number, payment) => sum + payment.amountCents,
+        0
+      ) / 100;
+      
+      return {
+        type: "ride" as const,
+        description: `${ride.customer.firstName} ${ride.customer.lastName} - Jazda ${ride.minutes} min${totalAmount > 0 ? ` (${totalAmount.toFixed(2)}€)` : ""}`,
+        timestamp: ride.createdAt,
+      };
     });
 
-    // Combine and sort recent activity
-    const recentActivity = [
-      ...recentRides.map((ride) => ({
-        type: "ride" as const,
-        description: `${ride.customer.firstName} ${ride.customer.lastName} - Jazda ${ride.minutes} min`,
-        timestamp: ride.createdAt,
-      })),
-      ...recentCustomers.map((customer) => ({
-        type: "customer" as const,
-        description: `Nový zákazník: ${customer.firstName} ${customer.lastName}`,
-        timestamp: customer.createdAt,
-      })),
-      ...recentPayments.map((payment) => ({
-        type: "payment" as const,
-        description: `Platba ${(payment.amountCents / 100).toFixed(2)}€${payment.customer ? ` - ${payment.customer.firstName} ${payment.customer.lastName}` : ""}`,
-        timestamp: payment.createdAt,
-      })),
-    ]
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
-      .slice(0, 10);
+    // Format recent customers
+    const recentCustomersActivity = recentCustomers.map((customer) => ({
+      type: "customer" as const,
+      description: `Nový zákazník: ${customer.firstName} ${customer.lastName}`,
+      timestamp: customer.createdAt,
+    }));
 
     return NextResponse.json({
       // All-time stats
@@ -230,8 +223,9 @@ export async function GET() {
       // Other stats
       activeReservations,
       
-      // Recent activity
-      recentActivity,
+      // Recent activity - separate rides and customers
+      recentRidesActivity,
+      recentCustomersActivity,
     });
   } catch (error) {
     console.error("Failed to fetch dashboard stats:", error);

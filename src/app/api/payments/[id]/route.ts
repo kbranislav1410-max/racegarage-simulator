@@ -21,6 +21,13 @@ export async function DELETE(
             email: true,
           },
         },
+        session: {
+          select: {
+            id: true,
+            startAt: true,
+            minutes: true,
+          },
+        },
       },
     });
 
@@ -31,10 +38,25 @@ export async function DELETE(
       );
     }
 
-    // Delete payment record
-    await prisma.paymentRecord.delete({
-      where: { id },
-    });
+    // If payment is associated with a ride session, delete the ride session first
+    // (which will cascade delete this and other payments for that ride)
+    if (paymentRecord.sessionId) {
+      // Delete the ride session (which will delete all related payments)
+      await prisma.rideSession.delete({
+        where: { id: paymentRecord.sessionId },
+      });
+
+      // Create audit log for ride deletion
+      await createAuditLog("DELETE", "RideSession", paymentRecord.sessionId, {
+        deletedViaPayment: true,
+        paymentId: id,
+      });
+    } else {
+      // If not associated with a ride, just delete the payment
+      await prisma.paymentRecord.delete({
+        where: { id },
+      });
+    }
 
     // Create audit log
     await createAuditLog("DELETE", "PaymentRecord", id, {

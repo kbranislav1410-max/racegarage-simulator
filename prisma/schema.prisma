@@ -158,7 +158,7 @@ model PaymentRecord {
   customerId    String?
   customer      Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
   sessionId     String?
-  session       RideSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  session       RideSession?  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   reservationId String?
   reservation   Reservation?  @relation(fields: [reservationId], references: [id], onDelete: SetNull)
   amountCents   Int

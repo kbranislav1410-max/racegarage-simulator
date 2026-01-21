@@ -21,6 +21,7 @@ export async function DELETE(
             email: true,
           },
         },
+        paymentRecords: true,
       },
     });
 
@@ -31,7 +32,14 @@ export async function DELETE(
       );
     }
 
-    // Delete ride session (cascade will handle related records)
+    // Delete associated payment records first
+    if (rideSession.paymentRecords.length > 0) {
+      await prisma.paymentRecord.deleteMany({
+        where: { sessionId: id },
+      });
+    }
+
+    // Delete ride session
     await prisma.rideSession.delete({
       where: { id },
     });
