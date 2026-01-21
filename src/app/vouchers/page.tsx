@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
+import { Search } from "lucide-react";
 
 interface Voucher {
   id: string;
@@ -31,6 +32,12 @@ export default function VouchersPage() {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  
+  // Voucher check state
+  const [checkCode, setCheckCode] = useState("");
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [checkedVoucher, setCheckedVoucher] = useState<Voucher | null>(null);
+  const [checkError, setCheckError] = useState("");
 
   useEffect(() => {
     fetchVouchers();
@@ -86,6 +93,29 @@ export default function VouchersPage() {
     }
   };
 
+  const handleCheckVoucher = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCheckError("");
+    setCheckedVoucher(null);
+    setCheckLoading(true);
+
+    try {
+      const response = await fetch(`/api/vouchers/check?code=${encodeURIComponent(checkCode)}`);
+      
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Voucher nebol nájdený");
+      }
+
+      const voucher = await response.json();
+      setCheckedVoucher(voucher);
+    } catch (error: any) {
+      setCheckError(error.message);
+    } finally {
+      setCheckLoading(false);
+    }
+  };
+
   const activeVouchers = vouchers.filter(
     (v) => v.status === "NEW" || v.status === "SENT"
   );
@@ -107,6 +137,162 @@ export default function VouchersPage() {
           >
             Vytvoriť Voucher
           </button>
+        </div>
+
+        {/* Voucher Check Section */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-bold text-slate-800 mb-4">
+            Kontrola Voucheru
+          </h2>
+          <form onSubmit={handleCheckVoucher} className="space-y-4">
+            <div className="flex gap-3">
+              <div className="flex-1">
+                <input
+                  type="text"
+                  value={checkCode}
+                  onChange={(e) => setCheckCode(e.target.value.toUpperCase())}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent font-mono"
+                  placeholder="Zadajte kód voucheru (napr. XXXX-XXXX-XXXX)"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={checkLoading}
+                className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:bg-slate-400 flex items-center gap-2"
+              >
+                <Search className="h-4 w-4" />
+                {checkLoading ? "Kontrolujem..." : "Skontrolovať"}
+              </button>
+            </div>
+
+            {checkError && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
+                {checkError}
+              </div>
+            )}
+
+            {checkedVoucher && (
+              <div className="p-6 bg-slate-50 border border-slate-200 rounded-lg space-y-4">
+                <div className="flex justify-between items-start">
+                  <h3 className="text-lg font-bold text-slate-800">
+                    Informácie o vouchere
+                  </h3>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      checkedVoucher.status === "REDEEMED"
+                        ? "bg-gray-200 text-gray-800"
+                        : checkedVoucher.status === "EXPIRED"
+                        ? "bg-red-200 text-red-800"
+                        : checkedVoucher.status === "CANCELLED"
+                        ? "bg-yellow-200 text-yellow-800"
+                        : "bg-green-200 text-green-800"
+                    }`}
+                  >
+                    {checkedVoucher.status === "REDEEMED"
+                      ? "POUŽITÝ"
+                      : checkedVoucher.status === "EXPIRED"
+                      ? "EXPIROVANÝ"
+                      : checkedVoucher.status === "CANCELLED"
+                      ? "ZRUŠENÝ"
+                      : "AKTÍVNY"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Kód voucheru</p>
+                    <p className="font-mono font-bold text-lg">
+                      {checkedVoucher.code}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Počet minút</p>
+                    <p className="font-semibold text-lg">
+                      {checkedVoucher.minutes} minút
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">
+                      Vytvorený pre
+                    </p>
+                    <p className="font-semibold">{checkedVoucher.soldToName}</p>
+                    <p className="text-sm text-slate-600">
+                      {checkedVoucher.soldToEmail}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-slate-600 mb-1">Dátum vytvorenia</p>
+                    <p className="font-semibold">
+                      {new Date(checkedVoucher.createdAt).toLocaleDateString(
+                        "sk-SK",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </p>
+                  </div>
+
+                  {checkedVoucher.status === "REDEEMED" && checkedVoucher.redeemedAt && (
+                    <>
+                      <div>
+                        <p className="text-sm text-slate-600 mb-1">
+                          Použitý dňa
+                        </p>
+                        <p className="font-semibold">
+                          {new Date(checkedVoucher.redeemedAt).toLocaleDateString(
+                            "sk-SK",
+                            {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </p>
+                      </div>
+
+                      {checkedVoucher.redeemedByCustomer && (
+                        <div>
+                          <p className="text-sm text-slate-600 mb-1">
+                            Použil zákazník
+                          </p>
+                          <p className="font-semibold">
+                            {checkedVoucher.redeemedByCustomer.firstName}{" "}
+                            {checkedVoucher.redeemedByCustomer.lastName}
+                          </p>
+                          <p className="text-sm text-slate-600">
+                            {checkedVoucher.redeemedByCustomer.email}
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  <div className="md:col-span-2">
+                    <p className="text-sm text-slate-600 mb-1">Stav</p>
+                    <p className="font-semibold">
+                      {checkedVoucher.status === "REDEEMED"
+                        ? "✓ Voucher bol už použitý"
+                        : checkedVoucher.status === "EXPIRED"
+                        ? "✗ Voucher expiroval"
+                        : checkedVoucher.status === "CANCELLED"
+                        ? "✗ Voucher bol zrušený"
+                        : "✓ Voucher je platný a môže byť použitý"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </form>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
