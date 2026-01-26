@@ -150,6 +150,47 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Create challenge attempt if lap time is provided
+    if (data.lapTime) {
+      // Parse lap time from format mm:ss.SSS to milliseconds
+      const lapTimeParts = data.lapTime.match(/^(\d+):(\d{2})\.(\d{1,3})$/);
+      if (lapTimeParts) {
+        const minutes = parseInt(lapTimeParts[1], 10);
+        const seconds = parseInt(lapTimeParts[2], 10);
+        const milliseconds = parseInt(lapTimeParts[3].padEnd(3, '0'), 10);
+        const lapTimeMs = minutes * 60000 + seconds * 1000 + milliseconds;
+
+        // Get current challenge month (using year-month)
+        const now = new Date();
+        const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+        // Find or create challenge month
+        let challenge = await prisma.challengeMonth.findFirst({
+          where: { yearMonth },
+        });
+
+        if (challenge) {
+          // Create challenge attempt
+          await prisma.challengeAttempt.create({
+            data: {
+              challengeId: challenge.id,
+              customerId: data.customerId,
+              sessionId: ride.id,
+              lapTimeMs,
+            },
+          });
+
+          // Log challenge attempt
+          await createAuditLog("CREATE", "ChallengeAttempt", challenge.id, {
+            customerId: data.customerId,
+            customerName: `${customer.firstName} ${customer.lastName}`,
+            lapTime: data.lapTime,
+            sessionId: ride.id,
+          });
+        }
+      }
+    }
+
     // Create audit log
     await createAuditLog("CREATE", "RideSession", ride.id, {
       customerId: data.customerId,
