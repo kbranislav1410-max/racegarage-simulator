@@ -191,7 +191,7 @@ model Voucher {
   soldToEmail         String
   soldToName          String
   createdAt           DateTime      @default(now())
-  expiresAt           DateTime // Expiration date (6 months from creation)
+  expiresAt           DateTime? // Expiration date (6 months from creation)
   redeemedAt          DateTime?
   redeemedByCustomerId String?
   redeemedByCustomer  Customer?     @relation(fields: [redeemedByCustomerId], references: [id], onDelete: SetNull)
