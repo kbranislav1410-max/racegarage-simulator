@@ -89,12 +89,13 @@ enum VoucherPartner {
 
 // ChallengeMonth model
 model ChallengeMonth {
-  id        String   @id @default(cuid())
-  year      Int
-  month     Int
-  trackName String
-  carName   String
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  year            Int
+  month           Int
+  trackName       String
+  carName         String
+  durationMinutes Int?
+  createdAt       DateTime @default(now())
 
   // Relations
   challengeAttempts ChallengeAttempt[]

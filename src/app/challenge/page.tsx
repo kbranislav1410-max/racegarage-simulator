@@ -12,6 +12,7 @@ interface ChallengeMonth {
   month: number;
   trackName: string;
   carName: string;
+  durationMinutes: number | null;
   createdAt: string;
 }
 
@@ -50,6 +51,7 @@ export default function ChallengePage() {
   const [challengeFormData, setChallengeFormData] = useState({
     trackName: "",
     carName: "",
+    durationMinutes: "",
   });
   const [challengeFormErrors, setChallengeFormErrors] = useState<Record<string, string>>({});
   const [challengeFormSubmitting, setChallengeFormSubmitting] = useState(false);
@@ -158,6 +160,7 @@ export default function ChallengePage() {
           month: selectedMonth,
           trackName: challengeFormData.trackName,
           carName: challengeFormData.carName,
+          durationMinutes: challengeFormData.durationMinutes ? parseInt(challengeFormData.durationMinutes) : undefined,
         }),
       });
 
@@ -169,7 +172,7 @@ export default function ChallengePage() {
 
       // Success - refresh data and close modal
       setShowCreateChallengeModal(false);
-      setChallengeFormData({ trackName: "", carName: "" });
+      setChallengeFormData({ trackName: "", carName: "", durationMinutes: "" });
       fetchChallengeData();
     } catch (err) {
       setChallengeFormErrors({ general: "An error occurred" });
@@ -349,7 +352,7 @@ export default function ChallengePage() {
               <h2 className="text-xl font-bold text-slate-800 mb-4">
                 {monthNames[challengeMonth.month - 1]} {challengeMonth.year} Challenge
               </h2>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <p className="text-sm text-slate-600">Track</p>
                   <p className="font-medium text-slate-900">{challengeMonth.trackName}</p>
@@ -358,6 +361,12 @@ export default function ChallengePage() {
                   <p className="text-sm text-slate-600">Car</p>
                   <p className="font-medium text-slate-900">{challengeMonth.carName}</p>
                 </div>
+                {challengeMonth.durationMinutes && (
+                  <div>
+                    <p className="text-sm text-slate-600">Trvanie</p>
+                    <p className="font-medium text-slate-900">{challengeMonth.durationMinutes} minút</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -527,6 +536,24 @@ export default function ChallengePage() {
                       placeholder="e.g., Porsche 911 GT3 RS"
                       required
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Trvanie (minúty)
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={challengeFormData.durationMinutes}
+                      onChange={(e) =>
+                        setChallengeFormData({ ...challengeFormData, durationMinutes: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      placeholder="napr. 30"
+                    />
+                    <p className="text-xs text-slate-500 mt-1">Voliteľné - dĺžka časovky v minútach</p>
                   </div>
 
                   <div className="flex gap-3 pt-4">
