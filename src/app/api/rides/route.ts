@@ -169,25 +169,40 @@ export async function POST(request: NextRequest) {
           where: { yearMonth },
         });
 
-        if (challenge) {
-          // Create challenge attempt
-          await prisma.challengeAttempt.create({
+        // If no challenge exists for this month, create one
+        if (!challenge) {
+          challenge = await prisma.challengeMonth.create({
             data: {
-              challengeId: challenge.id,
-              customerId: data.customerId,
-              sessionId: ride.id,
-              lapTimeMs,
+              yearMonth,
+              name: `Challenge ${yearMonth}`,
             },
           });
 
-          // Log challenge attempt
-          await createAuditLog("CREATE", "ChallengeAttempt", challenge.id, {
-            customerId: data.customerId,
-            customerName: `${customer.firstName} ${customer.lastName}`,
-            lapTime: data.lapTime,
-            sessionId: ride.id,
+          // Log challenge month creation
+          await createAuditLog("CREATE", "ChallengeMonth", challenge.id, {
+            yearMonth,
+            name: challenge.name,
+            autoCreated: true,
           });
         }
+
+        // Create challenge attempt
+        await prisma.challengeAttempt.create({
+          data: {
+            challengeId: challenge.id,
+            customerId: data.customerId,
+            sessionId: ride.id,
+            lapTimeMs,
+          },
+        });
+
+        // Log challenge attempt
+        await createAuditLog("CREATE", "ChallengeAttempt", challenge.id, {
+          customerId: data.customerId,
+          customerName: `${customer.firstName} ${customer.lastName}`,
+          lapTime: data.lapTime,
+          sessionId: ride.id,
+        });
       }
     }
 
