@@ -372,6 +372,7 @@ export default function RidesPage() {
       notes: "",
       amount: "",
       paymentMethod: "CASH_ON_SITE",
+      lapTime: "",
     });
   };
 
@@ -768,7 +769,7 @@ export default function RidesPage() {
                         </label>
                         <input
                           type="text"
-                          value={rideFormData.lapTime}
+                          value={rideFormData.lapTime || ""}
                           onChange={(e) =>
                             setRideFormData({ ...rideFormData, lapTime: e.target.value })
                           }
