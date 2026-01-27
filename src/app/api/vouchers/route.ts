@@ -88,6 +88,159 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// PATCH - Update voucher (extend expiration)
+export async function PATCH(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Voucher ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const body = await request.json();
+    const { expiresAt } = body;
+
+    if (!expiresAt) {
+      return NextResponse.json(
+        { error: "New expiration date is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if voucher exists and is unused
+    const voucher = await prisma.voucher.findUnique({
+      where: { id },
+    });
+
+    if (!voucher) {
+      return NextResponse.json(
+        { error: "Voucher not found" },
+        { status: 404 }
+      );
+    }
+
+    // Only allow extending unused vouchers
+    if (voucher.status === "REDEEMED" || voucher.status === "CANCELLED") {
+      return NextResponse.json(
+        { error: "Cannot extend redeemed or cancelled voucher" },
+        { status: 400 }
+      );
+    }
+
+    // Validate new expiration date is in the future
+    const newExpiresAt = new Date(expiresAt);
+    if (newExpiresAt <= new Date()) {
+      return NextResponse.json(
+        { error: "New expiration date must be in the future" },
+        { status: 400 }
+      );
+    }
+
+    // Update voucher
+    const updatedVoucher = await prisma.voucher.update({
+      where: { id },
+      data: {
+        expiresAt: newExpiresAt,
+      },
+      include: {
+        redeemedByCustomer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    // Log audit
+    await createAuditLog(
+      "UPDATE",
+      "VOUCHER",
+      voucher.id,
+      { 
+        code: voucher.code, 
+        action: "extend_expiration",
+        oldExpiresAt: voucher.expiresAt,
+        newExpiresAt: newExpiresAt
+      }
+    );
+
+    return NextResponse.json(updatedVoucher);
+  } catch (error) {
+    console.error("Error updating voucher:", error);
+    return NextResponse.json(
+      { error: "Failed to update voucher" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE - Delete unused voucher
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Voucher ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Check if voucher exists and is unused
+    const voucher = await prisma.voucher.findUnique({
+      where: { id },
+    });
+
+    if (!voucher) {
+      return NextResponse.json(
+        { error: "Voucher not found" },
+        { status: 404 }
+      );
+    }
+
+    // Only allow deleting unused vouchers
+    if (voucher.status === "REDEEMED") {
+      return NextResponse.json(
+        { error: "Cannot delete redeemed voucher" },
+        { status: 400 }
+      );
+    }
+
+    // Delete voucher
+    await prisma.voucher.delete({
+      where: { id },
+    });
+
+    // Log audit
+    await createAuditLog(
+      "DELETE",
+      "VOUCHER",
+      voucher.id,
+      { 
+        code: voucher.code,
+        status: voucher.status,
+        minutes: voucher.minutes
+      }
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting voucher:", error);
+    return NextResponse.json(
+      { error: "Failed to delete voucher" },
+      { status: 500 }
+    );
+  }
+}
+
 // Helper function to generate voucher code
 function generateVoucherCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Excluding similar looking characters

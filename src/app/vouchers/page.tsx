@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
-import { Search } from "lucide-react";
+import { Search, Calendar, Trash2 } from "lucide-react";
 
 interface Voucher {
   id: string;
@@ -39,6 +39,17 @@ export default function VouchersPage() {
   const [checkLoading, setCheckLoading] = useState(false);
   const [checkedVoucher, setCheckedVoucher] = useState<Voucher | null>(null);
   const [checkError, setCheckError] = useState("");
+
+  // Extend expiration state
+  const [showExtendModal, setShowExtendModal] = useState(false);
+  const [extendingVoucher, setExtendingVoucher] = useState<Voucher | null>(null);
+  const [newExpiresAt, setNewExpiresAt] = useState("");
+  const [extendLoading, setExtendLoading] = useState(false);
+
+  // Delete confirmation state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingVoucher, setDeletingVoucher] = useState<Voucher | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     fetchVouchers();
@@ -115,6 +126,87 @@ export default function VouchersPage() {
     } finally {
       setCheckLoading(false);
     }
+  };
+
+  const handleExtendVoucher = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!extendingVoucher) return;
+    
+    setError("");
+    setSuccess("");
+    setExtendLoading(true);
+
+    try {
+      const response = await fetch(`/api/vouchers?id=${extendingVoucher.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expiresAt: newExpiresAt }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Nepodarilo sa predĺžiť voucher");
+      }
+
+      const updatedVoucher = await response.json();
+      setVouchers(vouchers.map(v => v.id === updatedVoucher.id ? updatedVoucher : v));
+      setSuccess("Platnosť voucheru bola predĺžená!");
+      setShowExtendModal(false);
+      setExtendingVoucher(null);
+      setNewExpiresAt("");
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setExtendLoading(false);
+    }
+  };
+
+  const handleDeleteVoucher = async () => {
+    if (!deletingVoucher) return;
+    
+    setError("");
+    setSuccess("");
+    setDeleteLoading(true);
+
+    try {
+      const response = await fetch(`/api/vouchers?id=${deletingVoucher.id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Nepodarilo sa odstrániť voucher");
+      }
+
+      setVouchers(vouchers.filter(v => v.id !== deletingVoucher.id));
+      setSuccess("Voucher bol úspešne odstránený!");
+      setShowDeleteConfirm(false);
+      setDeletingVoucher(null);
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const openExtendModal = (voucher: Voucher) => {
+    setExtendingVoucher(voucher);
+    // Set default to 6 months from now
+    const defaultDate = new Date();
+    defaultDate.setMonth(defaultDate.getMonth() + 6);
+    setNewExpiresAt(defaultDate.toISOString().split('T')[0]);
+    setShowExtendModal(true);
+  };
+
+  const openDeleteConfirm = (voucher: Voucher) => {
+    setDeletingVoucher(voucher);
+    setShowDeleteConfirm(true);
   };
 
   const activeVouchers = vouchers.filter(
@@ -373,18 +465,37 @@ export default function VouchersPage() {
                     key={voucher.id}
                     className="p-4 border border-slate-200 rounded-lg"
                   >
-                    <div className="flex justify-between items-start">
-                      <div>
+                    <div className="flex justify-between items-start gap-3">
+                      <div className="flex-1">
                         <p className="font-mono font-bold text-lg">
                           {voucher.code}
                         </p>
                         <p className="text-sm text-slate-600">
                           {voucher.minutes} minút • {voucher.soldToName}
                         </p>
+                        <p className="text-xs text-slate-500 mt-1">
+                          Platnosť do: {new Date(voucher.expiresAt).toLocaleDateString("sk-SK")}
+                        </p>
                       </div>
-                      <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">
-                        {voucher.status}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded whitespace-nowrap">
+                          {voucher.status}
+                        </span>
+                        <button
+                          onClick={() => openExtendModal(voucher)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          title="Predĺžiť platnosť"
+                        >
+                          <Calendar className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => openDeleteConfirm(voucher)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Odstrániť"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -520,6 +631,141 @@ export default function VouchersPage() {
                 </div>
               </form>
             </div>
+          </div>
+        )}
+
+        {/* Extend Expiration Modal */}
+        {showExtendModal && extendingVoucher && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4">
+                Predĺžiť Platnosť Voucheru
+              </h2>
+              
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-800 rounded">
+                  {error}
+                </div>
+              )}
+
+              <div className="mb-4 p-4 bg-slate-50 rounded-lg">
+                <p className="text-sm text-slate-600 mb-1">Voucher kód</p>
+                <p className="font-mono font-bold text-lg">{extendingVoucher.code}</p>
+                <p className="text-sm text-slate-600 mt-2">Aktuálna platnosť do</p>
+                <p className="font-semibold">
+                  {new Date(extendingVoucher.expiresAt).toLocaleDateString("sk-SK", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+
+              <form onSubmit={handleExtendVoucher} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Nová platnosť do *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                    value={newExpiresAt}
+                    onChange={(e) => setNewExpiresAt(e.target.value)}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div className="flex gap-3 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowExtendModal(false);
+                      setExtendingVoucher(null);
+                      setNewExpiresAt("");
+                      setError("");
+                    }}
+                    className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                  >
+                    Zrušiť
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={extendLoading}
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400"
+                  >
+                    {extendLoading ? "Predlžujem..." : "Predĺžiť"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {showDeleteConfirm && deletingVoucher && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4">
+                Odstrániť Voucher
+              </h2>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 text-red-800 rounded">
+                  {error}
+                </div>
+              )}
+
+              <div className="mb-4 p-4 bg-slate-50 rounded-lg">
+                <p className="text-sm text-slate-600 mb-1">Voucher kód</p>
+                <p className="font-mono font-bold text-lg">{deletingVoucher.code}</p>
+                <p className="text-sm text-slate-600 mt-2">Vytvorený pre</p>
+                <p className="font-semibold">{deletingVoucher.soldToName}</p>
+                <p className="text-sm text-slate-600">{deletingVoucher.soldToEmail}</p>
+              </div>
+
+              <p className="text-slate-700 mb-6">
+                Naozaj chcete odstrániť tento voucher? Táto akcia je nevratná.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setDeletingVoucher(null);
+                    setError("");
+                  }}
+                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                >
+                  Zrušiť
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteVoucher}
+                  disabled={deleteLoading}
+                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:bg-red-400"
+                >
+                  {deleteLoading ? "Odstraňujem..." : "Odstrániť"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Global Success/Error Messages */}
+        {(success || error) && (
+          <div className="fixed bottom-4 right-4 z-50">
+            {success && (
+              <div className="p-4 bg-green-100 text-green-800 rounded-lg shadow-lg border border-green-200">
+                {success}
+              </div>
+            )}
+            {error && !showCreateModal && !showExtendModal && !showDeleteConfirm && (
+              <div className="p-4 bg-red-100 text-red-800 rounded-lg shadow-lg border border-red-200">
+                {error}
+              </div>
+            )}
           </div>
         )}
       </div>
