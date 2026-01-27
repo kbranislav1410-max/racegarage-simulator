@@ -31,7 +31,10 @@ interface Ride {
 
 export default function RidesPage() {
   const [rides, setRides] = useState<Ride[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>(
+  const [dateFrom, setDateFrom] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+  const [dateTo, setDateTo] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
   const [loading, setLoading] = useState(false);
@@ -76,12 +79,12 @@ export default function RidesPage() {
   const [rideFormErrors, setRideFormErrors] = useState<Record<string, string>>({});
   const [rideFormSubmitting, setRideFormSubmitting] = useState(false);
 
-  // Fetch rides for selected date
+  // Fetch rides for selected date range
   const fetchRides = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
-      const response = await fetch(`/api/rides?date=${selectedDate}`);
+      const response = await fetch(`/api/rides?dateFrom=${dateFrom}&dateTo=${dateTo}`);
       if (!response.ok) throw new Error("Failed to fetch rides");
 
       const data = await response.json();
@@ -92,7 +95,7 @@ export default function RidesPage() {
     } finally {
       setLoading(false);
     }
-  }, [selectedDate]);
+  }, [dateFrom, dateTo]);
 
   useEffect(() => {
     fetchRides();
@@ -283,7 +286,7 @@ export default function RidesPage() {
 
   // Handle export CSV
   const handleExportCSV = () => {
-    window.open(`/api/rides/export?date=${selectedDate}`, "_blank");
+    window.open(`/api/rides/export?dateFrom=${dateFrom}&dateTo=${dateTo}`, "_blank");
   };
 
   // Handle delete ride
@@ -346,16 +349,28 @@ export default function RidesPage() {
           </button>
         </div>
 
-        {/* Date Filter & Export */}
+        {/* Date Range Filter & Export */}
         <div className="bg-white rounded-lg shadow p-4 flex items-center gap-4">
-          <div className="flex items-center gap-2 flex-1">
+          <div className="flex items-center gap-4 flex-1">
             <Calendar className="w-5 h-5 text-slate-400" />
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={(e) => setSelectedDate(e.target.value)}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-            />
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-slate-700">Od:</label>
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+                className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-slate-700">Do:</label>
+              <input
+                type="date"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+                className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              />
+            </div>
           </div>
           <button
             onClick={handleExportCSV}
@@ -409,7 +424,7 @@ export default function RidesPage() {
                 ) : rides.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
-                      Žiadne jazdy pre {selectedDate}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
+                      Žiadne jazdy pre obdobie {dateFrom} - {dateTo}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
                     </td>
                   </tr>
                 ) : (

@@ -5,23 +5,34 @@ import prisma from "@/lib/prisma/client";
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const date = searchParams.get("date"); // Format: YYYY-MM-DD
+    const dateFrom = searchParams.get("dateFrom"); // Format: YYYY-MM-DD
+    const dateTo = searchParams.get("dateTo"); // Format: YYYY-MM-DD
+    const date = searchParams.get("date"); // Legacy single date support
 
     let startDate: Date | undefined;
     let endDate: Date | undefined;
 
-    if (date) {
-      startDate = new Date(date);
-      startDate.setHours(0, 0, 0, 0);
-      endDate = new Date(date);
-      endDate.setHours(23, 59, 59, 999);
+    // Support both new date range and legacy single date
+    if (dateFrom || dateTo || date) {
+      const fromDateStr = dateFrom || date;
+      const toDateStr = dateTo || date;
+      
+      if (fromDateStr) {
+        startDate = new Date(fromDateStr);
+        startDate.setHours(0, 0, 0, 0);
+      }
+      
+      if (toDateStr) {
+        endDate = new Date(toDateStr);
+        endDate.setHours(23, 59, 59, 999);
+      }
     }
 
-    const where = date
+    const where = (startDate || endDate)
       ? {
           startAt: {
-            gte: startDate,
-            lte: endDate,
+            ...(startDate && { gte: startDate }),
+            ...(endDate && { lte: endDate }),
           },
         }
       : {};
@@ -73,9 +84,16 @@ export async function GET(request: NextRequest) {
     });
 
     const csv = csvRows.join("\n");
-    const filename = date
-      ? `rides-${date}.csv`
-      : `rides-${new Date().toISOString().split("T")[0]}.csv`;
+    
+    // Generate filename based on date range
+    let filename: string;
+    if (dateFrom && dateTo && dateFrom !== dateTo) {
+      filename = `rides-${dateFrom}-to-${dateTo}.csv`;
+    } else if (dateFrom || date) {
+      filename = `rides-${dateFrom || date}.csv`;
+    } else {
+      filename = `rides-${new Date().toISOString().split("T")[0]}.csv`;
+    }
 
     return new NextResponse(csv, {
       headers: {
