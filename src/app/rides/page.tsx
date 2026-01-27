@@ -72,8 +72,6 @@ export default function RidesPage() {
     // Payment fields
     amount: "",
     paymentMethod: "CASH_ON_SITE" as "CASH_ON_SITE" | "CARD_ON_SITE" | "VOUCHER_PORTAL" | "PREPAID",
-    // Challenge lap time
-    lapTime: "",
   });
   const [rideFormErrors, setRideFormErrors] = useState<Record<string, string>>({});
   const [rideFormSubmitting, setRideFormSubmitting] = useState(false);
@@ -257,54 +255,6 @@ export default function RidesPage() {
         });
       }
 
-      // Create challenge attempt if lap time is provided
-      if (rideFormData.lapTime && rideFormData.lapTime.trim()) {
-        try {
-          // Parse lap time to milliseconds
-          const lapTime = rideFormData.lapTime.trim();
-          let lapTimeMs = 0;
-          
-          // Format: mm:ss.SSS or m:ss.SSS or mm:ss.S
-          const match = lapTime.match(/^(\d+):(\d{1,2})\.(\d{1,3})$/);
-          if (match) {
-            const minutes = parseInt(match[1]);
-            const seconds = parseInt(match[2]);
-            const millisStr = match[3].padEnd(3, '0'); // Pad to 3 digits
-            const milliseconds = parseInt(millisStr);
-            lapTimeMs = (minutes * 60 * 1000) + (seconds * 1000) + milliseconds;
-          }
-          
-          if (lapTimeMs > 0) {
-            // Get current challenge month
-            const currentDate = startAt;
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth() + 1;
-            
-            const challengeResponse = await fetch(`/api/challenges?year=${year}&month=${month}`);
-            if (challengeResponse.ok) {
-              const challengeData = await challengeResponse.json();
-              
-              if (challengeData.challengeMonth) {
-                // Create challenge attempt
-                await fetch("/api/challenges/attempts", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    challengeMonthId: challengeData.challengeMonth.id,
-                    customerId: selectedCustomer.id,
-                    lapTimeMs,
-                    sessionId: ride.id,
-                  }),
-                });
-              }
-            }
-          }
-        } catch (err) {
-          console.error("Failed to create challenge attempt:", err);
-          // Continue anyway - don't fail the whole ride creation
-        }
-      }
-
       // Reset and close modal
       setShowRecordModal(false);
       setStep("search");
@@ -319,7 +269,6 @@ export default function RidesPage() {
         notes: "",
         amount: "",
         paymentMethod: "CASH_ON_SITE",
-        lapTime: "",
       });
       
       // Refresh rides list
@@ -372,7 +321,6 @@ export default function RidesPage() {
       notes: "",
       amount: "",
       paymentMethod: "CASH_ON_SITE",
-      lapTime: "",
     });
   };
 
@@ -756,27 +704,6 @@ export default function RidesPage() {
                             <option value="PREPAID">Predplatené (→ Ja)</option>
                           </select>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Challenge Lap Time Section */}
-                    <div className="border-t border-slate-200 pt-4 mt-4">
-                      <h3 className="text-sm font-medium text-slate-700 mb-4">Challenge výsledok</h3>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Čas okruhu (mm:ss.SSS)
-                        </label>
-                        <input
-                          type="text"
-                          value={rideFormData.lapTime || ""}
-                          onChange={(e) =>
-                            setRideFormData({ ...rideFormData, lapTime: e.target.value })
-                          }
-                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                          placeholder="napr. 1:23.456 alebo 1:23.4"
-                        />
-                        <p className="text-xs text-slate-500 mt-1">Nechajte prázdne ak nejde o challenge</p>
                       </div>
                     </div>
 

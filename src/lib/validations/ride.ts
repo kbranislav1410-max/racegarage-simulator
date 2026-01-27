@@ -10,7 +10,6 @@ export const rideSessionSchema = z.object({
   notes: z.string().optional(),
   amountEur: z.number().positive("Amount must be positive").optional(),
   paymentMethod: z.enum(["CASH_ON_SITE", "CARD_ON_SITE", "VOUCHER_PORTAL", "PREPAID"]).optional(),
-  lapTime: z.string().optional(), // Challenge lap time in format mm:ss.SSS
 });
 
 export type RideSessionInput = z.infer<typeof rideSessionSchema>;
