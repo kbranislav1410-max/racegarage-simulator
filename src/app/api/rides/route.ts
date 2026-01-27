@@ -160,28 +160,36 @@ export async function POST(request: NextRequest) {
         const milliseconds = parseInt(lapTimeParts[3].padEnd(3, '0'), 10);
         const lapTimeMs = minutes * 60000 + seconds * 1000 + milliseconds;
 
-        // Get current challenge month (using year-month)
+        // Get current year and month
         const now = new Date();
-        const yearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1; // JavaScript months are 0-indexed
 
-        // Find or create challenge month
+        // Find existing challenge month
         let challenge = await prisma.challengeMonth.findFirst({
-          where: { yearMonth },
+          where: { 
+            year,
+            month,
+          },
         });
 
-        // If no challenge exists for this month, create one
+        // If no challenge exists for this month, create one automatically
         if (!challenge) {
           challenge = await prisma.challengeMonth.create({
             data: {
-              yearMonth,
-              name: `Challenge ${yearMonth}`,
+              year,
+              month,
+              trackName: "Hlavný okruh", // Default track name in Slovak
+              carName: "Simulátor", // Default car name in Slovak
             },
           });
 
           // Log challenge month creation
           await createAuditLog("CREATE", "ChallengeMonth", challenge.id, {
-            yearMonth,
-            name: challenge.name,
+            year,
+            month,
+            trackName: challenge.trackName,
+            carName: challenge.carName,
             autoCreated: true,
           });
         }
@@ -201,6 +209,7 @@ export async function POST(request: NextRequest) {
           customerId: data.customerId,
           customerName: `${customer.firstName} ${customer.lastName}`,
           lapTime: data.lapTime,
+          lapTimeMs,
           sessionId: ride.id,
         });
       }
