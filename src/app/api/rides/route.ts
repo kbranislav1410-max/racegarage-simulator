@@ -197,7 +197,7 @@ export async function POST(request: NextRequest) {
         // Create challenge attempt
         await prisma.challengeAttempt.create({
           data: {
-            challengeId: challenge.id,
+            challengeMonthId: challenge.id,
             customerId: data.customerId,
             sessionId: ride.id,
             lapTimeMs,
