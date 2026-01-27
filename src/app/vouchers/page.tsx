@@ -140,6 +140,26 @@ export default function VouchersPage() {
           </button>
         </div>
 
+        {/* Navigation Tabs */}
+        <div className="bg-white rounded-lg shadow">
+          <div className="border-b border-slate-200">
+            <nav className="flex -mb-px">
+              <a
+                href="/vouchers"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-slate-800 text-slate-800"
+              >
+                Moje vouchery
+              </a>
+              <a
+                href="/vouchers/discount-portals"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+              >
+                Zľavové portály
+              </a>
+            </nav>
+          </div>
+        </div>
+
         {/* Voucher Check Section */}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-bold text-slate-800 mb-4">

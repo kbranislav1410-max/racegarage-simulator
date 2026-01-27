@@ -137,6 +137,29 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Create partner voucher record if ride source is VOUCHER_PARTNER
+    if (data.source === "VOUCHER_PARTNER" && data.partner && data.voucherCode) {
+      await prisma.partnerVoucher.create({
+        data: {
+          code: data.voucherCode,
+          partner: data.partner,
+          sessionId: ride.id,
+          customerId: data.customerId,
+          customerName: `${customer.firstName} ${customer.lastName}`,
+          customerEmail: customer.email,
+          rideDate: startAt,
+          status: "UNCLAIMED",
+        },
+      });
+
+      // Log partner voucher creation
+      await createAuditLog("CREATE", "PARTNER_VOUCHER", ride.id, {
+        code: data.voucherCode,
+        partner: data.partner,
+        customerName: `${customer.firstName} ${customer.lastName}`,
+      });
+    }
+
     // Create payment record if amount is provided
     if (data.amountEur && data.paymentMethod) {
       await prisma.paymentRecord.create({

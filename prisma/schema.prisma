@@ -70,6 +70,7 @@ model RideSession {
   // Relations
   challengeAttempts ChallengeAttempt[]
   paymentRecords    PaymentRecord[]
+  partnerVoucher    PartnerVoucher?
 
   @@map("ride_sessions")
 }
@@ -206,6 +207,30 @@ enum VoucherStatus {
   REDEEMED
   EXPIRED
   CANCELLED
+}
+
+// PartnerVoucher model - tracks voucher codes from discount portals
+model PartnerVoucher {
+  id            String               @id @default(cuid())
+  code          String
+  partner       VoucherPartner
+  status        PartnerVoucherStatus @default(UNCLAIMED)
+  sessionId     String               @unique
+  session       RideSession          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  customerId    String
+  customerName  String // Cached for display
+  customerEmail String // Cached for display
+  rideDate      DateTime // When customer used it
+  claimedAt     DateTime? // When marked as claimed by admin
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@map("partner_vouchers")
+}
+
+enum PartnerVoucherStatus {
+  UNCLAIMED
+  CLAIMED
 }
 
 // AuditLog model
