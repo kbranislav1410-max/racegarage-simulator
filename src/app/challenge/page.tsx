@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
-import { Search, Plus, X, Trophy, Calendar } from "lucide-react";
+import { Search, Plus, X, Trophy, Calendar, Trash2 } from "lucide-react";
 import { formatAddress } from "@/lib/format";
 import { parseLapTime, formatLapTime } from "@/lib/validations/challenge";
 
@@ -25,14 +25,15 @@ interface Customer {
   city: string | null;
 }
 
-interface LeaderboardEntry {
+interface AttemptEntry {
+  id: string;
   rank: number;
   customerId: string;
   customerName: string;
   customerEmail: string;
-  bestLapTimeMs: number;
-  attemptCount: number;
-  lastAttemptAt: string;
+  lapTimeMs: number;
+  recordedAt: string;
+  sessionId: string | null;
 }
 
 export default function ChallengePage() {
@@ -41,8 +42,8 @@ export default function ChallengePage() {
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1);
   
   const [challengeMonth, setChallengeMonth] = useState<ChallengeMonth | null>(null);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [totalParticipants, setTotalParticipants] = useState(0);
+  const [attempts, setAttempts] = useState<AttemptEntry[]>([]);
+  const [totalAttempts, setTotalAttempts] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -92,19 +93,19 @@ export default function ChallengePage() {
       const challengeData = await challengeResponse.json();
       setChallengeMonth(challengeData.challengeMonth);
 
-      // If challenge exists, fetch leaderboard
+      // If challenge exists, fetch attempts
       if (challengeData.challengeMonth) {
-        const leaderboardResponse = await fetch(
+        const attemptsResponse = await fetch(
           `/api/challenges/attempts?challengeMonthId=${challengeData.challengeMonth.id}`
         );
-        if (!leaderboardResponse.ok) throw new Error("Failed to fetch leaderboard");
+        if (!attemptsResponse.ok) throw new Error("Failed to fetch attempts");
 
-        const leaderboardData = await leaderboardResponse.json();
-        setLeaderboard(leaderboardData.leaderboard);
-        setTotalParticipants(leaderboardData.totalParticipants);
+        const attemptsData = await attemptsResponse.json();
+        setAttempts(attemptsData.attempts);
+        setTotalAttempts(attemptsData.totalAttempts);
       } else {
-        setLeaderboard([]);
-        setTotalParticipants(0);
+        setAttempts([]);
+        setTotalAttempts(0);
       }
     } catch (err) {
       setError("Failed to load challenge data");
@@ -251,14 +252,37 @@ export default function ChallengePage() {
     setAttemptFormData({ lapTime: "", sessionId: "" });
   };
 
-  // Filter leaderboard by search
-  const filteredLeaderboard = leaderboardSearch
-    ? leaderboard.filter(
+  // Delete attempt
+  const handleDeleteAttempt = async (attemptId: string, customerName: string) => {
+    if (!confirm(`Naozaj chcete odstrániť pokus používateľa ${customerName}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/challenges/attempts?id=${attemptId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete attempt");
+      }
+
+      // Refresh data
+      fetchChallengeData();
+    } catch (err) {
+      console.error("Error deleting attempt:", err);
+      alert("Nepodarilo sa odstrániť pokus");
+    }
+  };
+
+  // Filter attempts by search
+  const filteredAttempts = leaderboardSearch
+    ? attempts.filter(
         (entry) =>
           entry.customerName.toLowerCase().includes(leaderboardSearch.toLowerCase()) ||
           entry.customerEmail.toLowerCase().includes(leaderboardSearch.toLowerCase())
       )
-    : leaderboard;
+    : attempts;
 
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
@@ -370,24 +394,24 @@ export default function ChallengePage() {
               </div>
             </div>
 
-            {/* Leaderboard */}
+            {/* Rebríček */}
             <div className="bg-white rounded-lg shadow">
               <div className="p-6 border-b border-slate-200">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-slate-800">
-                    Leaderboard
+                    Rebríček
                   </h2>
                   <span className="text-sm text-slate-600">
-                    {totalParticipants} {totalParticipants === 1 ? 'participant' : 'participants'}
+                    {totalAttempts} {totalAttempts === 1 ? 'pokus' : 'pokusov'}
                   </span>
                 </div>
 
-                {/* Search in Leaderboard */}
+                {/* Search in Attempts */}
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                   <input
                     type="text"
-                    placeholder="Search for a customer in the leaderboard..."
+                    placeholder="Hľadať zákazníka..."
                     value={leaderboardSearch}
                     onChange={(e) => setLeaderboardSearch(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
@@ -400,32 +424,35 @@ export default function ChallengePage() {
                   <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Rank
+                        Poradie
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Customer
+                        Zákazník
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Best Time
+                        Čas
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Attempts
+                        Dátum
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        Akcie
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-slate-200">
-                    {filteredLeaderboard.length === 0 ? (
+                    {filteredAttempts.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-slate-500">
+                        <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                           {leaderboardSearch
-                            ? "No customers found matching your search"
-                            : "No attempts recorded yet. Be the first to set a lap time!"}
+                            ? "Nenašli sa žiadni zákazníci"
+                            : "Zatiaľ žiadne pokusy. Buďte prvý kto zaznamená čas!"}
                         </td>
                       </tr>
                     ) : (
-                      filteredLeaderboard.map((entry) => (
+                      filteredAttempts.map((entry) => (
                         <tr
-                          key={entry.customerId}
+                          key={entry.id}
                           className={`hover:bg-slate-50 ${
                             entry.rank <= 3 ? "bg-yellow-50" : ""
                           }`}
@@ -458,13 +485,22 @@ export default function ChallengePage() {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-lg font-mono font-bold text-slate-900">
-                              {formatLapTime(entry.bestLapTimeMs)}
+                              {formatLapTime(entry.lapTimeMs)}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm text-slate-600">
-                              {entry.attemptCount} {entry.attemptCount === 1 ? 'attempt' : 'attempts'}
+                              {new Date(entry.recordedAt).toLocaleDateString('sk-SK')}
                             </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <button
+                              onClick={() => handleDeleteAttempt(entry.id, entry.customerName)}
+                              className="text-red-600 hover:text-red-900"
+                              title="Odstrániť pokus"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
                           </td>
                         </tr>
                       ))

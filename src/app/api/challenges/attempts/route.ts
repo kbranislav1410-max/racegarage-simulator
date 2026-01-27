@@ -3,12 +3,11 @@ import prisma from "@/lib/prisma/client";
 import { challengeAttemptSchema } from "@/lib/validations/challenge";
 import { createAuditLog } from "@/lib/audit";
 
-// GET /api/challenges/attempts - Get attempts for a challenge month with leaderboard
+// GET /api/challenges/attempts - Get ALL attempts for a challenge month (not grouped)
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const challengeMonthId = searchParams.get("challengeMonthId");
-    const customerId = searchParams.get("customerId"); // For searching specific customer
 
     if (!challengeMonthId) {
       return NextResponse.json(
@@ -40,69 +39,25 @@ export async function GET(request: NextRequest) {
         },
       },
       orderBy: {
-        recordedAt: "desc",
+        lapTimeMs: "asc", // Sort by fastest time first
       },
     });
 
-    // Calculate leaderboard: best time per customer
-    const customerBestTimes = new Map<string, {
-      customerId: string;
-      customerName: string;
-      customerEmail: string;
-      bestLapTimeMs: number;
-      attemptCount: number;
-      lastAttemptAt: Date;
-    }>();
-
-    attempts.forEach((attempt: typeof attempts[0]) => {
-      const existing = customerBestTimes.get(attempt.customerId);
-      const customerName = `${attempt.customer.firstName} ${attempt.customer.lastName}`;
-      
-      if (!existing || attempt.lapTimeMs < existing.bestLapTimeMs) {
-        customerBestTimes.set(attempt.customerId, {
-          customerId: attempt.customerId,
-          customerName,
-          customerEmail: attempt.customer.email,
-          bestLapTimeMs: attempt.lapTimeMs,
-          attemptCount: existing ? existing.attemptCount + 1 : 1,
-          lastAttemptAt: attempt.recordedAt,
-        });
-      } else {
-        // Not a better time, just increment count and update timestamp if newer
-        existing.attemptCount++;
-        if (attempt.recordedAt > existing.lastAttemptAt) {
-          existing.lastAttemptAt = attempt.recordedAt;
-        }
-      }
-    });
-
-    // Convert to array and sort by best time
-    const leaderboard = Array.from(customerBestTimes.values())
-      .sort((a, b) => a.bestLapTimeMs - b.bestLapTimeMs);
-
-    // Add rank
-    const leaderboardWithRank = leaderboard.map((entry, index) => ({
-      ...entry,
+    // Format attempts with rank and customer name
+    const formattedAttempts = attempts.map((attempt, index) => ({
+      id: attempt.id,
       rank: index + 1,
+      customerId: attempt.customerId,
+      customerName: `${attempt.customer.firstName} ${attempt.customer.lastName}`,
+      customerEmail: attempt.customer.email,
+      lapTimeMs: attempt.lapTimeMs,
+      recordedAt: attempt.recordedAt.toISOString(),
+      sessionId: attempt.sessionId,
     }));
 
-    // If searching for specific customer, return full list but highlight position
-    if (customerId) {
-      const customerPosition = leaderboardWithRank.findIndex(
-        (entry) => entry.customerId === customerId
-      );
-      
-      return NextResponse.json({
-        leaderboard: leaderboardWithRank,
-        customerPosition: customerPosition >= 0 ? customerPosition : null,
-        totalParticipants: leaderboardWithRank.length,
-      });
-    }
-
-    // Return top 20 by default
     return NextResponse.json({
-      leaderboard: leaderboardWithRank.slice(0, 20),
-      totalParticipants: leaderboardWithRank.length,
+      attempts: formattedAttempts,
+      totalAttempts: formattedAttempts.length,
     });
   } catch (error) {
     console.error("Error fetching challenge attempts:", error);
@@ -203,6 +158,62 @@ export async function POST(request: NextRequest) {
     console.error("Error creating challenge attempt:", error);
     return NextResponse.json(
       { error: "Failed to create challenge attempt" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/challenges/attempts - Delete a challenge attempt
+export async function DELETE(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const attemptId = searchParams.get("id");
+
+    if (!attemptId) {
+      return NextResponse.json(
+        { error: "Attempt ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Verify attempt exists
+    const attempt = await prisma.challengeAttempt.findUnique({
+      where: { id: attemptId },
+      include: {
+        customer: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
+    if (!attempt) {
+      return NextResponse.json(
+        { error: "Challenge attempt not found" },
+        { status: 404 }
+      );
+    }
+
+    // Delete the attempt
+    await prisma.challengeAttempt.delete({
+      where: { id: attemptId },
+    });
+
+    // Create audit log
+    await createAuditLog("DELETE", "ChallengeAttempt", attemptId, {
+      customerId: attempt.customerId,
+      customerName: `${attempt.customer.firstName} ${attempt.customer.lastName}`,
+      lapTimeMs: attempt.lapTimeMs,
+      challengeMonthId: attempt.challengeMonthId,
+    });
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    console.error("Error deleting challenge attempt:", error);
+    return NextResponse.json(
+      { error: "Failed to delete challenge attempt" },
       { status: 500 }
     );
   }
