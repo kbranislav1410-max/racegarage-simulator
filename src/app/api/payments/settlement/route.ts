@@ -79,9 +79,9 @@ export async function GET(request: NextRequest) {
         friendOwesMe: friendOwesMe,
         settlementMessage: 
           friendOwesMe > 0
-            ? `Za mesiac ${data.year}-${String(data.month).padStart(2, '0')}: Kamarát má poslať mne ${(friendOwesMe / 100).toFixed(2)} €`
+            ? `Za mesiac ${data.year}-${String(data.month).padStart(2, '0')}: PD Drive Club má poslať Racegarage ${(friendOwesMe / 100).toFixed(2)} €`
             : friendOwesMe < 0
-            ? `Za mesiac ${data.year}-${String(data.month).padStart(2, '0')}: Ja mám poslať kamarátovi ${(Math.abs(friendOwesMe) / 100).toFixed(2)} €`
+            ? `Za mesiac ${data.year}-${String(data.month).padStart(2, '0')}: Racegarage má poslať PD Drive Club ${(Math.abs(friendOwesMe) / 100).toFixed(2)} €`
             : `Za mesiac ${data.year}-${String(data.month).padStart(2, '0')}: Žiadne vyrovnanie, sumy sú vyrovnané`,
       },
       byMethod,
