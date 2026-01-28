@@ -210,6 +210,9 @@ export default function RidesPage() {
           partner: rideFormData.paymentMethod === "VOUCHER_PARTNER" && rideFormData.partner ? rideFormData.partner : undefined,
           voucherCode: (rideFormData.paymentMethod === "VOUCHER_PARTNER" || rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && rideFormData.voucherCode ? rideFormData.voucherCode : undefined,
           notes: rideFormData.notes || undefined,
+          // Add payment fields
+          amountEur: rideFormData.amount && parseFloat(rideFormData.amount) > 0 ? parseFloat(rideFormData.amount) : undefined,
+          paymentMethod: rideFormData.amount && parseFloat(rideFormData.amount) > 0 ? rideFormData.paymentMethod : undefined,
         }),
       });
 
@@ -231,31 +234,8 @@ export default function RidesPage() {
 
       const ride = await rideResponse.json();
 
-      // Create payment record if amount is provided
-      if (rideFormData.amount && parseFloat(rideFormData.amount) > 0) {
-        const amountCents = Math.round(parseFloat(rideFormData.amount) * 100);
-        
-        // Determine receiver based on payment method
-        let receiver: "FRIEND" | "ME";
-        if (rideFormData.paymentMethod === "CASH_ON_SITE" || rideFormData.paymentMethod === "CARD_ON_SITE") {
-          receiver = "FRIEND";
-        } else {
-          receiver = "ME";
-        }
-
-        await fetch("/api/payments", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amountCents,
-            currency: "EUR",
-            method: rideFormData.paymentMethod,
-            receiver,
-            customerId: selectedCustomer.id,
-            sessionId: ride.id,
-          }),
-        });
-      }
+      // Payment is now created by the API automatically
+      // No need for duplicate payment creation here
 
       // Reset and close modal
       setShowRecordModal(false);
