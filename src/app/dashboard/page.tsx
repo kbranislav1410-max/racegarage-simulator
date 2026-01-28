@@ -86,7 +86,6 @@ export default function DashboardPage() {
     date: new Date().toISOString().split("T")[0],
     time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
     minutes: 30,
-    source: "RESERVATION" as "RESERVATION" | "CAFE_CUSTOMER" | "VOUCHER_PARTNER" | "VOUCHER",
     partner: "" as "" | "ZLAVOMAT" | "ADROP" | "NAJZAZITKY",
     voucherCode: "",
     notes: "",
@@ -160,7 +159,6 @@ export default function DashboardPage() {
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
       minutes: 30,
-      source: "RESERVATION",
       partner: "",
       voucherCode: "",
       notes: "",
@@ -231,9 +229,9 @@ export default function DashboardPage() {
           customerId: selectedCustomer.id,
           startAt: startAt.toISOString(),
           minutes: Number(rideFormData.minutes),
-          source: rideFormData.source,
-          partner: rideFormData.source === "VOUCHER_PARTNER" ? rideFormData.partner : undefined,
-          voucherCode: (rideFormData.source === "VOUCHER_PARTNER" || rideFormData.source === "VOUCHER") ? rideFormData.voucherCode : undefined,
+          source: "RESERVATION", // Default source since we removed the field
+          partner: rideFormData.paymentMethod === "VOUCHER_PARTNER" ? rideFormData.partner : undefined,
+          voucherCode: (rideFormData.paymentMethod === "VOUCHER_PARTNER" || rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") ? rideFormData.voucherCode : undefined,
           notes: rideFormData.notes || undefined,
           amountEur: rideFormData.amount ? parseFloat(rideFormData.amount) : undefined,
           paymentMethod: rideFormData.amount ? rideFormData.paymentMethod : undefined,
@@ -762,22 +760,41 @@ export default function DashboardPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Zdroj *
+                      Suma zaplatená (€)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={rideFormData.amount}
+                      onChange={(e) => setRideFormData({ ...rideFormData, amount: e.target.value })}
+                      placeholder="0.00"
+                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Metóda platby
                     </label>
                     <select
-                      value={rideFormData.source}
-                      onChange={(e) => setRideFormData({ ...rideFormData, source: e.target.value as any })}
+                      value={rideFormData.paymentMethod}
+                      onChange={(e) => setRideFormData({ 
+                        ...rideFormData, 
+                        paymentMethod: e.target.value as any,
+                        partner: "", // Reset partner when payment method changes
+                        voucherCode: "", // Reset voucher code when payment method changes
+                      })}
                       className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                      required
                     >
-                      <option value="RESERVATION">Rezervácia</option>
-                      <option value="CAFE_CUSTOMER">Zákazník kaviarne</option>
-                      <option value="VOUCHER_PARTNER">Voucher partner</option>
-                      <option value="VOUCHER">Voucher</option>
+                      <option value="PD_DRIVE_CLUB">PD Drive Club</option>
+                      <option value="VOUCHER_PARTNER">Poukaz - Partner</option>
+                      <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage</option>
+                      <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive club</option>
                     </select>
                   </div>
 
-                  {rideFormData.source === "VOUCHER_PARTNER" && (
+                  {rideFormData.paymentMethod === "VOUCHER_PARTNER" && (
                     <>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -798,64 +815,34 @@ export default function DashboardPage() {
 
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-1">
-                          Kód voucheru
+                          Číslo poukazu *
                         </label>
                         <input
                           type="text"
                           value={rideFormData.voucherCode}
                           onChange={(e) => setRideFormData({ ...rideFormData, voucherCode: e.target.value })}
-                          placeholder="Zadajte kód voucheru"
+                          placeholder="Zadajte číslo poukazu"
                           className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                          required
                         />
                       </div>
                     </>
                   )}
 
-                  {rideFormData.source === "VOUCHER" && (
+                  {(rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && (
                     <div>
                       <label className="block text-sm font-medium text-slate-700 mb-1">
-                        Kód voucheru
+                        Číslo poukazu
                       </label>
                       <input
                         type="text"
                         value={rideFormData.voucherCode}
                         onChange={(e) => setRideFormData({ ...rideFormData, voucherCode: e.target.value })}
-                        placeholder="Zadajte kód voucheru"
+                        placeholder="Zadajte číslo poukazu"
                         className="w-full px-3 py-2 border border-slate-300 rounded-md"
                       />
                     </div>
                   )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Suma zaplatená (€)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={rideFormData.amount}
-                      onChange={(e) => setRideFormData({ ...rideFormData, amount: e.target.value })}
-                      placeholder="0.00"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Metóda platby
-                    </label>
-                    <select
-                      value={rideFormData.paymentMethod}
-                      onChange={(e) => setRideFormData({ ...rideFormData, paymentMethod: e.target.value as any })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    >
-                      <option value="PD_DRIVE_CLUB">PD Drive club (→ Kamarát)</option>
-                      <option value="VOUCHER_PARTNER">Poukaz - partner (→ Ja)</option>
-                      <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage (→ Ja)</option>
-                      <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive Club (→ Kamarát)</option>
-                    </select>
-                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">

@@ -68,7 +68,6 @@ export default function RidesPage() {
     date: new Date().toISOString().split("T")[0],
     time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
     minutes: 30,
-    source: "RESERVATION" as "RESERVATION" | "CAFE_CUSTOMER" | "VOUCHER_PARTNER" | "VOUCHER",
     partner: "" as "" | "ZLAVOMAT" | "ADROP" | "NAJZAZITKY",
     voucherCode: "",
     notes: "",
@@ -207,9 +206,9 @@ export default function RidesPage() {
           customerId: selectedCustomer.id,
           startAt,
           minutes: rideFormData.minutes,
-          source: rideFormData.source,
-          partner: rideFormData.source === "VOUCHER_PARTNER" && rideFormData.partner ? rideFormData.partner : undefined,
-          voucherCode: (rideFormData.source === "VOUCHER_PARTNER" || rideFormData.source === "VOUCHER") && rideFormData.voucherCode ? rideFormData.voucherCode : undefined,
+          source: "RESERVATION", // Default source since we removed the field
+          partner: rideFormData.paymentMethod === "VOUCHER_PARTNER" && rideFormData.partner ? rideFormData.partner : undefined,
+          voucherCode: (rideFormData.paymentMethod === "VOUCHER_PARTNER" || rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && rideFormData.voucherCode ? rideFormData.voucherCode : undefined,
           notes: rideFormData.notes || undefined,
         }),
       });
@@ -266,12 +265,11 @@ export default function RidesPage() {
         date: new Date().toISOString().split("T")[0],
         time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
         minutes: 30,
-        source: "RESERVATION",
         partner: "",
         voucherCode: "",
         notes: "",
         amount: "",
-        paymentMethod: "CASH_ON_SITE",
+        paymentMethod: "PD_DRIVE_CLUB",
       });
       
       // Refresh rides list
@@ -318,7 +316,6 @@ export default function RidesPage() {
       date: new Date().toISOString().split("T")[0],
       time: new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
       minutes: 30,
-      source: "RESERVATION",
       partner: "",
       voucherCode: "",
       notes: "",
@@ -404,9 +401,6 @@ export default function RidesPage() {
                     Minúty
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                    Zdroj
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Poznámky
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -417,13 +411,13 @@ export default function RidesPage() {
               <tbody className="bg-white divide-y divide-slate-200">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                       Načítavam...
                     </td>
                   </tr>
                 ) : rides.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
                       Žiadne jazdy pre obdobie {dateFrom} - {dateTo}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
                     </td>
                   </tr>
@@ -443,11 +437,6 @@ export default function RidesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-slate-600">{ride.minutes} min</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700">
-                          {ride.source}
-                        </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-slate-600">{ride.notes || "-"}</div>
@@ -607,75 +596,6 @@ export default function RidesPage() {
                       </div>
                     </div>
 
-                    {/* Source */}
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
-                        Zdroj *
-                      </label>
-                      <select
-                        value={rideFormData.source}
-                        onChange={(e) =>
-                          setRideFormData({
-                            ...rideFormData,
-                            source: e.target.value as typeof rideFormData.source,
-                            partner: "",
-                            voucherCode: "",
-                          })
-                        }
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                        required
-                      >
-                        <option value="RESERVATION">Rezervácia</option>
-                        <option value="CAFE_CUSTOMER">Zákazník kaviarne</option>
-                        <option value="VOUCHER_PARTNER">Poukaz - partner</option>
-                        <option value="VOUCHER">Poukaz</option>
-                      </select>
-                    </div>
-
-                    {/* Partner selection - shown only for VOUCHER_PARTNER */}
-                    {rideFormData.source === "VOUCHER_PARTNER" && (
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Partner *
-                        </label>
-                        <select
-                          value={rideFormData.partner}
-                          onChange={(e) =>
-                            setRideFormData({
-                              ...rideFormData,
-                              partner: e.target.value as typeof rideFormData.partner,
-                            })
-                          }
-                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                          required
-                        >
-                          <option value="">Vyberte partnera...</option>
-                          <option value="ZLAVOMAT">Zľavomat</option>
-                          <option value="ADROP">Adrop</option>
-                          <option value="NAJZAZITKY">Najzážitky</option>
-                        </select>
-                      </div>
-                    )}
-
-                    {/* Voucher Code - shown for VOUCHER_PARTNER and VOUCHER */}
-                    {(rideFormData.source === "VOUCHER_PARTNER" || rideFormData.source === "VOUCHER") && (
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Kód voucheru *
-                        </label>
-                        <input
-                          type="text"
-                          value={rideFormData.voucherCode}
-                          onChange={(e) =>
-                            setRideFormData({ ...rideFormData, voucherCode: e.target.value })
-                          }
-                          className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-                          placeholder="Zadajte kód voucheru"
-                          required
-                        />
-                      </div>
-                    )}
-
                     {/* Payment Section */}
                     <div className="border-t border-slate-200 pt-4 mt-4">
                       <h3 className="text-sm font-medium text-slate-700 mb-4">Platba</h3>
@@ -709,17 +629,65 @@ export default function RidesPage() {
                               setRideFormData({
                                 ...rideFormData,
                                 paymentMethod: e.target.value as typeof rideFormData.paymentMethod,
+                                partner: "", // Reset partner when payment method changes
+                                voucherCode: "", // Reset voucher code when payment method changes
                               })
                             }
                             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                           >
-                            <option value="PD_DRIVE_CLUB">PD Drive club (→ Kamarát)</option>
-                            <option value="VOUCHER_PARTNER">Poukaz - partner (→ Ja)</option>
-                            <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage (→ Ja)</option>
-                            <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive Club (→ Kamarát)</option>
+                            <option value="PD_DRIVE_CLUB">PD Drive Club</option>
+                            <option value="VOUCHER_PARTNER">Poukaz - Partner</option>
+                            <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage</option>
+                            <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive club</option>
                           </select>
                         </div>
                       </div>
+
+                      {/* Partner selection - shown only for VOUCHER_PARTNER */}
+                      {rideFormData.paymentMethod === "VOUCHER_PARTNER" && (
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Partner *
+                          </label>
+                          <select
+                            value={rideFormData.partner}
+                            onChange={(e) =>
+                              setRideFormData({
+                                ...rideFormData,
+                                partner: e.target.value as typeof rideFormData.partner,
+                              })
+                            }
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                            required
+                          >
+                            <option value="">Vyberte partnera...</option>
+                            <option value="ZLAVOMAT">Zľavomat</option>
+                            <option value="ADROP">Adrop</option>
+                            <option value="NAJZAZITKY">Najzážitky</option>
+                          </select>
+                        </div>
+                      )}
+
+                      {/* Voucher Code - shown for voucher payment methods */}
+                      {(rideFormData.paymentMethod === "VOUCHER_PARTNER" || 
+                        rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || 
+                        rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && (
+                        <div className="mt-4">
+                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Číslo poukazu {rideFormData.paymentMethod === "VOUCHER_PARTNER" ? "*" : ""}
+                          </label>
+                          <input
+                            type="text"
+                            value={rideFormData.voucherCode}
+                            onChange={(e) =>
+                              setRideFormData({ ...rideFormData, voucherCode: e.target.value })
+                            }
+                            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                            placeholder="Zadajte číslo poukazu"
+                            required={rideFormData.paymentMethod === "VOUCHER_PARTNER"}
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {/* Minutes */}
