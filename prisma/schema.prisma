@@ -173,10 +173,10 @@ model PaymentRecord {
 }
 
 enum PaymentMethod {
-  CASH_ON_SITE
-  CARD_ON_SITE
-  VOUCHER_PORTAL
-  PREPAID
+  PD_DRIVE_CLUB
+  VOUCHER_PARTNER
+  VOUCHER_RACEGARAGE
+  VOUCHER_PD_DRIVE_CLUB
 }
 
 enum PaymentReceiver {

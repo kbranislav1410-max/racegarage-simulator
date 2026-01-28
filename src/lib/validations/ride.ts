@@ -9,7 +9,7 @@ export const rideSessionSchema = z.object({
   voucherCode: z.string().optional(),
   notes: z.string().optional(),
   amountEur: z.number().positive("Amount must be positive").optional(),
-  paymentMethod: z.enum(["CASH_ON_SITE", "CARD_ON_SITE", "VOUCHER_PORTAL", "PREPAID"]).optional(),
+  paymentMethod: z.enum(["PD_DRIVE_CLUB", "VOUCHER_PARTNER", "VOUCHER_RACEGARAGE", "VOUCHER_PD_DRIVE_CLUB"]).optional(),
 });
 
 export type RideSessionInput = z.infer<typeof rideSessionSchema>;

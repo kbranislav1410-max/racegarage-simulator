@@ -74,7 +74,7 @@ export default function RidesPage() {
     notes: "",
     // Payment fields
     amount: "",
-    paymentMethod: "CASH_ON_SITE" as "CASH_ON_SITE" | "CARD_ON_SITE" | "VOUCHER_PORTAL" | "PREPAID",
+    paymentMethod: "PD_DRIVE_CLUB" as "PD_DRIVE_CLUB" | "VOUCHER_PARTNER" | "VOUCHER_RACEGARAGE" | "VOUCHER_PD_DRIVE_CLUB",
   });
   const [rideFormErrors, setRideFormErrors] = useState<Record<string, string>>({});
   const [rideFormSubmitting, setRideFormSubmitting] = useState(false);
@@ -323,7 +323,7 @@ export default function RidesPage() {
       voucherCode: "",
       notes: "",
       amount: "",
-      paymentMethod: "CASH_ON_SITE",
+      paymentMethod: "PD_DRIVE_CLUB",
     });
   };
 
@@ -627,8 +627,8 @@ export default function RidesPage() {
                       >
                         <option value="RESERVATION">Rezervácia</option>
                         <option value="CAFE_CUSTOMER">Zákazník kaviarne</option>
-                        <option value="VOUCHER_PARTNER">Voucher partner</option>
-                        <option value="VOUCHER">Voucher</option>
+                        <option value="VOUCHER_PARTNER">Poukaz - partner</option>
+                        <option value="VOUCHER">Poukaz</option>
                       </select>
                     </div>
 
@@ -713,10 +713,10 @@ export default function RidesPage() {
                             }
                             className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
                           >
-                            <option value="CASH_ON_SITE">Hotovosť (→ Kamarát)</option>
-                            <option value="CARD_ON_SITE">Karta (→ Kamarát)</option>
-                            <option value="VOUCHER_PORTAL">Voucher portál (→ Ja)</option>
-                            <option value="PREPAID">Predplatené (→ Ja)</option>
+                            <option value="PD_DRIVE_CLUB">PD Drive club (→ Kamarát)</option>
+                            <option value="VOUCHER_PARTNER">Poukaz - partner (→ Ja)</option>
+                            <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage (→ Ja)</option>
+                            <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive Club (→ Kamarát)</option>
                           </select>
                         </div>
                       </div>

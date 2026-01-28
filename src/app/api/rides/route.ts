@@ -173,13 +173,21 @@ export async function POST(request: NextRequest) {
 
     // Create payment record if amount is provided
     if (data.amountEur && data.paymentMethod) {
+      // Map payment method to receiver
+      let receiver: "ME" | "FRIEND";
+      if (data.paymentMethod === "PD_DRIVE_CLUB" || data.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") {
+        receiver = "FRIEND";
+      } else {
+        receiver = "ME"; // VOUCHER_PARTNER, VOUCHER_RACEGARAGE
+      }
+
       await prisma.paymentRecord.create({
         data: {
           customerId: data.customerId,
           sessionId: ride.id,
           amountCents: Math.round(data.amountEur * 100),
           method: data.paymentMethod,
-          receiver: "ME", // Default to ME for direct ride payments
+          receiver,
         },
       });
     }
