@@ -11,6 +11,7 @@ import {
   Calendar,
   Trophy,
   CreditCard,
+  FileText,
   Ticket,
   Settings,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const menuItems = [
   { href: "/reservations", label: "Rezervácie", icon: Calendar, roles: ["STAFF", "ADMIN"] },
   { href: "/challenge", label: "Výzva", icon: Trophy, roles: ["STAFF", "ADMIN"] },
   { href: "/payments", label: "Platby", icon: CreditCard, roles: ["ADMIN"] },
+  { href: "/settlements", label: "Vyúčtovania", icon: FileText, roles: ["ADMIN"] },
   { href: "/vouchers", label: "Vouchery", icon: Ticket, roles: ["STAFF", "ADMIN"] },
   { href: "/settings", label: "Nastavenia", icon: Settings, roles: ["ADMIN"] },
 ];

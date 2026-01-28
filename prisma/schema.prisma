@@ -258,3 +258,30 @@ model Settings {
   @@map("settings")
 }
 
+// MonthlySettlement model - tracks monthly invoicing and settlements
+model MonthlySettlement {
+  id                 String            @id @default(cuid())
+  year               Int
+  month              Int // 1-12
+  status             SettlementStatus  @default(NOT_INVOICED)
+  totalAmountCents   Int // Total payments for the month
+  friendAmountCents  Int // Amount collected for PD Drive Club (FRIEND)
+  meAmountCents      Int // Amount collected for Racegarage (ME)
+  settlementCents    Int // Net amount: who owes whom (positive = friend owes me)
+  invoiceNumber      String?          @unique
+  invoiceDate        DateTime?
+  paidDate           DateTime?
+  notes              String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  @@unique([year, month])
+  @@map("monthly_settlements")
+}
+
+enum SettlementStatus {
+  NOT_INVOICED    // Nevyfakturované
+  INVOICE_SENT    // Poslaná faktúra
+  PAID            // Zaplatená faktúra
+}
+
