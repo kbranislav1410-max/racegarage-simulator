@@ -91,19 +91,34 @@ export default function PaymentsPage() {
   // Get method badge color
   const getMethodBadge = (method: string) => {
     const colors: Record<string, string> = {
-      CASH_ON_SITE: "bg-green-100 text-green-800",
-      CARD_ON_SITE: "bg-blue-100 text-blue-800",
-      VOUCHER_PORTAL: "bg-purple-100 text-purple-800",
-      PREPAID: "bg-orange-100 text-orange-800",
+      PD_DRIVE_CLUB: "bg-blue-100 text-blue-800",
+      VOUCHER_PARTNER: "bg-purple-100 text-purple-800",
+      VOUCHER_RACEGARAGE: "bg-green-100 text-green-800",
+      VOUCHER_PD_DRIVE_CLUB: "bg-orange-100 text-orange-800",
     };
     return colors[method] || "bg-slate-100 text-slate-800";
   };
 
-  // Get receiver badge color
+  // Get method label in Slovak with receiver indication
+  const getMethodLabel = (method: string) => {
+    const labels: Record<string, string> = {
+      PD_DRIVE_CLUB: "PD Drive club (→ Kamarát)",
+      VOUCHER_PARTNER: "Poukaz - partner (→ Ja)",
+      VOUCHER_RACEGARAGE: "Poukaz - Racegarage (→ Ja)",
+      VOUCHER_PD_DRIVE_CLUB: "Poukaz - PD Drive Club (→ Kamarát)",
+    };
+    return labels[method] || method.replace(/_/g, " ");
+  };
+
+  // Get receiver badge color and label
   const getReceiverBadge = (receiver: string) => {
     return receiver === "FRIEND"
       ? "bg-blue-100 text-blue-800"
-      : "bg-indigo-100 text-indigo-800";
+      : "bg-green-100 text-green-800";
+  };
+
+  const getReceiverLabel = (receiver: string) => {
+    return receiver === "FRIEND" ? "→ Kamarát" : "→ Ja";
   };
 
   // Handle delete payment
@@ -231,15 +246,15 @@ export default function PaymentsPage() {
                 <p className="text-3xl font-bold text-blue-600 mt-2">
                   {formatCurrency(settlement.summary.sumFriend)}
                 </p>
-                <p className="text-sm text-slate-500 mt-1">Cash & Card payments</p>
+                <p className="text-sm text-slate-500 mt-1">PD Drive club platby</p>
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-sm font-medium text-slate-600">Me Total</h3>
-                <p className="text-3xl font-bold text-indigo-600 mt-2">
+                <p className="text-3xl font-bold text-green-600 mt-2">
                   {formatCurrency(settlement.summary.sumMe)}
                 </p>
-                <p className="text-sm text-slate-500 mt-1">Voucher & Prepaid</p>
+                <p className="text-sm text-slate-500 mt-1">Poukazy a ostatné</p>
               </div>
 
               <div
@@ -386,7 +401,7 @@ export default function PaymentsPage() {
                                   payment.method
                                 )}`}
                               >
-                                {payment.method.replace(/_/g, " ")}
+                                {getMethodLabel(payment.method)}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -395,7 +410,7 @@ export default function PaymentsPage() {
                                   payment.receiver
                                 )}`}
                               >
-                                {payment.receiver}
+                                {getReceiverLabel(payment.receiver)}
                               </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
