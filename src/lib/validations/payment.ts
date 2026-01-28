@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const paymentMethodEnum = z.enum([
-  "CASH_ON_SITE",
-  "CARD_ON_SITE",
-  "VOUCHER_PORTAL",
-  "PREPAID",
+  "PD_DRIVE_CLUB",
+  "VOUCHER_PARTNER",
+  "VOUCHER_RACEGARAGE",
+  "VOUCHER_PD_DRIVE_CLUB",
 ]);
 
 export const paymentReceiverEnum = z.enum(["FRIEND", "ME"]);
