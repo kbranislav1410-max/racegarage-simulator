@@ -99,13 +99,13 @@ export default function PaymentsPage() {
     return colors[method] || "bg-slate-100 text-slate-800";
   };
 
-  // Get method label in Slovak with receiver indication
+  // Get method label in Slovak
   const getMethodLabel = (method: string) => {
     const labels: Record<string, string> = {
-      PD_DRIVE_CLUB: "PD Drive club (→ Kamarát)",
-      VOUCHER_PARTNER: "Poukaz - partner (→ Ja)",
-      VOUCHER_RACEGARAGE: "Poukaz - Racegarage (→ Ja)",
-      VOUCHER_PD_DRIVE_CLUB: "Poukaz - PD Drive Club (→ Kamarát)",
+      PD_DRIVE_CLUB: "PD Drive Club",
+      VOUCHER_PARTNER: "Poukaz - partner",
+      VOUCHER_RACEGARAGE: "Poukaz - Racegarage",
+      VOUCHER_PD_DRIVE_CLUB: "Poukaz - PD Drive Club",
     };
     return labels[method] || method.replace(/_/g, " ");
   };
@@ -118,7 +118,7 @@ export default function PaymentsPage() {
   };
 
   const getReceiverLabel = (receiver: string) => {
-    return receiver === "FRIEND" ? "→ Kamarát" : "→ Ja";
+    return receiver === "FRIEND" ? "PD Drive Club" : "Racegarage";
   };
 
   // Handle delete payment
@@ -242,7 +242,7 @@ export default function PaymentsPage() {
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Celkom pre kamaráta</h3>
+                <h3 className="text-sm font-medium text-slate-600">Celkom pre PD Drive Club</h3>
                 <p className="text-3xl font-bold text-blue-600 mt-2">
                   {formatCurrency(settlement.summary.sumFriend)}
                 </p>
@@ -250,7 +250,7 @@ export default function PaymentsPage() {
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Celkom pre mňa</h3>
+                <h3 className="text-sm font-medium text-slate-600">Celkom pre Racegarage</h3>
                 <p className="text-3xl font-bold text-green-600 mt-2">
                   {formatCurrency(settlement.summary.sumMe)}
                 </p>
@@ -282,9 +282,9 @@ export default function PaymentsPage() {
                 </p>
                 <p className="text-sm text-slate-600 mt-1 font-medium">
                   {settlement.summary.friendOwesMe > 0
-                    ? "Kamarát mi dlhuje"
+                    ? "PD Drive Club mi dlhuje"
                     : settlement.summary.friendOwesMe < 0
-                    ? "Ja dlhujem kamarátovi"
+                    ? "Racegarage dlhuje PD Drive Club"
                     : "Vyrovnané"}
                 </p>
               </div>
