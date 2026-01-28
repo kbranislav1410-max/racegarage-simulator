@@ -91,7 +91,7 @@ export default function DashboardPage() {
     voucherCode: "",
     notes: "",
     amount: "",
-    paymentMethod: "CASH_ON_SITE" as "CASH_ON_SITE" | "CARD_ON_SITE" | "VOUCHER_PORTAL" | "PREPAID",
+    paymentMethod: "PD_DRIVE_CLUB" as "PD_DRIVE_CLUB" | "VOUCHER_PARTNER" | "VOUCHER_RACEGARAGE" | "VOUCHER_PD_DRIVE_CLUB",
   });
   const [rideFormErrors, setRideFormErrors] = useState<Record<string, string>>({});
   const [rideFormSubmitting, setRideFormSubmitting] = useState(false);
@@ -165,7 +165,7 @@ export default function DashboardPage() {
       voucherCode: "",
       notes: "",
       amount: "",
-      paymentMethod: "CASH_ON_SITE",
+      paymentMethod: "PD_DRIVE_CLUB",
     });
     setRideFormErrors({});
   };
@@ -850,10 +850,10 @@ export default function DashboardPage() {
                       onChange={(e) => setRideFormData({ ...rideFormData, paymentMethod: e.target.value as any })}
                       className="w-full px-3 py-2 border border-slate-300 rounded-md"
                     >
-                      <option value="CASH_ON_SITE">Hotovosť na mieste</option>
-                      <option value="CARD_ON_SITE">Karta na mieste</option>
-                      <option value="VOUCHER_PORTAL">Voucher portál</option>
-                      <option value="PREPAID">Preplatené</option>
+                      <option value="PD_DRIVE_CLUB">PD Drive club (→ Kamarát)</option>
+                      <option value="VOUCHER_PARTNER">Poukaz - partner (→ Ja)</option>
+                      <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage (→ Ja)</option>
+                      <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive Club (→ Kamarát)</option>
                     </select>
                   </div>
 
