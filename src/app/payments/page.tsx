@@ -168,10 +168,10 @@ export default function PaymentsPage() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-slate-800">
-            Payments & Financial Settlement
+            Platby a Vyúčtovanie
           </h1>
           <p className="text-slate-600 mt-2">
-            50/50 financial settlement and payment tracking
+            50/50 vyúčtovanie a sledovanie platieb
           </p>
         </div>
 
@@ -212,7 +212,7 @@ export default function PaymentsPage() {
             className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
-            Export CSV
+            Exportovať CSV
           </button>
         </div>
 
@@ -225,24 +225,24 @@ export default function PaymentsPage() {
 
         {loading ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
-            <div className="text-slate-600">Loading settlement data...</div>
+            <div className="text-slate-600">Načítavam údaje o vyúčtovaní...</div>
           </div>
         ) : settlement ? (
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Total Revenue</h3>
+                <h3 className="text-sm font-medium text-slate-600">Celkové Príjmy</h3>
                 <p className="text-3xl font-bold text-slate-800 mt-2">
                   {formatCurrency(settlement.summary.totalRevenue)}
                 </p>
                 <p className="text-sm text-slate-500 mt-1">
-                  {settlement.summary.totalPayments} payments
+                  {settlement.summary.totalPayments} platieb
                 </p>
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Friend Total</h3>
+                <h3 className="text-sm font-medium text-slate-600">Celkom pre kamaráta</h3>
                 <p className="text-3xl font-bold text-blue-600 mt-2">
                   {formatCurrency(settlement.summary.sumFriend)}
                 </p>
@@ -250,7 +250,7 @@ export default function PaymentsPage() {
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Me Total</h3>
+                <h3 className="text-sm font-medium text-slate-600">Celkom pre mňa</h3>
                 <p className="text-3xl font-bold text-green-600 mt-2">
                   {formatCurrency(settlement.summary.sumMe)}
                 </p>
@@ -266,7 +266,7 @@ export default function PaymentsPage() {
                     : "border-2 border-slate-300"
                 }`}
               >
-                <h3 className="text-sm font-medium text-slate-600">Settlement</h3>
+                <h3 className="text-sm font-medium text-slate-600">Vyúčtovanie</h3>
                 <p
                   className={`text-3xl font-bold mt-2 ${
                     settlement.summary.friendOwesMe > 0
@@ -282,10 +282,10 @@ export default function PaymentsPage() {
                 </p>
                 <p className="text-sm text-slate-600 mt-1 font-medium">
                   {settlement.summary.friendOwesMe > 0
-                    ? "Friend owes me"
+                    ? "Kamarát mi dlhuje"
                     : settlement.summary.friendOwesMe < 0
-                    ? "I owe friend"
-                    : "Even"}
+                    ? "Ja dlhujem kamarátovi"
+                    : "Vyrovnané"}
                 </p>
               </div>
             </div>
@@ -295,7 +295,7 @@ export default function PaymentsPage() {
               <div className="flex items-center gap-3">
                 <Euro className="w-8 h-8" />
                 <div>
-                  <h3 className="text-sm font-medium opacity-90">50/50 Settlement Result</h3>
+                  <h3 className="text-sm font-medium opacity-90">Výsledok 50/50 vyúčtovania</h3>
                   <p className="text-xl font-bold mt-1">
                     {settlement.summary.settlementMessage}
                   </p>
@@ -307,18 +307,18 @@ export default function PaymentsPage() {
             {Object.keys(settlement.byMethod).length > 0 && (
               <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-bold text-slate-800 mb-4">
-                  Payment Methods Breakdown
+                  Rozdelenie podľa metód platby
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {Object.entries(settlement.byMethod).map(([method, data]) => (
                     <div key={method} className="border border-slate-200 rounded-lg p-4">
                       <h4 className="text-sm font-medium text-slate-600">
-                        {method.replace(/_/g, " ")}
+                        {getMethodLabel(method as any)}
                       </h4>
                       <p className="text-2xl font-bold text-slate-800 mt-2">
                         {formatCurrency(data.total)}
                       </p>
-                      <p className="text-sm text-slate-500 mt-1">{data.count} payments</p>
+                      <p className="text-sm text-slate-500 mt-1">{data.count} platieb</p>
                     </div>
                   ))}
                 </div>
@@ -328,12 +328,12 @@ export default function PaymentsPage() {
             {/* Payments Table */}
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="p-6 border-b border-slate-200">
-                <h2 className="text-xl font-bold text-slate-800">Payment History</h2>
+                <h2 className="text-xl font-bold text-slate-800">História platieb</h2>
               </div>
               
               {settlement.payments.length === 0 ? (
                 <div className="p-8 text-center text-slate-500">
-                  No payments recorded for {settlement.monthName} {settlement.year}
+                  Žiadne platby zaznamenané pre {settlement.monthName} {settlement.year}
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -341,22 +341,22 @@ export default function PaymentsPage() {
                     <thead className="bg-slate-50 border-b border-slate-200">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Date & Time
+                          Dátum a Čas
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Customer
+                          Zákazník
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Amount
+                          Suma
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Method
+                          Metóda
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Receiver
+                          Príjemca
                         </th>
                         <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Ride
+                          Jazda
                         </th>
                         <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                           Akcie
