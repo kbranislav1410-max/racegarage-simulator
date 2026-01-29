@@ -190,7 +190,7 @@ export default function SettlementsPage() {
           <select
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+            className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
           >
             <option value="ALL">Všetky roky</option>
             {years.map((year) => (
@@ -203,7 +203,7 @@ export default function SettlementsPage() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+            className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
           >
             <option value="ALL">Všetky stavy</option>
             <option value="NOT_INVOICED">Nevyfakturované</option>
@@ -214,60 +214,60 @@ export default function SettlementsPage() {
 
         {/* Settlements Table */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-slate-200">
+            <thead className="bg-slate-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Mesiac
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Celková suma
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Vyúčtovanie
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Faktúra č.
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Akcie
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-slate-200">
               {settlements.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
                     Žiadne vyúčtovania. Vytvorte nové vyúčtovanie pre mesiac.
                   </td>
                 </tr>
               ) : (
                 settlements.map((settlement) => (
-                  <tr key={settlement.id} className="hover:bg-gray-50">
+                  <tr key={settlement.id} className="hover:bg-slate-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-sm font-medium text-slate-900">
                         {monthNames[settlement.month - 1]} {settlement.year}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
+                      <div className="text-sm text-slate-900">
                         {formatAmount(settlement.totalAmountCents)}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-slate-500">
                         PD: {formatAmount(settlement.friendAmountCents)} | RG: {formatAmount(settlement.meAmountCents)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
+                      <div className="text-sm text-slate-900">
                         {settlement.settlementCents > 0 ? (
                           <span className="text-green-600">PD Drive Club mi dlhuje {formatAmount(Math.abs(settlement.settlementCents))}</span>
                         ) : settlement.settlementCents < 0 ? (
                           <span className="text-red-600">Racegarage dlhuje {formatAmount(Math.abs(settlement.settlementCents))}</span>
                         ) : (
-                          <span className="text-gray-600">Vyrovnané</span>
+                          <span className="text-slate-600">Vyrovnané</span>
                         )}
                       </div>
                     </td>
@@ -276,7 +276,7 @@ export default function SettlementsPage() {
                         {statusLabels[settlement.status]}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                       {settlement.invoiceNumber || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
@@ -304,29 +304,29 @@ export default function SettlementsPage() {
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4 text-gray-900">
+              <h2 className="text-xl font-bold mb-4 text-slate-800">
                 Vytvoriť nové vyúčtovanie
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     Rok
                   </label>
                   <input
                     type="number"
                     value={createYear}
                     onChange={(e) => setCreateYear(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     Mesiac
                   </label>
                   <select
                     value={createMonth}
                     onChange={(e) => setCreateMonth(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
                   >
                     {monthNames.map((name, index) => (
                       <option key={index + 1} value={index + 1}>
@@ -345,7 +345,7 @@ export default function SettlementsPage() {
                 </button>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
                 >
                   Zrušiť
                 </button>
@@ -358,20 +358,20 @@ export default function SettlementsPage() {
         {showStatusModal && selectedSettlement && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4 text-gray-900">
+              <h2 className="text-xl font-bold mb-4 text-slate-800">
                 Zmeniť stav vyúčtovania
               </h2>
               <div className="mb-4">
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm text-slate-600 mb-2">
                   {monthNames[selectedSettlement.month - 1]} {selectedSettlement.year}
                 </p>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-slate-700 mb-1">
                   Nový stav
                 </label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
                 >
                   <option value="NOT_INVOICED">Nevyfakturované</option>
                   <option value="INVOICE_SENT">Poslaná faktúra</option>
@@ -390,7 +390,7 @@ export default function SettlementsPage() {
                     setShowStatusModal(false);
                     setSelectedSettlement(null);
                   }}
-                  className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
                 >
                   Zrušiť
                 </button>
