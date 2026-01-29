@@ -26,9 +26,33 @@ interface DashboardStats {
     pdDriveClub: number;
   }>;
   settlementAmount: number;
+  // Customer statistics
+  ridesThisWeek: number;
+  ridesThisMonth: number;
+  newCustomersThisWeek: number;
+  newCustomersThisMonth: number;
+  returningRidersThisWeek: number;
+  ridesByMonth: Array<{
+    month: number;
+    monthName: string;
+    count: number;
+  }>;
+  newCustomersByMonth: Array<{
+    month: number;
+    monthName: string;
+    count: number;
+  }>;
+  returningCustomersByMonth: Array<{
+    month: number;
+    monthName: string;
+    count: number;
+  }>;
   yearlyRevenue: number;
   yearlyRevenueChange: number;
   yearlyRevenueChangePercent: number;
+  yearlyCustomers: number;
+  yearlyRides: number;
+  yearlyMinutes: number;
   activeReservations: number;
   recentRidesActivity: Array<{
     type: "ride";
@@ -69,9 +93,20 @@ export default function DashboardPage() {
     weeklyRevenuePDDriveClub: 0,
     monthlyRevenueByMonth: [],
     settlementAmount: 0,
+    ridesThisWeek: 0,
+    ridesThisMonth: 0,
+    newCustomersThisWeek: 0,
+    newCustomersThisMonth: 0,
+    returningRidersThisWeek: 0,
+    ridesByMonth: [],
+    newCustomersByMonth: [],
+    returningCustomersByMonth: [],
     yearlyRevenue: 0,
     yearlyRevenueChange: 0,
     yearlyRevenueChangePercent: 0,
+    yearlyCustomers: 0,
+    yearlyRides: 0,
+    yearlyMinutes: 0,
     activeReservations: 0,
     recentRidesActivity: [],
     recentCustomersActivity: [],
@@ -322,75 +357,208 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* All-time Statistics */}
+        {/* Customer Statistics Section */}
         <div>
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">Celková štatistika</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
-                Celkový počet jazdcov
-              </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
-                {loading ? "..." : stats.totalCustomers}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
-                Celkový počet jázd
-              </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
-                {loading ? "..." : stats.totalRides}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
-                Celkový počet odjazdených minút
-              </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
-                {loading ? "..." : stats.totalMinutes.toLocaleString()}
-              </p>
-              {!loading && stats.totalMinutes > 0 && (
-                <p className="text-sm text-slate-500 mt-1">
-                  {(stats.totalMinutes / 60).toFixed(1)} hodín
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">Zákazníci</h2>
+
+          {/* Rides Statistics */}
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-slate-700 mb-3">Jazdy</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h4 className="text-sm font-medium text-slate-600">
+                  Počet jázd tento týždeň
+                </h4>
+                <p className="text-3xl font-bold text-blue-600 mt-2">
+                  {loading ? "..." : stats.ridesThisWeek}
                 </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h4 className="text-sm font-medium text-slate-600">
+                  Počet jázd tento mesiac
+                </h4>
+                <p className="text-3xl font-bold text-green-600 mt-2">
+                  {loading ? "..." : stats.ridesThisMonth}
+                </p>
+              </div>
+            </div>
+            
+            {/* Rides Chart */}
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h4 className="text-lg font-semibold text-slate-700 mb-4">
+                Počet jázd po mesiacoch - {new Date().getFullYear()}
+              </h4>
+              {loading ? (
+                <div className="h-64 flex items-center justify-center">
+                  <p className="text-slate-600">Načítavam graf...</p>
+                </div>
+              ) : (
+                <div className="h-64">
+                  <div className="flex items-end justify-between h-full gap-2">
+                    {stats.ridesByMonth.map((data, index) => {
+                      const maxValue = Math.max(...stats.ridesByMonth.map(d => d.count));
+                      const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                      
+                      return (
+                        <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                          <div className="relative w-full" style={{ height: '200px' }}>
+                            <div 
+                              className="absolute bottom-0 w-full rounded-t-lg transition-all bg-blue-500"
+                              style={{ height: `${height}%` }}
+                              title={`${data.monthName}: ${data.count} jázd`}
+                            >
+                              {data.count > 0 && (
+                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                                  {data.count}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-xs text-slate-600 text-center">
+                            {data.monthName.slice(0, 3)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               )}
             </div>
           </div>
-        </div>
 
-        {/* Monthly Statistics */}
-        <div>
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">Tento mesiac</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
-                Noví jazdci
-              </h3>
-              <p className="text-3xl font-bold text-green-600 mt-2">
-                {loading ? "..." : stats.newRidersThisMonth}
-              </p>
-              <p className="text-sm text-slate-500 mt-1">
-                Prvýkrát jazdili tento mesiac
-              </p>
+          {/* New Customers Statistics */}
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-slate-700 mb-3">Noví zákazníci</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h4 className="text-sm font-medium text-slate-600">
+                  Noví zákazníci tento týždeň
+                </h4>
+                <p className="text-3xl font-bold text-blue-600 mt-2">
+                  {loading ? "..." : stats.newCustomersThisWeek}
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h4 className="text-sm font-medium text-slate-600">
+                  Noví zákazníci tento mesiac
+                </h4>
+                <p className="text-3xl font-bold text-green-600 mt-2">
+                  {loading ? "..." : stats.newCustomersThisMonth}
+                </p>
+              </div>
             </div>
+            
+            {/* New Customers Chart */}
             <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
-                Vracajúci sa jazdci
-              </h3>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
-                {loading ? "..." : stats.returningRidersThisMonth}
-              </p>
-              <p className="text-sm text-slate-500 mt-1">
-                Jazdili viac ako raz celkovo
-              </p>
+              <h4 className="text-lg font-semibold text-slate-700 mb-4">
+                Noví zákazníci po mesiacoch - {new Date().getFullYear()}
+              </h4>
+              {loading ? (
+                <div className="h-64 flex items-center justify-center">
+                  <p className="text-slate-600">Načítavam graf...</p>
+                </div>
+              ) : (
+                <div className="h-64">
+                  <div className="flex items-end justify-between h-full gap-2">
+                    {stats.newCustomersByMonth.map((data, index) => {
+                      const maxValue = Math.max(...stats.newCustomersByMonth.map(d => d.count));
+                      const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                      
+                      return (
+                        <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                          <div className="relative w-full" style={{ height: '200px' }}>
+                            <div 
+                              className="absolute bottom-0 w-full rounded-t-lg transition-all bg-green-500"
+                              style={{ height: `${height}%` }}
+                              title={`${data.monthName}: ${data.count} nových`}
+                            >
+                              {data.count > 0 && (
+                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                                  {data.count}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-xs text-slate-600 text-center">
+                            {data.monthName.slice(0, 3)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
+          </div>
+
+          {/* Returning Customers Statistics */}
+          <div className="mb-6">
+            <h3 className="text-lg font-medium text-slate-700 mb-3">Vracajúci sa zákazníci</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h4 className="text-sm font-medium text-slate-600">
+                  Vracajúci sa tento týždeň
+                </h4>
+                <p className="text-3xl font-bold text-blue-600 mt-2">
+                  {loading ? "..." : stats.returningRidersThisWeek}
+                </p>
+                <p className="text-sm text-slate-500 mt-1">
+                  Jazdili viac ako raz celkovo
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h4 className="text-sm font-medium text-slate-600">
+                  Vracajúci sa tento mesiac
+                </h4>
+                <p className="text-3xl font-bold text-green-600 mt-2">
+                  {loading ? "..." : stats.returningRidersThisMonth}
+                </p>
+                <p className="text-sm text-slate-500 mt-1">
+                  Jazdili viac ako raz celkovo
+                </p>
+              </div>
+            </div>
+            
+            {/* Returning Customers Chart */}
             <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
-                Aktívne rezervácie
-              </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
-                {loading ? "..." : stats.activeReservations}
-              </p>
+              <h4 className="text-lg font-semibold text-slate-700 mb-4">
+                Vracajúci sa zákazníci po mesiacoch - {new Date().getFullYear()}
+              </h4>
+              {loading ? (
+                <div className="h-64 flex items-center justify-center">
+                  <p className="text-slate-600">Načítavam graf...</p>
+                </div>
+              ) : (
+                <div className="h-64">
+                  <div className="flex items-end justify-between h-full gap-2">
+                    {stats.returningCustomersByMonth.map((data, index) => {
+                      const maxValue = Math.max(...stats.returningCustomersByMonth.map(d => d.count));
+                      const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                      
+                      return (
+                        <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                          <div className="relative w-full" style={{ height: '200px' }}>
+                            <div 
+                              className="absolute bottom-0 w-full rounded-t-lg transition-all bg-purple-500"
+                              style={{ height: `${height}%` }}
+                              title={`${data.monthName}: ${data.count} vracajúcich sa`}
+                            >
+                              {data.count > 0 && (
+                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                                  {data.count}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-xs text-slate-600 text-center">
+                            {data.monthName.slice(0, 3)}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -538,31 +706,68 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Yearly Revenue Summary */}
+        {/* Yearly Overview */}
         <div>
           <h2 className="text-xl font-semibold text-slate-700 mb-4">Ročný prehľad</h2>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-sm font-medium text-slate-600">
-              Príjem za tento rok
-            </h3>
-            <p className="text-3xl font-bold text-slate-800 mt-2">
-              {loading ? "..." : `€${stats.yearlyRevenue.toFixed(2)}`}
-            </p>
-            {!loading && stats.yearlyRevenueChange !== 0 && (
-              <div className="mt-2 flex items-center gap-2">
-                <span className={`text-sm font-medium ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
-                  {stats.yearlyRevenueChange > 0 ? "+" : ""}
-                  €{Math.abs(stats.yearlyRevenueChange).toFixed(2)}
-                </span>
-                <span className={`text-sm ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
-                  ({stats.yearlyRevenueChange > 0 ? "+" : ""}
-                  {stats.yearlyRevenueChangePercent.toFixed(1)}%)
-                </span>
-                <span className="text-xs text-slate-500">
-                  oproti minulému roku
-                </span>
-              </div>
-            )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Príjem za tento rok
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : `€${stats.yearlyRevenue.toFixed(2)}`}
+              </p>
+              {!loading && stats.yearlyRevenueChange !== 0 && (
+                <div className="mt-2 flex items-center gap-2">
+                  <span className={`text-sm font-medium ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                    {stats.yearlyRevenueChange > 0 ? "+" : ""}
+                    €{Math.abs(stats.yearlyRevenueChange).toFixed(2)}
+                  </span>
+                  <span className={`text-sm ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                    ({stats.yearlyRevenueChange > 0 ? "+" : ""}
+                    {stats.yearlyRevenueChangePercent.toFixed(1)}%)
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Počet zákazníkov
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.yearlyCustomers}
+              </p>
+              <p className="text-sm text-slate-500 mt-1">
+                Celkový počet
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Počet jázd
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.yearlyRides}
+              </p>
+              <p className="text-sm text-slate-500 mt-1">
+                Za tento rok
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Počet odjazdených minút
+              </h3>
+              <p className="text-3xl font-bold text-slate-800 mt-2">
+                {loading ? "..." : stats.yearlyMinutes.toLocaleString()}
+              </p>
+              {!loading && stats.yearlyMinutes > 0 && (
+                <p className="text-sm text-slate-500 mt-1">
+                  {(stats.yearlyMinutes / 60).toFixed(1)} hodín
+                </p>
+              )}
+            </div>
           </div>
         </div>
 

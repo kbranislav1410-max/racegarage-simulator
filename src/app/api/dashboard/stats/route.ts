@@ -165,6 +165,166 @@ export async function GET() {
     // Calculate settlement for current month
     const settlementAmount = (monthlyRevenuePDDriveClub - monthlyRevenueRacegarage) / 2;
 
+    // === CUSTOMER STATISTICS ===
+    
+    // Get rides this week
+    const ridesThisWeek = await prisma.rideSession.count({
+      where: {
+        startAt: {
+          gte: startOfWeek,
+        },
+      },
+    });
+
+    // Get rides this month
+    const ridesThisMonthCount = ridesThisMonth.length;
+
+    // Get rides by month for the year (for chart)
+    const ridesByMonth = [];
+    for (let month = 0; month < 12; month++) {
+      const monthStart = new Date(now.getFullYear(), month, 1);
+      const monthEnd = new Date(now.getFullYear(), month + 1, 0, 23, 59, 59);
+      
+      const count = await prisma.rideSession.count({
+        where: {
+          startAt: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+      });
+
+      ridesByMonth.push({
+        month: month + 1,
+        monthName: new Date(now.getFullYear(), month).toLocaleString('sk-SK', { month: 'long' }),
+        count,
+      });
+    }
+
+    // Get new customers this week (customers created this week)
+    const newCustomersThisWeek = await prisma.customer.count({
+      where: {
+        createdAt: {
+          gte: startOfWeek,
+        },
+      },
+    });
+
+    // Get new customers this month (customers created this month)
+    const newCustomersThisMonth = await prisma.customer.count({
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+    });
+
+    // Get new customers by month for the year (for chart)
+    const newCustomersByMonth = [];
+    for (let month = 0; month < 12; month++) {
+      const monthStart = new Date(now.getFullYear(), month, 1);
+      const monthEnd = new Date(now.getFullYear(), month + 1, 0, 23, 59, 59);
+      
+      const count = await prisma.customer.count({
+        where: {
+          createdAt: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+      });
+
+      newCustomersByMonth.push({
+        month: month + 1,
+        monthName: new Date(now.getFullYear(), month).toLocaleString('sk-SK', { month: 'long' }),
+        count,
+      });
+    }
+
+    // Get returning customers this week
+    const ridesThisWeekData = await prisma.rideSession.findMany({
+      where: {
+        startAt: {
+          gte: startOfWeek,
+        },
+      },
+      select: {
+        customerId: true,
+      },
+    });
+    
+    const ridersThisWeek = new Set(ridesThisWeekData.map((r) => r.customerId));
+    let returningRidersThisWeek = 0;
+    
+    for (const customerId of ridersThisWeek) {
+      const totalRidesForCustomer = await prisma.rideSession.count({
+        where: { customerId },
+      });
+      if (totalRidesForCustomer > 1) {
+        returningRidersThisWeek++;
+      }
+    }
+
+    // Get returning customers by month for the year (for chart)
+    const returningCustomersByMonth = [];
+    for (let month = 0; month < 12; month++) {
+      const monthStart = new Date(now.getFullYear(), month, 1);
+      const monthEnd = new Date(now.getFullYear(), month + 1, 0, 23, 59, 59);
+      
+      const monthRides = await prisma.rideSession.findMany({
+        where: {
+          startAt: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+        select: {
+          customerId: true,
+        },
+      });
+
+      const ridersInMonth = new Set(monthRides.map((r) => r.customerId));
+      let returningCount = 0;
+      
+      for (const customerId of ridersInMonth) {
+        const totalRidesForCustomer = await prisma.rideSession.count({
+          where: { customerId },
+        });
+        if (totalRidesForCustomer > 1) {
+          returningCount++;
+        }
+      }
+
+      returningCustomersByMonth.push({
+        month: month + 1,
+        monthName: new Date(now.getFullYear(), month).toLocaleString('sk-SK', { month: 'long' }),
+        count: returningCount,
+      });
+    }
+
+    // Yearly totals
+    const yearlyCustomers = totalCustomers;
+    const yearlyRides = await prisma.rideSession.count({
+      where: {
+        startAt: {
+          gte: startOfYear,
+        },
+      },
+    });
+    const yearlyRideSessions = await prisma.rideSession.findMany({
+      where: {
+        startAt: {
+          gte: startOfYear,
+        },
+      },
+      select: { minutes: true },
+    });
+    const yearlyMinutes = yearlyRideSessions.reduce(
+      (sum: number, session: typeof yearlyRideSessions[0]) => sum + session.minutes,
+      0
+    );
+
     // Get last month revenue for comparison
     const lastMonthPayments = await prisma.paymentRecord.findMany({
       where: {
@@ -308,10 +468,27 @@ export async function GET() {
       // Settlement
       settlementAmount,
       
+      // Customer statistics - Weekly
+      ridesThisWeek,
+      newCustomersThisWeek,
+      returningRidersThisWeek,
+
+      // Customer statistics - Monthly
+      ridesThisMonth: ridesThisMonthCount,
+      newCustomersThisMonth,
+
+      // Customer statistics - Charts
+      ridesByMonth,
+      newCustomersByMonth,
+      returningCustomersByMonth,
+      
       // Yearly stats
       yearlyRevenue,
       yearlyRevenueChange,
       yearlyRevenueChangePercent,
+      yearlyCustomers,
+      yearlyRides,
+      yearlyMinutes,
       
       // Other stats
       activeReservations,
