@@ -27,8 +27,7 @@ body {
 
 /* Improve input field text visibility */
 input,
-textarea,
-select {
+textarea {
   color: #0f172a !important; /* slate-900 - very dark text for readability */
 }
 
@@ -41,8 +40,36 @@ textarea::placeholder {
 
 /* Ensure disabled inputs are still readable */
 input:disabled,
-textarea:disabled,
-select:disabled {
+textarea:disabled {
   color: #64748b !important; /* slate-500 - medium gray for disabled state */
   opacity: 0.7;
+}
+
+/* Custom select/dropdown styling */
+select {
+  color: white !important;
+  background-color: #292929 !important;
+  border: none !important;
+}
+
+/* Style dropdown options */
+select option {
+  background-color: #292929 !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 16px;
+}
+
+/* Hover effect for dropdown options - red color */
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: #c20003 !important;
+  color: white !important;
+}
+
+/* Remove default select styling */
+select:focus {
+  outline: none;
+  border: none !important;
 }
