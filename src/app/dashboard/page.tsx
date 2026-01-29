@@ -547,32 +547,50 @@ export default function DashboardPage() {
               <div className="h-64">
                 {(() => {
                   const chartData = getCustomerChartData();
-                  const maxValue = Math.max(...chartData.map(d => d.count), 1);
+                  const maxValue = Math.max(...chartData.map(d => d.count), 0);
+                  
+                  // Fixed scale system
+                  const getChartScale = (maxVal: number) => {
+                    const scaleOptions = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
+                    if (maxVal === 0) return scaleOptions[0];
+                    for (const scale of scaleOptions) {
+                      if (maxVal <= scale * 0.8) return scale;
+                    }
+                    return scaleOptions[scaleOptions.length - 1];
+                  };
+                  
+                  const chartScale = getChartScale(maxValue);
                   
                   return (
-                    <div className="flex gap-2">
-                      {/* Y-axis labels */}
-                      <div className="flex flex-col justify-between text-xs text-slate-400 pt-0 pb-10">
-                        <span>{maxValue}</span>
-                        <span>{Math.round(maxValue / 2)}</span>
-                        <span>0</span>
-                      </div>
-                      
-                      {/* Chart area */}
-                      <div className="flex-1 space-y-1">
-                        {/* Chart with grid lines */}
-                        <div className="relative h-48 border-b border-slate-700">
-                          {/* Horizontal grid lines */}
-                          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                            <div className="border-t border-slate-700"></div>
-                            <div className="border-t border-slate-700"></div>
-                            <div className="border-t border-slate-700"></div>
-                          </div>
+                    <div className="mt-4">
+                      <div className="flex gap-2">
+                        {/* Y-axis labels - 5 labels */}
+                        <div className="flex flex-col justify-between text-xs text-slate-400 pt-0 pb-10">
+                          <span>{chartScale}</span>
+                          <span>{Math.round(chartScale * 0.75)}</span>
+                          <span>{Math.round(chartScale * 0.5)}</span>
+                          <span>{Math.round(chartScale * 0.25)}</span>
+                          <span>0</span>
+                        </div>
+                        
+                        {/* Chart area */}
+                        <div className="flex-1 space-y-1">
+                          {/* Chart with grid lines */}
+                          <div className="relative h-56 border-b border-slate-700">
+                            {/* 5 horizontal grid lines */}
+                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                            </div>
                           
                           {/* Bars */}
                           <div className="flex items-end justify-between h-full gap-2">
                             {chartData.map((data, index) => {
-                              const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                              const percentage = (data.count / chartScale) * 100;
+                              const height = Math.min(percentage, 100);
                               
                               return (
                                 <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
@@ -724,32 +742,50 @@ export default function DashboardPage() {
               <div className="h-64">
                 {(() => {
                   const chartData = getChartData();
-                  const maxValue = Math.max(...chartData.map(d => d.value), 1);
+                  const maxValue = Math.max(...chartData.map(d => d.value), 0);
+                  
+                  // Fixed scale system
+                  const getChartScale = (maxVal: number) => {
+                    const scaleOptions = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
+                    if (maxVal === 0) return scaleOptions[0];
+                    for (const scale of scaleOptions) {
+                      if (maxVal <= scale * 0.8) return scale;
+                    }
+                    return scaleOptions[scaleOptions.length - 1];
+                  };
+                  
+                  const chartScale = getChartScale(maxValue);
                   
                   return (
-                    <div className="flex gap-2">
-                      {/* Y-axis labels */}
-                      <div className="flex flex-col justify-between text-xs text-slate-400 pt-0 pb-10">
-                        <span>€{maxValue.toFixed(0)}</span>
-                        <span>€{(maxValue / 2).toFixed(0)}</span>
-                        <span>€0</span>
-                      </div>
-                      
-                      {/* Chart area */}
-                      <div className="flex-1 space-y-1">
-                        {/* Chart with grid lines */}
-                        <div className="relative h-48 border-b border-slate-700">
-                          {/* Horizontal grid lines */}
-                          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                            <div className="border-t border-slate-700"></div>
-                            <div className="border-t border-slate-700"></div>
-                            <div className="border-t border-slate-700"></div>
-                          </div>
+                    <div className="mt-4">
+                      <div className="flex gap-2">
+                        {/* Y-axis labels - 5 labels */}
+                        <div className="flex flex-col justify-between text-xs text-slate-400 pt-0 pb-10">
+                          <span>€{chartScale}</span>
+                          <span>€{Math.round(chartScale * 0.75)}</span>
+                          <span>€{Math.round(chartScale * 0.5)}</span>
+                          <span>€{Math.round(chartScale * 0.25)}</span>
+                          <span>€0</span>
+                        </div>
+                        
+                        {/* Chart area */}
+                        <div className="flex-1 space-y-1">
+                          {/* Chart with grid lines */}
+                          <div className="relative h-56 border-b border-slate-700">
+                            {/* 5 horizontal grid lines */}
+                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                              <div className="border-t border-slate-700"></div>
+                            </div>
                           
                           {/* Bars */}
                           <div className="flex items-end justify-between h-full gap-2">
                             {chartData.map((data, index) => {
-                              const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
+                              const percentage = (data.value / chartScale) * 100;
+                              const height = Math.min(percentage, 100);
                               
                               return (
                                 <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
