@@ -168,11 +168,31 @@ export default function PaymentsPage() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-slate-800">
-            Platby a Vyúčtovanie
+            Platby a Vyúčtovania
           </h1>
           <p className="text-slate-600 mt-2">
             50/50 vyúčtovanie a sledovanie platieb
           </p>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div className="bg-white rounded-lg shadow">
+          <div className="border-b border-slate-200">
+            <nav className="flex -mb-px">
+              <a
+                href="/payments"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-slate-800 text-slate-800"
+              >
+                Platby
+              </a>
+              <a
+                href="/payments/settlements"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+              >
+                Vyúčtovania
+              </a>
+            </nav>
+          </div>
         </div>
 
         {/* Month Selector & Export */}

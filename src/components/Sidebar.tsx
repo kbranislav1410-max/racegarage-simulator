@@ -23,7 +23,6 @@ const menuItems = [
   { href: "/reservations", label: "Rezervácie", icon: Calendar, roles: ["STAFF", "ADMIN"] },
   { href: "/challenge", label: "Výzva", icon: Trophy, roles: ["STAFF", "ADMIN"] },
   { href: "/payments", label: "Platby", icon: CreditCard, roles: ["ADMIN"] },
-  { href: "/settlements", label: "Vyúčtovania", icon: FileText, roles: ["ADMIN"] },
   { href: "/vouchers", label: "Vouchery", icon: Ticket, roles: ["STAFF", "ADMIN"] },
   { href: "/settings", label: "Nastavenia", icon: Settings, roles: ["ADMIN"] },
 ];
@@ -46,7 +45,10 @@ export function Sidebar() {
       <nav className="space-y-2">
         {visibleMenuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
+          // Highlight menu items when on their page or subpages
+          const isActive = pathname === item.href || 
+            (item.href === "/payments" && pathname.startsWith("/payments/")) ||
+            (item.href === "/vouchers" && pathname.startsWith("/vouchers/"));
           return (
             <Link
               key={item.href}
