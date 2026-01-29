@@ -439,6 +439,37 @@ export async function GET() {
       };
     }
 
+    // Get most frequent riders (TOP 10)
+    const frequentRiders = await prisma.customer.findMany({
+      include: {
+        rideSessions: {
+          select: {
+            minutes: true,
+          },
+        },
+      },
+    });
+
+    // Calculate total rides and minutes for each customer
+    const ridersWithStats = frequentRiders
+      .map((customer) => {
+        const totalRides = customer.rideSessions.length;
+        const totalMinutes = customer.rideSessions.reduce(
+          (sum, session) => sum + session.minutes,
+          0
+        );
+        
+        return {
+          customerId: customer.id,
+          customerName: `${customer.firstName} ${customer.lastName}`,
+          totalRides,
+          totalMinutes,
+        };
+      })
+      .filter((rider) => rider.totalRides > 0) // Only include riders with at least 1 ride
+      .sort((a, b) => b.totalRides - a.totalRides) // Sort by total rides descending
+      .slice(0, 10); // Take TOP 10
+
     return NextResponse.json({
       // All-time stats
       totalCustomers,
@@ -492,6 +523,9 @@ export async function GET() {
       
       // Challenge leaderboard (TOP 3)
       challengeLeaderboard,
+      
+      // Most frequent riders (TOP 10)
+      frequentRiders: ridersWithStats,
     });
   } catch (error) {
     console.error("Failed to fetch dashboard stats:", error);

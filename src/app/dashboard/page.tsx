@@ -2,7 +2,7 @@
 
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { useEffect, useState } from "react";
-import { Plus, Search, X, Calendar, UserPlus, Ticket, Trophy, ChevronRight } from "lucide-react";
+import { Plus, Search, X, Calendar, UserPlus, Ticket, Trophy, ChevronRight, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface DashboardStats {
@@ -70,6 +70,12 @@ interface DashboardStats {
       recordedAt: string;
     }>;
   } | null;
+  frequentRiders: Array<{
+    customerId: string;
+    customerName: string;
+    totalRides: number;
+    totalMinutes: number;
+  }>;
 }
 
 interface Customer {
@@ -116,6 +122,7 @@ export default function DashboardPage() {
     yearlyMinutes: 0,
     activeReservations: 0,
     challengeLeaderboard: null,
+    frequentRiders: [],
   });
   const [loading, setLoading] = useState(true);
   const [revenueFilter, setRevenueFilter] = useState<"all" | "racegarage" | "pdDriveClub">("all");
@@ -777,8 +784,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Challenge Leaderboard - TOP 3 */}
-        <div className="bg-white p-6 rounded-lg shadow">
+        {/* Challenge Leaderboard and Frequent Riders - Side by Side */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Challenge Leaderboard - TOP 3 */}
+          <div className="bg-white p-6 rounded-lg shadow h-full">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
               <Trophy className="text-yellow-500" size={24} />
@@ -869,6 +878,63 @@ export default function DashboardPage() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Most Frequent Riders - TOP 10 */}
+        <div className="bg-white p-6 rounded-lg shadow h-full">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <Users className="text-blue-600" size={24} />
+              Najčastejší jazdci
+            </h2>
+          </div>
+          
+          {loading ? (
+            <p className="text-slate-600">Načítavam...</p>
+          ) : stats.frequentRiders.length === 0 ? (
+            <div className="text-center py-8">
+              <Users className="mx-auto text-slate-300 mb-3" size={48} />
+              <p className="text-slate-600">Žiadni jazdci</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {stats.frequentRiders.map((rider, index) => (
+                <div
+                  key={rider.customerId}
+                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-colors"
+                >
+                  {/* Rank Number */}
+                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-700 flex-shrink-0">
+                    {index + 1}
+                  </div>
+                  
+                  {/* Customer Name */}
+                  <div className="flex-1">
+                    <p className="font-semibold text-slate-800">
+                      {rider.customerName}
+                    </p>
+                  </div>
+                  
+                  {/* Statistics */}
+                  <div className="text-right flex gap-4">
+                    <div>
+                      <p className="text-lg font-bold text-blue-600">
+                        {rider.totalRides}
+                      </p>
+                      <p className="text-xs text-slate-500">jázd</p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold text-green-600">
+                        {rider.totalMinutes}
+                      </p>
+                      <p className="text-xs text-slate-500">minút</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         </div>
       </div>
 
