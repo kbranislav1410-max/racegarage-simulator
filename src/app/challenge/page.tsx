@@ -735,10 +735,8 @@ export default function ChallengePage() {
                         onChange={(e) =>
                           setAttemptFormData({ ...attemptFormData, lapTime: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white ${
-                          attemptFormErrors.lapTime ? "border-red-300" : "border-slate-600"
-                        }`}
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         placeholder="mm:ss.mmm (e.g., 01:23.456) or ms (e.g., 83456)"
                         required
                       />
@@ -761,8 +759,8 @@ export default function ChallengePage() {
                         onChange={(e) =>
                           setAttemptFormData({ ...attemptFormData, sessionId: e.target.value })
                         }
-                        className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         placeholder="Ride Session ID (optional)"
                       />
                     </div>
