@@ -113,6 +113,7 @@ export default function DashboardPage() {
   });
   const [loading, setLoading] = useState(true);
   const [revenueFilter, setRevenueFilter] = useState<"all" | "racegarage" | "pdDriveClub">("all");
+  const [customerFilter, setCustomerFilter] = useState<"rides" | "newCustomers" | "returningCustomers">("rides");
 
   // Record Ride Modal State
   const [showRecordModal, setShowRecordModal] = useState(false);
@@ -166,6 +167,55 @@ export default function DashboardPage() {
              revenueFilter === "pdDriveClub" ? month.pdDriveClub : 
              month.total
     }));
+  };
+
+  // Helper functions for customer statistics
+  const getCustomerWeeklyCount = () => {
+    if (customerFilter === "rides") return stats.ridesThisWeek;
+    if (customerFilter === "newCustomers") return stats.newCustomersThisWeek;
+    return stats.returningRidersThisWeek;
+  };
+
+  const getCustomerMonthlyCount = () => {
+    if (customerFilter === "rides") return stats.ridesThisMonth;
+    if (customerFilter === "newCustomers") return stats.newCustomersThisMonth;
+    return stats.returningRidersThisMonth;
+  };
+
+  const getCustomerChartData = () => {
+    if (customerFilter === "rides") return stats.ridesByMonth;
+    if (customerFilter === "newCustomers") return stats.newCustomersByMonth;
+    return stats.returningCustomersByMonth;
+  };
+
+  const getCustomerChartColor = () => {
+    if (customerFilter === "rides") return "bg-blue-500";
+    if (customerFilter === "newCustomers") return "bg-green-500";
+    return "bg-purple-500";
+  };
+
+  const getCustomerTitle = () => {
+    if (customerFilter === "rides") return "Počet jázd";
+    if (customerFilter === "newCustomers") return "Noví zákazníci";
+    return "Vracajúci sa zákazníci";
+  };
+
+  const getCustomerWeeklyLabel = () => {
+    if (customerFilter === "rides") return "Počet jázd tento týždeň";
+    if (customerFilter === "newCustomers") return "Noví zákazníci tento týždeň";
+    return "Vracajúci sa tento týždeň";
+  };
+
+  const getCustomerMonthlyLabel = () => {
+    if (customerFilter === "rides") return "Počet jázd tento mesiac";
+    if (customerFilter === "newCustomers") return "Noví zákazníci tento mesiac";
+    return "Vracajúci sa tento mesiac";
+  };
+
+  const getCustomerChartTitle = () => {
+    if (customerFilter === "rides") return `Počet jázd po mesiacoch - ${new Date().getFullYear()}`;
+    if (customerFilter === "newCustomers") return `Noví zákazníci po mesiacoch - ${new Date().getFullYear()}`;
+    return `Vracajúci sa zákazníci po mesiacoch - ${new Date().getFullYear()}`;
   };
 
   useEffect(() => {
@@ -359,207 +409,90 @@ export default function DashboardPage() {
 
         {/* Customer Statistics Section */}
         <div>
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">Zákazníci</h2>
-
-          {/* Rides Statistics */}
-          <div className="mb-6">
-            <h3 className="text-lg font-medium text-slate-700 mb-3">Jazdy</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h4 className="text-sm font-medium text-slate-600">
-                  Počet jázd tento týždeň
-                </h4>
-                <p className="text-3xl font-bold text-blue-600 mt-2">
-                  {loading ? "..." : stats.ridesThisWeek}
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h4 className="text-sm font-medium text-slate-600">
-                  Počet jázd tento mesiac
-                </h4>
-                <p className="text-3xl font-bold text-green-600 mt-2">
-                  {loading ? "..." : stats.ridesThisMonth}
-                </p>
-              </div>
-            </div>
-            
-            {/* Rides Chart */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h4 className="text-lg font-semibold text-slate-700 mb-4">
-                Počet jázd po mesiacoch - {new Date().getFullYear()}
-              </h4>
-              {loading ? (
-                <div className="h-64 flex items-center justify-center">
-                  <p className="text-slate-600">Načítavam graf...</p>
-                </div>
-              ) : (
-                <div className="h-64">
-                  <div className="flex items-end justify-between h-full gap-2">
-                    {stats.ridesByMonth.map((data, index) => {
-                      const maxValue = Math.max(...stats.ridesByMonth.map(d => d.count));
-                      const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
-                      
-                      return (
-                        <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                          <div className="relative w-full" style={{ height: '200px' }}>
-                            <div 
-                              className="absolute bottom-0 w-full rounded-t-lg transition-all bg-blue-500"
-                              style={{ height: `${height}%` }}
-                              title={`${data.monthName}: ${data.count} jázd`}
-                            >
-                              {data.count > 0 && (
-                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
-                                  {data.count}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-xs text-slate-600 text-center">
-                            {data.monthName.slice(0, 3)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-slate-700">Zákazníci</h2>
+            <select
+              value={customerFilter}
+              onChange={(e) => setCustomerFilter(e.target.value as typeof customerFilter)}
+              className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+            >
+              <option value="rides">Počet jázd</option>
+              <option value="newCustomers">Noví zákazníci</option>
+              <option value="returningCustomers">Vracajúci sa zákazníci</option>
+            </select>
           </div>
 
-          {/* New Customers Statistics */}
-          <div className="mb-6">
-            <h3 className="text-lg font-medium text-slate-700 mb-3">Noví zákazníci</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h4 className="text-sm font-medium text-slate-600">
-                  Noví zákazníci tento týždeň
-                </h4>
-                <p className="text-3xl font-bold text-blue-600 mt-2">
-                  {loading ? "..." : stats.newCustomersThisWeek}
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h4 className="text-sm font-medium text-slate-600">
-                  Noví zákazníci tento mesiac
-                </h4>
-                <p className="text-3xl font-bold text-green-600 mt-2">
-                  {loading ? "..." : stats.newCustomersThisMonth}
-                </p>
-              </div>
-            </div>
-            
-            {/* New Customers Chart */}
+          {/* Weekly and Monthly Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-white p-6 rounded-lg shadow">
-              <h4 className="text-lg font-semibold text-slate-700 mb-4">
-                Noví zákazníci po mesiacoch - {new Date().getFullYear()}
-              </h4>
-              {loading ? (
-                <div className="h-64 flex items-center justify-center">
-                  <p className="text-slate-600">Načítavam graf...</p>
-                </div>
-              ) : (
-                <div className="h-64">
-                  <div className="flex items-end justify-between h-full gap-2">
-                    {stats.newCustomersByMonth.map((data, index) => {
-                      const maxValue = Math.max(...stats.newCustomersByMonth.map(d => d.count));
-                      const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
-                      
-                      return (
-                        <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                          <div className="relative w-full" style={{ height: '200px' }}>
-                            <div 
-                              className="absolute bottom-0 w-full rounded-t-lg transition-all bg-green-500"
-                              style={{ height: `${height}%` }}
-                              title={`${data.monthName}: ${data.count} nových`}
-                            >
-                              {data.count > 0 && (
-                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
-                                  {data.count}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-xs text-slate-600 text-center">
-                            {data.monthName.slice(0, 3)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Returning Customers Statistics */}
-          <div className="mb-6">
-            <h3 className="text-lg font-medium text-slate-700 mb-3">Vracajúci sa zákazníci</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h4 className="text-sm font-medium text-slate-600">
-                  Vracajúci sa tento týždeň
-                </h4>
-                <p className="text-3xl font-bold text-blue-600 mt-2">
-                  {loading ? "..." : stats.returningRidersThisWeek}
-                </p>
+              <h3 className="text-sm font-medium text-slate-600">
+                {getCustomerWeeklyLabel()}
+              </h3>
+              <p className="text-3xl font-bold text-blue-600 mt-2">
+                {loading ? "..." : getCustomerWeeklyCount()}
+              </p>
+              {customerFilter === "returningCustomers" && !loading && (
                 <p className="text-sm text-slate-500 mt-1">
                   Jazdili viac ako raz celkovo
                 </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow">
-                <h4 className="text-sm font-medium text-slate-600">
-                  Vracajúci sa tento mesiac
-                </h4>
-                <p className="text-3xl font-bold text-green-600 mt-2">
-                  {loading ? "..." : stats.returningRidersThisMonth}
-                </p>
+              )}
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                {getCustomerMonthlyLabel()}
+              </h3>
+              <p className="text-3xl font-bold text-green-600 mt-2">
+                {loading ? "..." : getCustomerMonthlyCount()}
+              </p>
+              {customerFilter === "returningCustomers" && !loading && (
                 <p className="text-sm text-slate-500 mt-1">
                   Jazdili viac ako raz celkovo
                 </p>
-              </div>
-            </div>
-            
-            {/* Returning Customers Chart */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h4 className="text-lg font-semibold text-slate-700 mb-4">
-                Vracajúci sa zákazníci po mesiacoch - {new Date().getFullYear()}
-              </h4>
-              {loading ? (
-                <div className="h-64 flex items-center justify-center">
-                  <p className="text-slate-600">Načítavam graf...</p>
-                </div>
-              ) : (
-                <div className="h-64">
-                  <div className="flex items-end justify-between h-full gap-2">
-                    {stats.returningCustomersByMonth.map((data, index) => {
-                      const maxValue = Math.max(...stats.returningCustomersByMonth.map(d => d.count));
-                      const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
-                      
-                      return (
-                        <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                          <div className="relative w-full" style={{ height: '200px' }}>
-                            <div 
-                              className="absolute bottom-0 w-full rounded-t-lg transition-all bg-purple-500"
-                              style={{ height: `${height}%` }}
-                              title={`${data.monthName}: ${data.count} vracajúcich sa`}
-                            >
-                              {data.count > 0 && (
-                                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
-                                  {data.count}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <span className="text-xs text-slate-600 text-center">
-                            {data.monthName.slice(0, 3)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
               )}
             </div>
+          </div>
+          
+          {/* Chart */}
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-lg font-semibold text-slate-700 mb-4">
+              {getCustomerChartTitle()}
+            </h3>
+            {loading ? (
+              <div className="h-64 flex items-center justify-center">
+                <p className="text-slate-600">Načítavam graf...</p>
+              </div>
+            ) : (
+              <div className="h-64">
+                <div className="flex items-end justify-between h-full gap-2">
+                  {getCustomerChartData().map((data, index) => {
+                    const chartData = getCustomerChartData();
+                    const maxValue = Math.max(...chartData.map(d => d.count));
+                    const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                    
+                    return (
+                      <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                        <div className="relative w-full" style={{ height: '200px' }}>
+                          <div 
+                            className={`absolute bottom-0 w-full rounded-t-lg transition-all ${getCustomerChartColor()}`}
+                            style={{ height: `${height}%` }}
+                            title={`${data.monthName}: ${data.count}`}
+                          >
+                            {data.count > 0 && (
+                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                                {data.count}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-xs text-slate-600 text-center">
+                          {data.monthName.slice(0, 3)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
