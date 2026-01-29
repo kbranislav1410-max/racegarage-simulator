@@ -463,23 +463,25 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Customer Statistics Section */}
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-slate-700">Zákazníci</h2>
-            <select
-              value={customerFilter}
-              onChange={(e) => setCustomerFilter(e.target.value as typeof customerFilter)}
-              className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
-            >
-              <option value="rides">Počet jázd</option>
-              <option value="newCustomers">Noví zákazníci</option>
-              <option value="returningCustomers">Vracajúci sa zákazníci</option>
-            </select>
-          </div>
+        {/* Customer Statistics and Financial Indicators Side by Side */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Customer Statistics Section */}
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-slate-700">Zákazníci</h2>
+              <select
+                value={customerFilter}
+                onChange={(e) => setCustomerFilter(e.target.value as typeof customerFilter)}
+                className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+              >
+                <option value="rides">Počet jázd</option>
+                <option value="newCustomers">Noví zákazníci</option>
+                <option value="returningCustomers">Vracajúci sa zákazníci</option>
+              </select>
+            </div>
 
-          {/* Weekly and Monthly Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Weekly and Monthly Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-sm font-medium text-slate-600">
                 {getCustomerWeeklyLabel()}
@@ -693,6 +695,7 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
+        </div>
         </div>
 
         {/* Yearly Overview */}
