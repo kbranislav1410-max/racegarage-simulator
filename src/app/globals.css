@@ -50,6 +50,7 @@ select {
   color: white !important;
   background-color: #292929 !important;
   border: none !important;
+  -webkit-text-fill-color: white !important; /* Force white text in WebKit browsers */
 }
 
 /* Style dropdown options */
