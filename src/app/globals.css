@@ -49,9 +49,13 @@ textarea:disabled {
 /* Custom select/dropdown styling */
 select {
   color: white !important;
-  background-color: #292929 !important;
   border: none !important;
   -webkit-text-fill-color: white !important; /* Force white text in WebKit browsers */
+}
+
+/* Add white hover border effect to select elements */
+select:hover {
+  border: 1px solid white !important;
 }
 
 /* Style dropdown options */
