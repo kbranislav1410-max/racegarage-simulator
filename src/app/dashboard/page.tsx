@@ -613,15 +613,16 @@ export default function DashboardPage() {
                               );
                             })}
                           </div>
-                        </div>
+                          </div>
                         
-                        {/* Month labels */}
-                        <div className="flex items-center justify-between gap-2 pt-4">
-                          {chartData.map((data, index) => (
-                            <span key={index} className="flex-1 text-xs text-slate-300 text-center">
-                              {data.monthName.slice(0, 3)}
-                            </span>
-                          ))}
+                          {/* Month labels */}
+                          <div className="flex items-center justify-between gap-2 pt-4">
+                            {chartData.map((data, index) => (
+                              <span key={index} className="flex-1 text-xs text-slate-300 text-center">
+                                {data.monthName.slice(0, 3)}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -808,15 +809,16 @@ export default function DashboardPage() {
                               );
                             })}
                           </div>
-                        </div>
+                          </div>
                         
-                        {/* Month labels */}
-                        <div className="flex items-center justify-between gap-2 pt-4">
-                          {chartData.map((data, index) => (
-                            <span key={index} className="flex-1 text-xs text-slate-300 text-center">
-                              {data.month.slice(0, 3)}
-                            </span>
-                          ))}
+                          {/* Month labels */}
+                          <div className="flex items-center justify-between gap-2 pt-4">
+                            {chartData.map((data, index) => (
+                              <span key={index} className="flex-1 text-xs text-slate-300 text-center">
+                                {data.month.slice(0, 3)}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
