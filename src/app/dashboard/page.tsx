@@ -202,8 +202,8 @@ export default function DashboardPage() {
   };
 
   const getCustomerChartColor = () => {
-    // All charts use red color
-    return "bg-red-600";
+    // All charts use gray color
+    return "#a6a6a6";
   };
 
   const getCustomerTitle = () => {
@@ -452,7 +452,8 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={handleOpenRecordModal}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            style={{ backgroundColor: "#4ca626" }}
+            className="hover:bg-opacity-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Plus size={24} />
             <span>Nová jazda</span>
@@ -460,7 +461,8 @@ export default function DashboardPage() {
           
           <button
             onClick={handleNewCustomer}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            style={{ backgroundColor: "#0097b2" }}
+            className="hover:bg-opacity-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <UserPlus size={24} />
             <span>Nový zákazník</span>
@@ -468,7 +470,8 @@ export default function DashboardPage() {
           
           <button
             onClick={handleNewVoucher}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            style={{ backgroundColor: "#ffd21f" }}
+            className="hover:bg-opacity-90 text-black px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Ticket size={24} />
             <span>Nový poukaz</span>
@@ -542,34 +545,71 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="h-64">
-                <div className="flex items-end justify-between h-full gap-2">
-                  {getCustomerChartData().map((data, index) => {
-                    const chartData = getCustomerChartData();
-                    const maxValue = Math.max(...chartData.map(d => d.count));
-                    const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
-                    
-                    return (
-                      <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                        <div className="relative w-full" style={{ height: '200px' }}>
-                          <div 
-                            className={`absolute bottom-0 w-full rounded-t-lg transition-all ${getCustomerChartColor()}`}
-                            style={{ height: `${height}%` }}
-                            title={`${data.monthName}: ${data.count}`}
-                          >
-                            {data.count > 0 && (
-                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
-                                {data.count}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <span className="text-xs text-slate-300 text-center">
-                          {data.monthName.slice(0, 3)}
-                        </span>
+                {(() => {
+                  const chartData = getCustomerChartData();
+                  const maxValue = Math.max(...chartData.map(d => d.count), 1);
+                  
+                  return (
+                    <div className="space-y-1">
+                      {/* Y-axis labels */}
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>{maxValue}</span>
                       </div>
-                    );
-                  })}
-                </div>
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>{Math.round(maxValue / 2)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>0</span>
+                      </div>
+                      
+                      {/* Chart with grid lines */}
+                      <div className="relative h-48 border-b border-slate-700">
+                        {/* Horizontal grid lines */}
+                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                          <div className="border-t border-slate-700"></div>
+                          <div className="border-t border-slate-700"></div>
+                          <div className="border-t border-slate-700"></div>
+                        </div>
+                        
+                        {/* Bars */}
+                        <div className="flex items-end justify-between h-full gap-2">
+                          {chartData.map((data, index) => {
+                            const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                            
+                            return (
+                              <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <div 
+                                  className="w-full rounded-t relative"
+                                  style={{ 
+                                    backgroundColor: getCustomerChartColor(),
+                                    height: `${height}%`,
+                                    minHeight: data.count > 0 ? "8px" : "0px"
+                                  }}
+                                  title={`${data.monthName}: ${data.count}`}
+                                >
+                                  {data.count > 0 && (
+                                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
+                                      {data.count}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      
+                      {/* Month labels */}
+                      <div className="flex items-center justify-between gap-2 pt-2">
+                        {chartData.map((data, index) => (
+                          <span key={index} className="flex-1 text-xs text-slate-300 text-center">
+                            {data.monthName.slice(0, 3)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
@@ -683,33 +723,71 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="h-64">
-                <div className="flex items-end justify-between h-full gap-2">
-                  {getChartData().map((data, index) => {
-                    const maxValue = Math.max(...getChartData().map(d => d.value));
-                    const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
-                    
-                    return (
-                      <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                        <div className="relative w-full" style={{ height: '200px' }}>
-                          <div 
-                            className="absolute bottom-0 w-full rounded-t-lg transition-all bg-red-600"
-                            style={{ height: `${height}%` }}
-                            title={`${data.month}: €${data.value.toFixed(2)}`}
-                          >
-                            {data.value > 0 && (
-                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
-                                €{data.value.toFixed(0)}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        <span className="text-xs text-slate-300 text-center">
-                          {data.month.slice(0, 3)}
-                        </span>
+                {(() => {
+                  const chartData = getChartData();
+                  const maxValue = Math.max(...chartData.map(d => d.value), 1);
+                  
+                  return (
+                    <div className="space-y-1">
+                      {/* Y-axis labels */}
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>€{maxValue.toFixed(0)}</span>
                       </div>
-                    );
-                  })}
-                </div>
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>€{(maxValue / 2).toFixed(0)}</span>
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                        <span>€0</span>
+                      </div>
+                      
+                      {/* Chart with grid lines */}
+                      <div className="relative h-48 border-b border-slate-700">
+                        {/* Horizontal grid lines */}
+                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                          <div className="border-t border-slate-700"></div>
+                          <div className="border-t border-slate-700"></div>
+                          <div className="border-t border-slate-700"></div>
+                        </div>
+                        
+                        {/* Bars */}
+                        <div className="flex items-end justify-between h-full gap-2">
+                          {chartData.map((data, index) => {
+                            const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
+                            
+                            return (
+                              <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <div 
+                                  className="w-full rounded-t relative"
+                                  style={{ 
+                                    backgroundColor: "#a6a6a6",
+                                    height: `${height}%`,
+                                    minHeight: data.value > 0 ? "8px" : "0px"
+                                  }}
+                                  title={`${data.month}: €${data.value.toFixed(2)}`}
+                                >
+                                  {data.value > 0 && (
+                                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
+                                      €{data.value.toFixed(0)}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      
+                      {/* Month labels */}
+                      <div className="flex items-center justify-between gap-2 pt-2">
+                        {chartData.map((data, index) => (
+                          <span key={index} className="flex-1 text-xs text-slate-300 text-center">
+                            {data.month.slice(0, 3)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
