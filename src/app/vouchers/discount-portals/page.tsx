@@ -154,7 +154,8 @@ export default function DiscountPortalsPage() {
               </a>
               <a
                 href="/vouchers/discount-portals"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-red-600 text-white"
+                className="px-6 py-4 text-sm font-medium border-b-2 text-white"
+                style={{ borderBottomColor: "#c20003" }}
               >
                 Zľavové portály
               </a>

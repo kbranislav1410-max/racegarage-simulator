@@ -228,7 +228,7 @@ export default function SettingsPage() {
                       })
                     }
                     disabled={!workingHours[day].enabled}
-                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-100 disabled:text-slate-500"
+                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-800 disabled:text-slate-500"
                   />
                   <span className="text-slate-300">-</span>
                   <input
@@ -244,7 +244,7 @@ export default function SettingsPage() {
                       })
                     }
                     disabled={!workingHours[day].enabled}
-                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-100 disabled:text-slate-500"
+                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-800 disabled:text-slate-500"
                   />
                 </div>
               </div>

@@ -459,7 +459,7 @@ export default function ChallengePage() {
                         <tr
                           key={entry.id}
                           className={`hover:bg-slate-700 ${
-                            entry.rank <= 3 ? "bg-yellow-50" : ""
+                            entry.rank <= 3 ? "bg-yellow-900/20" : ""
                           }`}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
