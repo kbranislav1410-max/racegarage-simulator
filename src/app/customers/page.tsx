@@ -406,10 +406,8 @@ export default function CustomersPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, firstName: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white ${
-                          formErrors.firstName ? "border-red-300" : "border-slate-600"
-                        }`}
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                       {formErrors.firstName && (
@@ -427,10 +425,8 @@ export default function CustomersPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, lastName: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white ${
-                          formErrors.lastName ? "border-red-300" : "border-slate-600"
-                        }`}
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                       {formErrors.lastName && (
@@ -449,10 +445,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white ${
-                        formErrors.email ? "border-red-300" : "border-slate-600"
-                      }`}
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                       required
                     />
                     {formErrors.email && (
@@ -470,8 +464,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, street: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                   </div>
 
@@ -485,8 +479,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, city: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                   </div>
 
@@ -500,8 +494,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                   </div>
 
