@@ -2,7 +2,8 @@
 
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { useEffect, useState } from "react";
-import { Plus, Search, X, Calendar } from "lucide-react";
+import { Plus, Search, X, Calendar, UserPlus, Ticket } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DashboardStats {
   totalCustomers: number;
@@ -77,6 +78,7 @@ interface Customer {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
     totalCustomers: 0,
     totalRides: 0,
@@ -297,6 +299,33 @@ export default function DashboardPage() {
     setSelectedCustomer(null);
   };
 
+  // Quick action handlers
+  const handleNewCustomer = () => {
+    setShowRecordModal(true);
+    setRecordStep("create-customer");
+    setCustomerFormData({
+      email: "",
+      firstName: "",
+      lastName: "",
+      street: "",
+      city: "",
+      phone: "",
+      newsletter: false,
+    });
+    setCustomerFormErrors({});
+  };
+
+  const handleSearchCustomer = () => {
+    setShowRecordModal(true);
+    setRecordStep("search");
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
+  const handleNewVoucher = () => {
+    router.push("/vouchers");
+  };
+
   const handleSelectCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
     setRecordStep("record-ride");
@@ -391,19 +420,46 @@ export default function DashboardPage() {
   return (
     <ProtectedLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-800">Prehľad</h1>
-            <p className="text-slate-600 mt-2">
-              Vitajte v systéme Racegarage Simulátor
-            </p>
-          </div>
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-slate-800">Prehľad</h1>
+          <p className="text-slate-600 mt-2">
+            Vitajte v systéme Racegarage Simulátor
+          </p>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={handleOpenRecordModal}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md flex items-center gap-2 font-medium shadow-lg hover:shadow-xl transition"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
-            <Plus size={20} />
-            Zaznamenať jazdu
+            <Plus size={24} />
+            <span>Nová jazda</span>
+          </button>
+          
+          <button
+            onClick={handleNewCustomer}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            <UserPlus size={24} />
+            <span>Nový zákazník</span>
+          </button>
+          
+          <button
+            onClick={handleNewVoucher}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            <Ticket size={24} />
+            <span>Nový poukaz</span>
+          </button>
+          
+          <button
+            onClick={handleSearchCustomer}
+            className="bg-slate-600 hover:bg-slate-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+          >
+            <Search size={24} />
+            <span>Vyhľadať zákazníka</span>
           </button>
         </div>
 
