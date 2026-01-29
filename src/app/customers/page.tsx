@@ -226,8 +226,8 @@ export default function CustomersPage() {
                 placeholder="Hľadať podľa mena, emailu alebo adresy..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f" }}
+                className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f", border: "none" }}
               />
             </div>
             <button
@@ -611,16 +611,17 @@ export default function CustomersPage() {
                 </div>
 
                 {/* Ride History */}
-                <div>
+                <div className="rounded-lg p-4" style={{ backgroundColor: "#1f1f1f" }}>
                   <h3 className="font-semibold text-white mb-3">Nedávne jazdy</h3>
                   {selectedCustomer.rideSessions.length === 0 ? (
                     <p className="text-slate-300 text-center py-4">Zatiaľ žiadne jazdy</p>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {selectedCustomer.rideSessions.map((ride) => (
                         <div
                           key={ride.id}
-                          className="border border-slate-700 rounded-lg p-3"
+                          className="rounded-lg p-3"
+                          style={{ backgroundColor: "#292929" }}
                         >
                           <div className="flex justify-between items-start">
                             <div>
@@ -646,7 +647,8 @@ export default function CustomersPage() {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={() => setShowDetailModal(false)}
-                    className="px-6 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                    className="px-6 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+                    style={{ backgroundColor: "#c20003" }}
                   >
                     Zavrieť
                   </button>
