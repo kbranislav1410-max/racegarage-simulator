@@ -63,9 +63,14 @@ select option {
 
 /* Hover effect for dropdown options - red color */
 select option:hover,
-select option:focus,
-select option:checked {
+select option:focus {
   background-color: #c20003 !important;
+  color: white !important;
+}
+
+/* Selected option keeps normal background */
+select option:checked {
+  background-color: #292929 !important;
   color: white !important;
 }
 
