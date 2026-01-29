@@ -202,9 +202,8 @@ export default function DashboardPage() {
   };
 
   const getCustomerChartColor = () => {
-    if (customerFilter === "rides") return "bg-blue-500";
-    if (customerFilter === "newCustomers") return "bg-green-500";
-    return "bg-purple-500";
+    // All charts use red color
+    return "bg-red-600";
   };
 
   const getCustomerTitle = () => {
@@ -508,7 +507,7 @@ export default function DashboardPage() {
               <h3 className="text-sm font-medium text-slate-300">
                 {getCustomerWeeklyLabel()}
               </h3>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : getCustomerWeeklyCount()}
               </p>
               {customerFilter === "returningCustomers" && !loading && (
@@ -521,7 +520,7 @@ export default function DashboardPage() {
               <h3 className="text-sm font-medium text-slate-300">
                 {getCustomerMonthlyLabel()}
               </h3>
-              <p className="text-3xl font-bold text-green-600 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : getCustomerMonthlyCount()}
               </p>
               {customerFilter === "returningCustomers" && !loading && (
@@ -598,7 +597,7 @@ export default function DashboardPage() {
               <h3 className="text-sm font-medium text-slate-300">
                 Príjem za tento týždeň
               </h3>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : `€${getFilteredRevenue(
                   stats.weeklyRevenue,
                   stats.weeklyRevenueRacegarage,
@@ -617,7 +616,7 @@ export default function DashboardPage() {
               <h3 className="text-sm font-medium text-slate-300">
                 Príjem za tento mesiac
               </h3>
-              <p className="text-3xl font-bold text-green-600 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : `€${getFilteredRevenue(
                   stats.monthlyRevenue,
                   stats.monthlyRevenueRacegarage,
@@ -693,11 +692,7 @@ export default function DashboardPage() {
                       <div key={index} className="flex-1 flex flex-col items-center gap-2">
                         <div className="relative w-full" style={{ height: '200px' }}>
                           <div 
-                            className={`absolute bottom-0 w-full rounded-t-lg transition-all ${
-                              revenueFilter === "racegarage" ? "bg-blue-500" :
-                              revenueFilter === "pdDriveClub" ? "bg-green-500" :
-                              "bg-slate-600"
-                            }`}
+                            className="absolute bottom-0 w-full rounded-t-lg transition-all bg-red-600"
                             style={{ height: `${height}%` }}
                             title={`${data.month}: €${data.value.toFixed(2)}`}
                           >
@@ -869,7 +864,7 @@ export default function DashboardPage() {
                         
                         {/* Lap Time */}
                         <div className="text-right">
-                          <p className="text-2xl font-bold text-blue-600">
+                          <p className="text-2xl font-bold text-white">
                             {formatLapTime(attempt.lapTimeMs)}
                           </p>
                           <p className="text-xs text-slate-400">čas kola</p>
@@ -887,7 +882,7 @@ export default function DashboardPage() {
         <div className="p-6 rounded-lg shadow h-full" style={{ backgroundColor: "#292929" }}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <Users className="text-blue-600" size={24} />
+              <Users className="text-red-600" size={24} />
               Najčastejší jazdci
             </h2>
           </div>
@@ -904,10 +899,10 @@ export default function DashboardPage() {
               {stats.frequentRiders.map((rider, index) => (
                 <div
                   key={rider.customerId}
-                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-700 hover:border-slate-600 hover:bg-slate-700 transition-colors"
                 >
                   {/* Rank Number */}
-                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-white flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white flex-shrink-0">
                     {index + 1}
                   </div>
                   
@@ -921,13 +916,13 @@ export default function DashboardPage() {
                   {/* Statistics */}
                   <div className="text-right flex gap-4">
                     <div>
-                      <p className="text-lg font-bold text-blue-600">
+                      <p className="text-lg font-bold text-white">
                         {rider.totalRides}
                       </p>
                       <p className="text-xs text-slate-400">jázd</p>
                     </div>
                     <div>
-                      <p className="text-lg font-bold text-green-600">
+                      <p className="text-lg font-bold text-white">
                         {rider.totalMinutes}
                       </p>
                       <p className="text-xs text-slate-400">minút</p>
