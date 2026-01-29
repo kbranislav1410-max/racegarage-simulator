@@ -443,8 +443,8 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Prehľad</h1>
-          <p className="text-slate-600 mt-2">
+          <h1 className="text-3xl font-bold text-white">Prehľad</h1>
+          <p className="text-slate-300 mt-2">
             Vitajte v systéme Racegarage Simulátor
           </p>
         </div>
@@ -489,11 +489,12 @@ export default function DashboardPage() {
           {/* Customer Statistics Section */}
           <div className="h-full">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-slate-700">Zákazníci</h2>
+              <h2 className="text-xl font-semibold text-white">Zákazníci</h2>
               <select
                 value={customerFilter}
                 onChange={(e) => setCustomerFilter(e.target.value as typeof customerFilter)}
-                className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+                className="px-4 py-2 border border-slate-600 rounded-lg text-white"
+                style={{ backgroundColor: '#1f1f1f' }}
               >
                 <option value="rides">Počet jázd</option>
                 <option value="newCustomers">Noví zákazníci</option>
@@ -503,28 +504,28 @@ export default function DashboardPage() {
 
             {/* Weekly and Monthly Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 {getCustomerWeeklyLabel()}
               </h3>
               <p className="text-3xl font-bold text-blue-600 mt-2">
                 {loading ? "..." : getCustomerWeeklyCount()}
               </p>
               {customerFilter === "returningCustomers" && !loading && (
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   Jazdili viac ako raz celkovo
                 </p>
               )}
             </div>
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 {getCustomerMonthlyLabel()}
               </h3>
               <p className="text-3xl font-bold text-green-600 mt-2">
                 {loading ? "..." : getCustomerMonthlyCount()}
               </p>
               {customerFilter === "returningCustomers" && !loading && (
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   Jazdili viac ako raz celkovo
                 </p>
               )}
@@ -532,13 +533,13 @@ export default function DashboardPage() {
           </div>
           
           {/* Chart */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">
+          <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+            <h3 className="text-lg font-semibold text-white mb-4">
               {getCustomerChartTitle()}
             </h3>
             {loading ? (
               <div className="h-64 flex items-center justify-center">
-                <p className="text-slate-600">Načítavam graf...</p>
+                <p className="text-slate-300">Načítavam graf...</p>
               </div>
             ) : (
               <div className="h-64">
@@ -557,13 +558,13 @@ export default function DashboardPage() {
                             title={`${data.monthName}: ${data.count}`}
                           >
                             {data.count > 0 && (
-                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
                                 {data.count}
                               </div>
                             )}
                           </div>
                         </div>
-                        <span className="text-xs text-slate-600 text-center">
+                        <span className="text-xs text-slate-300 text-center">
                           {data.monthName.slice(0, 3)}
                         </span>
                       </div>
@@ -578,11 +579,12 @@ export default function DashboardPage() {
         {/* Financial Indicators Section */}
         <div className="h-full">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-slate-700">Finančné ukazovatele</h2>
+            <h2 className="text-xl font-semibold text-white">Finančné ukazovatele</h2>
             <select
               value={revenueFilter}
               onChange={(e) => setRevenueFilter(e.target.value as typeof revenueFilter)}
-              className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+              className="px-4 py-2 border border-slate-600 rounded-lg text-white"
+              style={{ backgroundColor: '#1f1f1f' }}
             >
               <option value="all">Celkové príjmy</option>
               <option value="racegarage">Racegarage</option>
@@ -592,8 +594,8 @@ export default function DashboardPage() {
 
           {/* Weekly, Monthly, Settlement Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Príjem za tento týždeň
               </h3>
               <p className="text-3xl font-bold text-blue-600 mt-2">
@@ -604,15 +606,15 @@ export default function DashboardPage() {
                 ).toFixed(2)}`}
               </p>
               {!loading && revenueFilter === "all" && (
-                <div className="mt-2 text-xs text-slate-500">
+                <div className="mt-2 text-xs text-slate-400">
                   <div>Racegarage: €{stats.weeklyRevenueRacegarage.toFixed(2)}</div>
                   <div>PD Drive Club: €{stats.weeklyRevenuePDDriveClub.toFixed(2)}</div>
                 </div>
               )}
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Príjem za tento mesiac
               </h3>
               <p className="text-3xl font-bold text-green-600 mt-2">
@@ -623,7 +625,7 @@ export default function DashboardPage() {
                 ).toFixed(2)}`}
               </p>
               {!loading && revenueFilter === "all" && (
-                <div className="mt-2 text-xs text-slate-500">
+                <div className="mt-2 text-xs text-slate-400">
                   <div>Racegarage: €{stats.monthlyRevenueRacegarage.toFixed(2)}</div>
                   <div>PD Drive Club: €{stats.monthlyRevenuePDDriveClub.toFixed(2)}</div>
                 </div>
@@ -642,14 +644,14 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Vyrovnanie za aktuálny mesiac
               </h3>
               <p className={`text-3xl font-bold mt-2 ${
                 stats.settlementAmount > 0 ? "text-green-600" : 
                 stats.settlementAmount < 0 ? "text-red-600" : 
-                "text-slate-800"
+                "text-white"
               }`}>
                 {loading ? "..." : stats.settlementAmount > 0 
                   ? `+€${stats.settlementAmount.toFixed(2)}`
@@ -659,7 +661,7 @@ export default function DashboardPage() {
                 }
               </p>
               {!loading && (
-                <p className="text-xs text-slate-500 mt-2">
+                <p className="text-xs text-slate-400 mt-2">
                   {stats.settlementAmount > 0 
                     ? "PD Drive Club mi dlhuje"
                     : stats.settlementAmount < 0
@@ -672,13 +674,13 @@ export default function DashboardPage() {
           </div>
 
           {/* Monthly Revenue Chart */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-slate-700 mb-4">
+          <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+            <h3 className="text-lg font-semibold text-white mb-4">
               Mesačné príjmy za rok {new Date().getFullYear()}
             </h3>
             {loading ? (
               <div className="h-64 flex items-center justify-center">
-                <p className="text-slate-600">Načítavam graf...</p>
+                <p className="text-slate-300">Načítavam graf...</p>
               </div>
             ) : (
               <div className="h-64">
@@ -700,13 +702,13 @@ export default function DashboardPage() {
                             title={`${data.month}: €${data.value.toFixed(2)}`}
                           >
                             {data.value > 0 && (
-                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
                                 €{data.value.toFixed(0)}
                               </div>
                             )}
                           </div>
                         </div>
-                        <span className="text-xs text-slate-600 text-center">
+                        <span className="text-xs text-slate-300 text-center">
                           {data.month.slice(0, 3)}
                         </span>
                       </div>
@@ -721,13 +723,13 @@ export default function DashboardPage() {
 
         {/* Yearly Overview */}
         <div>
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">Ročný prehľad</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">Ročný prehľad</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Príjem za tento rok
               </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : `€${stats.yearlyRevenue.toFixed(2)}`}
               </p>
               {!loading && stats.yearlyRevenueChange !== 0 && (
@@ -744,39 +746,39 @@ export default function DashboardPage() {
               )}
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Počet zákazníkov
               </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : stats.yearlyCustomers}
               </p>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 Celkový počet
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Počet jázd
               </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : stats.yearlyRides}
               </p>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-400 mt-1">
                 Za tento rok
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-sm font-medium text-slate-600">
+            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <h3 className="text-sm font-medium text-slate-300">
                 Počet odjazdených minút
               </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
+              <p className="text-3xl font-bold text-white mt-2">
                 {loading ? "..." : stats.yearlyMinutes.toLocaleString()}
               </p>
               {!loading && stats.yearlyMinutes > 0 && (
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   {(stats.yearlyMinutes / 60).toFixed(1)} hodín
                 </p>
               )}
@@ -787,9 +789,9 @@ export default function DashboardPage() {
         {/* Challenge Leaderboard and Frequent Riders - Side by Side */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Challenge Leaderboard - TOP 3 */}
-          <div className="bg-white p-6 rounded-lg shadow h-full">
+          <div className="p-6 rounded-lg shadow h-full" style={{ backgroundColor: "#292929" }}>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <Trophy className="text-yellow-500" size={24} />
               Aktuálna výzva
             </h2>
@@ -803,11 +805,11 @@ export default function DashboardPage() {
           </div>
           
           {loading ? (
-            <p className="text-slate-600">Načítavam...</p>
+            <p className="text-slate-300">Načítavam...</p>
           ) : !stats.challengeLeaderboard ? (
             <div className="text-center py-8">
               <Trophy className="mx-auto text-slate-300 mb-3" size={48} />
-              <p className="text-slate-600">Žiadna aktívna výzva pre tento mesiac</p>
+              <p className="text-slate-300">Žiadna aktívna výzva pre tento mesiac</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -815,14 +817,14 @@ export default function DashboardPage() {
               <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-slate-600">Trať:</span>
-                    <span className="ml-2 font-semibold text-slate-800">
+                    <span className="text-slate-300">Trať:</span>
+                    <span className="ml-2 font-semibold text-white">
                       {stats.challengeLeaderboard.challenge.trackName}
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-600">Auto:</span>
-                    <span className="ml-2 font-semibold text-slate-800">
+                    <span className="text-slate-300">Auto:</span>
+                    <span className="ml-2 font-semibold text-white">
                       {stats.challengeLeaderboard.challenge.carName}
                     </span>
                   </div>
@@ -831,7 +833,7 @@ export default function DashboardPage() {
 
               {/* TOP 3 Leaderboard */}
               {stats.challengeLeaderboard.topAttempts.length === 0 ? (
-                <p className="text-center text-slate-600 py-4">
+                <p className="text-center text-slate-300 py-4">
                   Zatiaľ žiadne pokusy. Buď prvý!
                 </p>
               ) : (
@@ -856,10 +858,10 @@ export default function DashboardPage() {
                         
                         {/* Customer Name */}
                         <div className="flex-1">
-                          <p className="font-semibold text-slate-800">
+                          <p className="font-semibold text-white">
                             {attempt.customerName}
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-slate-400">
                             {new Date(attempt.recordedAt).toLocaleDateString("sk-SK")}
                           </p>
                         </div>
@@ -869,7 +871,7 @@ export default function DashboardPage() {
                           <p className="text-2xl font-bold text-blue-600">
                             {formatLapTime(attempt.lapTimeMs)}
                           </p>
-                          <p className="text-xs text-slate-500">čas kola</p>
+                          <p className="text-xs text-slate-400">čas kola</p>
                         </div>
                       </div>
                     );
@@ -881,20 +883,20 @@ export default function DashboardPage() {
         </div>
 
         {/* Most Frequent Riders - TOP 10 */}
-        <div className="bg-white p-6 rounded-lg shadow h-full">
+        <div className="p-6 rounded-lg shadow h-full" style={{ backgroundColor: "#292929" }}>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+            <h2 className="text-xl font-bold text-white flex items-center gap-2">
               <Users className="text-blue-600" size={24} />
               Najčastejší jazdci
             </h2>
           </div>
           
           {loading ? (
-            <p className="text-slate-600">Načítavam...</p>
+            <p className="text-slate-300">Načítavam...</p>
           ) : stats.frequentRiders.length === 0 ? (
             <div className="text-center py-8">
               <Users className="mx-auto text-slate-300 mb-3" size={48} />
-              <p className="text-slate-600">Žiadni jazdci</p>
+              <p className="text-slate-300">Žiadni jazdci</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -904,13 +906,13 @@ export default function DashboardPage() {
                   className="flex items-center gap-3 p-4 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-colors"
                 >
                   {/* Rank Number */}
-                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-700 flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-white flex-shrink-0">
                     {index + 1}
                   </div>
                   
                   {/* Customer Name */}
                   <div className="flex-1">
-                    <p className="font-semibold text-slate-800">
+                    <p className="font-semibold text-white">
                       {rider.customerName}
                     </p>
                   </div>
@@ -921,13 +923,13 @@ export default function DashboardPage() {
                       <p className="text-lg font-bold text-blue-600">
                         {rider.totalRides}
                       </p>
-                      <p className="text-xs text-slate-500">jázd</p>
+                      <p className="text-xs text-slate-400">jázd</p>
                     </div>
                     <div>
                       <p className="text-lg font-bold text-green-600">
                         {rider.totalMinutes}
                       </p>
-                      <p className="text-xs text-slate-500">minút</p>
+                      <p className="text-xs text-slate-400">minút</p>
                     </div>
                   </div>
                 </div>
@@ -943,12 +945,12 @@ export default function DashboardPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-slate-200 flex justify-between items-center sticky top-0 bg-white">
-              <h2 className="text-xl font-bold text-slate-800">
+              <h2 className="text-xl font-bold text-white">
                 Zaznamenať jazdu
               </h2>
               <button
                 onClick={handleCloseRecordModal}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-slate-400 hover:text-slate-300"
               >
                 <X size={24} />
               </button>
@@ -958,7 +960,7 @@ export default function DashboardPage() {
               {/* Step 1: Choice */}
               {recordStep === "choice" && (
                 <div className="space-y-4">
-                  <p className="text-slate-700 mb-6">Vyberte typ zákazníka:</p>
+                  <p className="text-white mb-6">Vyberte typ zákazníka:</p>
                   <div className="grid grid-cols-1 gap-4">
                     <button
                       onClick={() => setRecordStep("search")}
@@ -995,7 +997,7 @@ export default function DashboardPage() {
                   </button>
                   
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Vyhľadať zákazníka
                     </label>
                     <div className="relative">
@@ -1011,24 +1013,24 @@ export default function DashboardPage() {
                   </div>
 
                   {searchLoading && (
-                    <p className="text-slate-600 text-center py-4">Vyhľadávam...</p>
+                    <p className="text-slate-300 text-center py-4">Vyhľadávam...</p>
                   )}
 
                   {!searchLoading && searchResults.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-sm text-slate-600">Nájdení zákazníci:</p>
+                      <p className="text-sm text-slate-300">Nájdení zákazníci:</p>
                       {searchResults.map((customer) => (
                         <button
                           key={customer.id}
                           onClick={() => handleSelectCustomer(customer)}
                           className="w-full text-left p-4 border border-slate-200 rounded-md hover:bg-slate-50 hover:border-blue-300"
                         >
-                          <div className="font-medium text-slate-800">
+                          <div className="font-medium text-white">
                             {customer.firstName} {customer.lastName}
                           </div>
-                          <div className="text-sm text-slate-600">{customer.email}</div>
+                          <div className="text-sm text-slate-300">{customer.email}</div>
                           {customer.city && (
-                            <div className="text-sm text-slate-500">{customer.city}</div>
+                            <div className="text-sm text-slate-400">{customer.city}</div>
                           )}
                         </button>
                       ))}
@@ -1036,7 +1038,7 @@ export default function DashboardPage() {
                   )}
 
                   {!searchLoading && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
-                    <p className="text-slate-600 text-center py-4">Žiadni zákazníci nenájdení</p>
+                    <p className="text-slate-300 text-center py-4">Žiadni zákazníci nenájdení</p>
                   )}
                 </div>
               )}
@@ -1054,7 +1056,7 @@ export default function DashboardPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         Meno *
                       </label>
                       <input
@@ -1070,7 +1072,7 @@ export default function DashboardPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         Priezvisko *
                       </label>
                       <input
@@ -1087,7 +1089,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Email *
                     </label>
                     <input
@@ -1103,7 +1105,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Telefón
                     </label>
                     <input
@@ -1118,7 +1120,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Ulica
                     </label>
                     <input
@@ -1133,7 +1135,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Mesto
                     </label>
                     <input
@@ -1155,7 +1157,7 @@ export default function DashboardPage() {
                       onChange={(e) => setCustomerFormData({ ...customerFormData, newsletter: e.target.checked })}
                       className="mr-2"
                     />
-                    <label htmlFor="newsletter" className="text-sm text-slate-700">
+                    <label htmlFor="newsletter" className="text-sm text-white">
                       Zákazník má záujem o newsletter (propagačné materiály a novinky)
                     </label>
                   </div>
@@ -1176,16 +1178,16 @@ export default function DashboardPage() {
               {recordStep === "record-ride" && selectedCustomer && (
                 <form onSubmit={handleRecordRide} className="space-y-4">
                   <div className="bg-blue-50 p-4 rounded-md mb-4">
-                    <p className="text-sm text-slate-600">Zákazník:</p>
-                    <p className="font-medium text-slate-800">
+                    <p className="text-sm text-slate-300">Zákazník:</p>
+                    <p className="font-medium text-white">
                       {selectedCustomer.firstName} {selectedCustomer.lastName}
                     </p>
-                    <p className="text-sm text-slate-600">{selectedCustomer.email}</p>
+                    <p className="text-sm text-slate-300">{selectedCustomer.email}</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         Dátum *
                       </label>
                       <input
@@ -1198,7 +1200,7 @@ export default function DashboardPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         Čas jazdy *
                       </label>
                       <input
@@ -1212,7 +1214,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Suma zaplatená (€)
                     </label>
                     <input
@@ -1227,7 +1229,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Metóda platby
                     </label>
                     <select
@@ -1250,7 +1252,7 @@ export default function DashboardPage() {
                   {rideFormData.paymentMethod === "VOUCHER_PARTNER" && (
                     <>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Partner *
                         </label>
                         <select
@@ -1267,7 +1269,7 @@ export default function DashboardPage() {
                       </div>
 
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
+                        <label className="block text-sm font-medium text-white mb-1">
                           Číslo poukazu *
                         </label>
                         <input
@@ -1284,7 +1286,7 @@ export default function DashboardPage() {
 
                   {(rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && (
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">
+                      <label className="block text-sm font-medium text-white mb-1">
                         Číslo poukazu
                       </label>
                       <input
@@ -1298,7 +1300,7 @@ export default function DashboardPage() {
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Minúty *
                     </label>
                     <input
@@ -1312,7 +1314,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-white mb-1">
                       Poznámka
                     </label>
                     <textarea
@@ -1330,7 +1332,7 @@ export default function DashboardPage() {
                         setSelectedCustomer(null);
                         setRecordStep("choice");
                       }}
-                      className="px-4 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50"
+                      className="px-4 py-2 border border-slate-300 text-white rounded-md hover:bg-slate-50"
                     >
                       Zrušiť
                     </button>
