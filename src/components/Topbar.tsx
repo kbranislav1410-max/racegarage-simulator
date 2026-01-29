@@ -24,7 +24,8 @@ export function Topbar() {
           </div>
           <button
             onClick={logout}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-white rounded-lg transition-colors hover:bg-opacity-90"
+            style={{ backgroundColor: '#c20003' }}
           >
             <LogOut className="w-4 h-4" />
             <span>Odhlásiť sa</span>

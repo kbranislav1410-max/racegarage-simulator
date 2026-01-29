@@ -190,7 +190,8 @@ export default function DiscountPortalsPage() {
                 onChange={(e) =>
                   setFilter(e.target.value as "ALL" | "UNCLAIMED" | "CLAIMED")
                 }
-                className="border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                style={{ backgroundColor: '#292929', border: 'none' }}
               >
                 <option value="ALL">Všetky</option>
                 <option value="UNCLAIMED">Neuplatnené</option>
@@ -204,7 +205,8 @@ export default function DiscountPortalsPage() {
               <select
                 value={partnerFilter}
                 onChange={(e) => setPartnerFilter(e.target.value)}
-                className="border border-slate-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                style={{ backgroundColor: '#292929', border: 'none' }}
               >
                 <option value="ALL">Všetci partneri</option>
                 <option value="ZLAVOMAT">Zľavomat</option>

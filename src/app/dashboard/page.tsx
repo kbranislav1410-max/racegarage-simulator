@@ -493,8 +493,8 @@ export default function DashboardPage() {
               <select
                 value={customerFilter}
                 onChange={(e) => setCustomerFilter(e.target.value as typeof customerFilter)}
-                className="px-4 py-2 border border-slate-600 rounded-lg text-white"
-                style={{ backgroundColor: '#1f1f1f' }}
+                className="px-4 py-2 rounded-lg text-white"
+                style={{ backgroundColor: '#292929', border: 'none' }}
               >
                 <option value="rides">Počet jázd</option>
                 <option value="newCustomers">Noví zákazníci</option>
@@ -583,8 +583,8 @@ export default function DashboardPage() {
             <select
               value={revenueFilter}
               onChange={(e) => setRevenueFilter(e.target.value as typeof revenueFilter)}
-              className="px-4 py-2 border border-slate-600 rounded-lg text-white"
-              style={{ backgroundColor: '#1f1f1f' }}
+              className="px-4 py-2 rounded-lg text-white"
+              style={{ backgroundColor: '#292929', border: 'none' }}
             >
               <option value="all">Celkové príjmy</option>
               <option value="racegarage">Racegarage</option>

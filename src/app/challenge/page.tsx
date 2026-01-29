@@ -322,7 +322,8 @@ export default function ChallengePage() {
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+              style={{ backgroundColor: '#292929', border: 'none' }}
             >
               {monthNames.map((name, index) => (
                 <option key={index + 1} value={index + 1}>
@@ -333,7 +334,8 @@ export default function ChallengePage() {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+              style={{ backgroundColor: '#292929', border: 'none' }}
             >
               {Array.from({ length: YEAR_RANGE }, (_, i) => currentDate.getFullYear() - i).map((year) => (
                 <option key={year} value={year}>

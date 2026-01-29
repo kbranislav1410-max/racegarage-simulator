@@ -210,7 +210,8 @@ export default function SettlementsPage() {
           <select
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+            className="px-4 py-2 rounded-lg text-white"
+            style={{ backgroundColor: '#292929', border: 'none' }}
           >
             <option value="ALL">Všetky roky</option>
             {years.map((year) => (
@@ -223,7 +224,8 @@ export default function SettlementsPage() {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+            className="px-4 py-2 rounded-lg text-white"
+            style={{ backgroundColor: '#292929', border: 'none' }}
           >
             <option value="ALL">Všetky stavy</option>
             <option value="NOT_INVOICED">Nevyfakturované</option>
