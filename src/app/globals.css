@@ -25,10 +25,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Improve input field text visibility */
+/* Input field text styling for dark theme */
 input,
 textarea {
-  color: #0f172a !important; /* slate-900 - very dark text for readability */
+  color: white !important; /* White text for dark theme */
+  -webkit-text-fill-color: white !important; /* Force white text in WebKit browsers */
 }
 
 /* Keep placeholder text visible but lighter */
