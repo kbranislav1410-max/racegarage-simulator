@@ -297,17 +297,18 @@ export default function ChallengePage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">
+            <h1 className="text-3xl font-bold text-white">
               Monthly Challenges
             </h1>
-            <p className="text-slate-600 mt-2">
+            <p className="text-slate-300 mt-2">
               Track monthly lap time challenges and leaderboards
             </p>
           </div>
           {challengeMonth && (
             <button
               onClick={() => setShowRecordAttemptModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg transition-colors"
+              style={{ backgroundColor: "#c20003" }}
             >
               <Plus className="w-4 h-4" />
               Record Attempt
@@ -316,14 +317,14 @@ export default function ChallengePage() {
         </div>
 
         {/* Month Selector */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-4">
             <Calendar className="w-5 h-5 text-slate-400" />
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
               className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-              style={{ backgroundColor: '#292929', border: 'none' }}
+              style={{ backgroundColor: '#1f1f1f', border: 'none' }}
             >
               {monthNames.map((name, index) => (
                 <option key={index + 1} value={index + 1}>
@@ -335,7 +336,7 @@ export default function ChallengePage() {
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
               className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-              style={{ backgroundColor: '#292929', border: 'none' }}
+              style={{ backgroundColor: '#1f1f1f', border: 'none' }}
             >
               {Array.from({ length: YEAR_RANGE }, (_, i) => currentDate.getFullYear() - i).map((year) => (
                 <option key={year} value={year}>
@@ -354,19 +355,20 @@ export default function ChallengePage() {
         )}
 
         {loading ? (
-          <div className="text-center py-12 text-slate-500">Loading...</div>
+          <div className="text-center py-12 text-slate-400">Loading...</div>
         ) : !challengeMonth ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
+          <div className="rounded-lg shadow p-8 text-center" style={{ backgroundColor: "#292929" }}>
             <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-slate-800 mb-2">
+            <h2 className="text-xl font-bold text-white mb-2">
               No Challenge for {monthNames[selectedMonth - 1]} {selectedYear}
             </h2>
-            <p className="text-slate-600 mb-6">
+            <p className="text-slate-300 mb-6">
               Create a challenge to start tracking lap times and leaderboards
             </p>
             <button
               onClick={() => setShowCreateChallengeModal(true)}
-              className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+              className="px-6 py-2 text-white rounded-lg transition-colors"
+              style={{ backgroundColor: "#c20003" }}
             >
               Create Challenge
             </button>
@@ -374,36 +376,36 @@ export default function ChallengePage() {
         ) : (
           <div className="space-y-6">
             {/* Challenge Info */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-bold text-slate-800 mb-4">
+            <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+              <h2 className="text-xl font-bold text-white mb-4">
                 {monthNames[challengeMonth.month - 1]} {challengeMonth.year} Challenge
               </h2>
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <p className="text-sm text-slate-600">Track</p>
-                  <p className="font-medium text-slate-900">{challengeMonth.trackName}</p>
+                  <p className="text-sm text-slate-300">Track</p>
+                  <p className="font-medium text-white">{challengeMonth.trackName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-600">Car</p>
-                  <p className="font-medium text-slate-900">{challengeMonth.carName}</p>
+                  <p className="text-sm text-slate-300">Car</p>
+                  <p className="font-medium text-white">{challengeMonth.carName}</p>
                 </div>
                 {challengeMonth.durationMinutes && (
                   <div>
-                    <p className="text-sm text-slate-600">Trvanie</p>
-                    <p className="font-medium text-slate-900">{challengeMonth.durationMinutes} minút</p>
+                    <p className="text-sm text-slate-300">Trvanie</p>
+                    <p className="font-medium text-white">{challengeMonth.durationMinutes} minút</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Rebríček */}
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b border-slate-200">
+            <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+              <div className="p-6 border-b border-slate-700">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-slate-800">
+                  <h2 className="text-xl font-bold text-white">
                     Rebríček
                   </h2>
-                  <span className="text-sm text-slate-600">
+                  <span className="text-sm text-slate-300">
                     {totalAttempts} {totalAttempts === 1 ? 'pokus' : 'pokusov'}
                   </span>
                 </div>
@@ -416,36 +418,37 @@ export default function ChallengePage() {
                     placeholder="Hľadať zákazníka..."
                     value={leaderboardSearch}
                     onChange={(e) => setLeaderboardSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
                   />
                 </div>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-slate-50 border-b border-slate-200">
+                  <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                         Poradie
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                         Zákazník
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                         Čas
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                         Dátum
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                         Akcie
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-slate-200">
+                  <tbody className="divide-y divide-slate-700">
                     {filteredAttempts.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                        <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
                           {leaderboardSearch
                             ? "Nenašli sa žiadni zákazníci"
                             : "Zatiaľ žiadne pokusy. Buďte prvý kto zaznamená čas!"}
@@ -455,7 +458,7 @@ export default function ChallengePage() {
                       filteredAttempts.map((entry) => (
                         <tr
                           key={entry.id}
-                          className={`hover:bg-slate-50 ${
+                          className={`hover:bg-slate-700 ${
                             entry.rank <= 3 ? "bg-yellow-50" : ""
                           }`}
                         >
@@ -472,26 +475,26 @@ export default function ChallengePage() {
                                   }`}
                                 />
                               )}
-                              <span className="text-lg font-bold text-slate-900">
+                              <span className="text-lg font-bold text-white">
                                 #{entry.rank}
                               </span>
                             </div>
                           </td>
                           <td className="px-6 py-4">
-                            <div className="text-sm font-medium text-slate-900">
+                            <div className="text-sm font-medium text-white">
                               {entry.customerName}
                             </div>
-                            <div className="text-sm text-slate-500">
+                            <div className="text-sm text-slate-400">
                               {entry.customerEmail}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-lg font-mono font-bold text-slate-900">
+                            <div className="text-lg font-mono font-bold text-white">
                               {formatLapTime(entry.lapTimeMs)}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-600">
+                            <div className="text-sm text-slate-300">
                               {new Date(entry.recordedAt).toLocaleDateString('sk-SK')}
                             </div>
                           </td>
@@ -517,15 +520,15 @@ export default function ChallengePage() {
         {/* Create Challenge Month Modal */}
         {showCreateChallengeModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="rounded-lg max-w-md w-full" style={{ backgroundColor: "#292929" }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-slate-800">
+                  <h2 className="text-2xl font-bold text-white">
                     Create Challenge
                   </h2>
                   <button
                     onClick={() => setShowCreateChallengeModal(false)}
-                    className="text-slate-400 hover:text-slate-600"
+                    className="text-slate-400 hover:text-slate-300"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -539,13 +542,13 @@ export default function ChallengePage() {
                   )}
 
                   <div>
-                    <p className="text-sm text-slate-600 mb-2">
+                    <p className="text-sm text-slate-300 mb-2">
                       Creating challenge for: <strong>{monthNames[selectedMonth - 1]} {selectedYear}</strong>
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
                       Track Name *
                     </label>
                     <input
@@ -554,14 +557,15 @@ export default function ChallengePage() {
                       onChange={(e) =>
                         setChallengeFormData({ ...challengeFormData, trackName: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
                       placeholder="e.g., Nürburgring Nordschleife"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
                       Car Name *
                     </label>
                     <input
@@ -570,14 +574,15 @@ export default function ChallengePage() {
                       onChange={(e) =>
                         setChallengeFormData({ ...challengeFormData, carName: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
                       placeholder="e.g., Porsche 911 GT3 RS"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
                       Trvanie (minúty)
                     </label>
                     <input
@@ -588,24 +593,26 @@ export default function ChallengePage() {
                       onChange={(e) =>
                         setChallengeFormData({ ...challengeFormData, durationMinutes: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
                       placeholder="napr. 30"
                     />
-                    <p className="text-xs text-slate-500 mt-1">Voliteľné - dĺžka časovky v minútach</p>
+                    <p className="text-xs text-slate-400 mt-1">Voliteľné - dĺžka časovky v minútach</p>
                   </div>
 
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={challengeFormSubmitting}
-                      className="flex-1 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: "#c20003" }}
                     >
                       {challengeFormSubmitting ? "Creating..." : "Create Challenge"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowCreateChallengeModal(false)}
-                      className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                      className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                     >
                       Cancel
                     </button>
@@ -619,15 +626,15 @@ export default function ChallengePage() {
         {/* Record Attempt Modal */}
         {showRecordAttemptModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-slate-800">
+                  <h2 className="text-2xl font-bold text-white">
                     {attemptStep === "search" ? "Select Customer" : "Record Lap Time"}
                   </h2>
                   <button
                     onClick={resetAttemptModal}
-                    className="text-slate-400 hover:text-slate-600"
+                    className="text-slate-400 hover:text-slate-300"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -643,32 +650,33 @@ export default function ChallengePage() {
                         placeholder="Search by name, email, or address..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f" }}
                         autoFocus
                       />
                     </div>
 
                     {/* Search Results */}
                     {searchLoading && (
-                      <div className="text-center py-4 text-slate-500">
+                      <div className="text-center py-4 text-slate-400">
                         Searching...
                       </div>
                     )}
 
                     {!searchLoading && searchResults.length > 0 && (
-                      <div className="border border-slate-200 rounded-lg divide-y divide-slate-200 max-h-96 overflow-y-auto">
+                      <div className="border border-slate-700 rounded-lg divide-y divide-slate-700 max-h-96 overflow-y-auto">
                         {searchResults.map((customer) => (
                           <button
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
-                            className="w-full px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+                            className="w-full px-4 py-3 text-left hover:bg-slate-700 transition-colors"
                           >
-                            <div className="font-medium text-slate-900">
+                            <div className="font-medium text-white">
                               {customer.firstName} {customer.lastName}
                             </div>
-                            <div className="text-sm text-slate-600">{customer.email}</div>
+                            <div className="text-sm text-slate-300">{customer.email}</div>
                             {(customer.street || customer.city) && (
-                              <div className="text-sm text-slate-500">
+                              <div className="text-sm text-slate-400">
                                 {formatAddress(customer.street, customer.city)}
                               </div>
                             )}
@@ -678,13 +686,13 @@ export default function ChallengePage() {
                     )}
 
                     {!searchLoading && searchQuery.length >= 2 && searchResults.length === 0 && (
-                      <div className="text-center py-8 text-slate-600">
+                      <div className="text-center py-8 text-slate-300">
                         No customers found matching &quot;{searchQuery}&quot;
                       </div>
                     )}
 
                     {searchQuery.length < 2 && (
-                      <div className="text-center py-8 text-slate-500">
+                      <div className="text-center py-8 text-slate-400">
                         Start typing to search for customers...
                       </div>
                     )}
@@ -692,19 +700,19 @@ export default function ChallengePage() {
                 ) : (
                   <form onSubmit={handleRecordAttempt} className="space-y-4">
                     {/* Selected Customer */}
-                    <div className="bg-slate-50 rounded-lg p-4 mb-4">
-                      <p className="text-sm text-slate-600 mb-1">Customer</p>
-                      <p className="font-medium text-slate-900">
+                    <div className="rounded-lg p-4 mb-4" style={{ backgroundColor: "#1f1f1f" }}>
+                      <p className="text-sm text-slate-300 mb-1">Customer</p>
+                      <p className="font-medium text-white">
                         {selectedCustomer?.firstName} {selectedCustomer?.lastName}
                       </p>
-                      <p className="text-sm text-slate-600">{selectedCustomer?.email}</p>
+                      <p className="text-sm text-slate-300">{selectedCustomer?.email}</p>
                       <button
                         type="button"
                         onClick={() => {
                           setAttemptStep("search");
                           setSelectedCustomer(null);
                         }}
-                        className="text-sm text-slate-600 hover:text-slate-800 mt-2"
+                        className="text-sm text-slate-300 hover:text-white mt-2"
                       >
                         Change customer
                       </button>
@@ -718,7 +726,7 @@ export default function ChallengePage() {
 
                     {/* Lap Time */}
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-slate-300 mb-2">
                         Lap Time *
                       </label>
                       <input
@@ -727,23 +735,24 @@ export default function ChallengePage() {
                         onChange={(e) =>
                           setAttemptFormData({ ...attemptFormData, lapTime: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent ${
-                          attemptFormErrors.lapTime ? "border-red-300" : "border-slate-300"
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white ${
+                          attemptFormErrors.lapTime ? "border-red-300" : "border-slate-600"
                         }`}
+                        style={{ backgroundColor: "#1f1f1f" }}
                         placeholder="mm:ss.mmm (e.g., 01:23.456) or ms (e.g., 83456)"
                         required
                       />
                       {attemptFormErrors.lapTime && (
                         <p className="text-red-600 text-sm mt-1">{attemptFormErrors.lapTime}</p>
                       )}
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-slate-400 mt-1">
                         Enter time as mm:ss.mmm (e.g., 01:23.456) or milliseconds (e.g., 83456)
                       </p>
                     </div>
 
                     {/* Session ID (Optional) */}
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-slate-300 mb-2">
                         Link to Ride Session (Optional)
                       </label>
                       <input
@@ -752,7 +761,8 @@ export default function ChallengePage() {
                         onChange={(e) =>
                           setAttemptFormData({ ...attemptFormData, sessionId: e.target.value })
                         }
-                        className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                        className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f" }}
                         placeholder="Ride Session ID (optional)"
                       />
                     </div>
@@ -762,14 +772,15 @@ export default function ChallengePage() {
                       <button
                         type="submit"
                         disabled={attemptFormSubmitting}
-                        className="flex-1 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{ backgroundColor: "#c20003" }}
                       >
                         {attemptFormSubmitting ? "Recording..." : "Record Attempt"}
                       </button>
                       <button
                         type="button"
                         onClick={resetAttemptModal}
-                        className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                        className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                       >
                         Cancel
                       </button>
