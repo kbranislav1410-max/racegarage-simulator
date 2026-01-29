@@ -664,12 +664,12 @@ export default function ChallengePage() {
                     )}
 
                     {!searchLoading && searchResults.length > 0 && (
-                      <div className="border border-slate-700 rounded-lg divide-y divide-slate-700 max-h-96 overflow-y-auto">
+                      <div className="rounded-lg max-h-96 overflow-y-auto" style={{ backgroundColor: "#1f1f1f" }}>
                         {searchResults.map((customer) => (
                           <button
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
-                            className="w-full px-4 py-3 text-left hover:bg-slate-700 transition-colors"
+                            className="w-full px-4 py-3 text-left hover:bg-slate-800 transition-colors"
                           >
                             <div className="font-medium text-white">
                               {customer.firstName} {customer.lastName}
