@@ -201,14 +201,15 @@ export default function CustomersPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">Zákazníci</h1>
-            <p className="text-slate-600 mt-2">
+            <h1 className="text-3xl font-bold text-white">Zákazníci</h1>
+            <p className="text-slate-300 mt-2">
               Spravujte zákaznícke účty a informácie
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+            style={{ backgroundColor: "#c20003" }}
           >
             <Plus className="w-4 h-4" />
             Pridať zákazníka
@@ -216,7 +217,7 @@ export default function CustomersPage() {
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
           <form onSubmit={handleSearch} className="flex gap-2">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
@@ -225,12 +226,14 @@ export default function CustomersPage() {
                 placeholder="Hľadať podľa mena, emailu alebo adresy..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f" }}
               />
             </div>
             <button
               type="submit"
-              className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+              className="px-6 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+              style={{ backgroundColor: "#c20003" }}
             >
               Hľadať
             </button>
@@ -241,7 +244,7 @@ export default function CustomersPage() {
                   setSearch("");
                   setSearchInput("");
                 }}
-                className="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition-colors"
+                className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
               >
                 Vymazať
               </button>
@@ -257,59 +260,59 @@ export default function CustomersPage() {
         )}
 
         {/* Customer table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Meno
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Adresa
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Telefón
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Akcie
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-200">
+              <tbody className="divide-y divide-slate-700">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-slate-300">
                       Načítavam...
                     </td>
                   </tr>
                 ) : customers.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={5} className="px-6 py-8 text-center text-slate-300">
                       Nenašli sa žiadni zákazníci. Kliknite na &quot;Pridať zákazníka&quot; pre začatie.
                     </td>
                   </tr>
                 ) : (
                   customers.map((customer) => (
-                    <tr key={customer.id} className="hover:bg-slate-50">
+                    <tr key={customer.id} className="hover:bg-slate-700">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-slate-900">
+                        <div className="text-sm font-medium text-white">
                           {customer.firstName} {customer.lastName}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-slate-600">{customer.email}</div>
+                        <div className="text-sm text-slate-300">{customer.email}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-slate-600">
+                        <div className="text-sm text-slate-300">
                           {formatAddress(customer.street, customer.city)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-slate-600">
+                        <div className="text-sm text-slate-300">
                           {customer.phone || "-"}
                         </div>
                       </td>
@@ -317,14 +320,14 @@ export default function CustomersPage() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => handleViewCustomer(customer.id)}
-                            className="text-slate-600 hover:text-slate-900 p-1"
+                            className="text-slate-300 hover:text-white p-1"
                             title="Zobraziť detaily"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteCustomer(customer.id)}
-                            className="text-red-600 hover:text-red-900 p-1"
+                            className="text-red-400 hover:text-red-300 p-1"
                             title="Odstrániť"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -340,8 +343,8 @@ export default function CustomersPage() {
 
           {/* Pagination */}
           {pagination.totalPages > 1 && (
-            <div className="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
-              <div className="text-sm text-slate-600">
+            <div className="px-6 py-4 border-t border-slate-700 flex items-center justify-between">
+              <div className="text-sm text-slate-300">
                 Zobrazených {(pagination.page - 1) * pagination.limit + 1} až{" "}
                 {Math.min(pagination.page * pagination.limit, pagination.total)} z{" "}
                 {pagination.total} zákazníkov
@@ -352,7 +355,7 @@ export default function CustomersPage() {
                     setPagination({ ...pagination, page: pagination.page - 1 })
                   }
                   disabled={pagination.page === 1}
-                  className="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Predchádzajúce
                 </button>
@@ -361,7 +364,7 @@ export default function CustomersPage() {
                     setPagination({ ...pagination, page: pagination.page + 1 })
                   }
                   disabled={pagination.page === pagination.totalPages}
-                  className="px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Ďalšie
                 </button>
@@ -373,13 +376,13 @@ export default function CustomersPage() {
         {/* Create Customer Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-slate-800">Pridať nového zákazníka</h2>
+                  <h2 className="text-2xl font-bold text-white">Pridať nového zákazníka</h2>
                   <button
                     onClick={() => setShowCreateModal(false)}
-                    className="text-slate-400 hover:text-slate-600"
+                    className="text-slate-400 hover:text-slate-300"
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -394,7 +397,7 @@ export default function CustomersPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-white mb-2">
                         Meno *
                       </label>
                       <input
@@ -403,18 +406,19 @@ export default function CustomersPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, firstName: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent ${
-                          formErrors.firstName ? "border-red-300" : "border-slate-300"
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white ${
+                          formErrors.firstName ? "border-red-300" : "border-slate-600"
                         }`}
+                        style={{ backgroundColor: "#1f1f1f" }}
                         required
                       />
                       {formErrors.firstName && (
-                        <p className="text-red-600 text-sm mt-1">{formErrors.firstName}</p>
+                        <p className="text-red-400 text-sm mt-1">{formErrors.firstName}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-white mb-2">
                         Priezvisko *
                       </label>
                       <input
@@ -423,19 +427,20 @@ export default function CustomersPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, lastName: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent ${
-                          formErrors.lastName ? "border-red-300" : "border-slate-300"
+                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white ${
+                          formErrors.lastName ? "border-red-300" : "border-slate-600"
                         }`}
+                        style={{ backgroundColor: "#1f1f1f" }}
                         required
                       />
                       {formErrors.lastName && (
-                        <p className="text-red-600 text-sm mt-1">{formErrors.lastName}</p>
+                        <p className="text-red-400 text-sm mt-1">{formErrors.lastName}</p>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Email *
                     </label>
                     <input
@@ -444,18 +449,19 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent ${
-                        formErrors.email ? "border-red-300" : "border-slate-300"
+                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white ${
+                        formErrors.email ? "border-red-300" : "border-slate-600"
                       }`}
+                      style={{ backgroundColor: "#1f1f1f" }}
                       required
                     />
                     {formErrors.email && (
-                      <p className="text-red-600 text-sm mt-1">{formErrors.email}</p>
+                      <p className="text-red-400 text-sm mt-1">{formErrors.email}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Ulica
                     </label>
                     <input
@@ -464,12 +470,13 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, street: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Mesto
                     </label>
                     <input
@@ -478,12 +485,13 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, city: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Telefón
                     </label>
                     <input
@@ -492,11 +500,12 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
                     />
                   </div>
 
-                  <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-lg">
+                  <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                     <input
                       type="checkbox"
                       id="newsletter"
@@ -504,9 +513,10 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, newsletter: e.target.checked })
                       }
-                      className="w-4 h-4 text-slate-800 border-slate-300 rounded focus:ring-2 focus:ring-slate-500"
+                      className="w-4 h-4 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
+                      style={{ accentColor: "#c20003" }}
                     />
-                    <label htmlFor="newsletter" className="text-sm text-slate-700 cursor-pointer">
+                    <label htmlFor="newsletter" className="text-sm text-white cursor-pointer">
                       Zákazník má záujem o newsletter (propagačné materiály a novinky)
                     </label>
                   </div>
@@ -515,14 +525,15 @@ export default function CustomersPage() {
                     <button
                       type="submit"
                       disabled={formSubmitting}
-                      className="flex-1 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-1 px-6 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ backgroundColor: "#c20003" }}
                     >
                       {formSubmitting ? "Vytváram..." : "Vytvoriť zákazníka"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowCreateModal(false)}
-                      className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                      className="px-6 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
                     >
                       Zrušiť
                     </button>
@@ -536,64 +547,64 @@ export default function CustomersPage() {
         {/* Customer Detail Modal */}
         {showDetailModal && selectedCustomer && customerSummary && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-slate-800">
+                  <h2 className="text-2xl font-bold text-white">
                     Detaily zákazníka
                   </h2>
                   <button
                     onClick={() => setShowDetailModal(false)}
-                    className="text-slate-400 hover:text-slate-600"
+                    className="text-slate-400 hover:text-slate-300"
                   >
                     <X className="w-6 h-6" />
                   </button>
                 </div>
 
                 {/* Basic Info */}
-                <div className="bg-slate-50 rounded-lg p-4 mb-6">
-                  <h3 className="font-semibold text-slate-800 mb-3">Základné informácie</h3>
+                <div className="rounded-lg p-4 mb-6" style={{ backgroundColor: "#1f1f1f" }}>
+                  <h3 className="font-semibold text-white mb-3">Základné informácie</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-slate-600">Meno</p>
-                      <p className="font-medium">
+                      <p className="text-sm text-slate-400">Meno</p>
+                      <p className="font-medium text-white">
                         {selectedCustomer.firstName} {selectedCustomer.lastName}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Email</p>
-                      <p className="font-medium">{selectedCustomer.email}</p>
+                      <p className="text-sm text-slate-400">Email</p>
+                      <p className="font-medium text-white">{selectedCustomer.email}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Adresa</p>
-                      <p className="font-medium">
+                      <p className="text-sm text-slate-400">Adresa</p>
+                      <p className="font-medium text-white">
                         {formatAddress(selectedCustomer.street, selectedCustomer.city)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-600">Telefón</p>
-                      <p className="font-medium">{selectedCustomer.phone || "-"}</p>
+                      <p className="text-sm text-slate-400">Telefón</p>
+                      <p className="font-medium text-white">{selectedCustomer.phone || "-"}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Summary */}
                 <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <p className="text-sm text-blue-600 mb-1">Celkový počet jázd</p>
-                    <p className="text-2xl font-bold text-blue-900">
+                  <div className="rounded-lg p-4" style={{ backgroundColor: "#1a3a52" }}>
+                    <p className="text-sm text-blue-300 mb-1">Celkový počet jázd</p>
+                    <p className="text-2xl font-bold text-blue-100">
                       {customerSummary.totalRides}
                     </p>
                   </div>
-                  <div className="bg-green-50 rounded-lg p-4">
-                    <p className="text-sm text-green-600 mb-1">Celkový počet minút</p>
-                    <p className="text-2xl font-bold text-green-900">
+                  <div className="rounded-lg p-4" style={{ backgroundColor: "#1a4d2e" }}>
+                    <p className="text-sm text-green-300 mb-1">Celkový počet minút</p>
+                    <p className="text-2xl font-bold text-green-100">
                       {customerSummary.totalMinutes}
                     </p>
                   </div>
-                  <div className="bg-purple-50 rounded-lg p-4">
-                    <p className="text-sm text-purple-600 mb-1">Posledná jazda</p>
-                    <p className="text-sm font-medium text-purple-900">
+                  <div className="rounded-lg p-4" style={{ backgroundColor: "#4a1a4d" }}>
+                    <p className="text-sm text-purple-300 mb-1">Posledná jazda</p>
+                    <p className="text-sm font-medium text-purple-100">
                       {formatDate(customerSummary.lastRide)}
                     </p>
                   </div>
@@ -601,26 +612,26 @@ export default function CustomersPage() {
 
                 {/* Ride History */}
                 <div>
-                  <h3 className="font-semibold text-slate-800 mb-3">Nedávne jazdy</h3>
+                  <h3 className="font-semibold text-white mb-3">Nedávne jazdy</h3>
                   {selectedCustomer.rideSessions.length === 0 ? (
-                    <p className="text-slate-600 text-center py-4">Zatiaľ žiadne jazdy</p>
+                    <p className="text-slate-300 text-center py-4">Zatiaľ žiadne jazdy</p>
                   ) : (
                     <div className="space-y-2">
                       {selectedCustomer.rideSessions.map((ride) => (
                         <div
                           key={ride.id}
-                          className="border border-slate-200 rounded-lg p-3"
+                          className="border border-slate-700 rounded-lg p-3"
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <p className="font-medium text-slate-800">
+                              <p className="font-medium text-white">
                                 {formatDateTime(ride.startAt)}
                               </p>
-                              <p className="text-sm text-slate-600">
+                              <p className="text-sm text-slate-300">
                                 Trvanie: {ride.minutes} minút • Zdroj: {ride.source}
                               </p>
                               {ride.notes && (
-                                <p className="text-sm text-slate-500 mt-1">
+                                <p className="text-sm text-slate-400 mt-1">
                                   {ride.notes}
                                 </p>
                               )}
@@ -635,7 +646,7 @@ export default function CustomersPage() {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={() => setShowDetailModal(false)}
-                    className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                    className="px-6 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
                   >
                     Zavrieť
                   </button>
