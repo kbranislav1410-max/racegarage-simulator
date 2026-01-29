@@ -466,7 +466,7 @@ export default function DashboardPage() {
         {/* Customer Statistics and Financial Indicators Side by Side */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Customer Statistics Section */}
-          <div>
+          <div className="h-full">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-slate-700">Zákazníci</h2>
               <select
@@ -555,7 +555,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Financial Indicators Section */}
-        <div>
+        <div className="h-full">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-slate-700">Finančné ukazovatele</h2>
             <select
