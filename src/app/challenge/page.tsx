@@ -418,8 +418,8 @@ export default function ChallengePage() {
                     placeholder="Hľadať zákazníka..."
                     value={leaderboardSearch}
                     onChange={(e) => setLeaderboardSearch(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                    style={{ backgroundColor: "#1f1f1f" }}
+                    className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                    style={{ backgroundColor: "#1f1f1f", border: "none" }}
                   />
                 </div>
               </div>
