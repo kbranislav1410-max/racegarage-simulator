@@ -156,7 +156,7 @@ export default function SettingsPage() {
     return (
       <ProtectedLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-slate-600">Loading settings...</div>
+          <div className="text-slate-300">Loading settings...</div>
         </div>
       </ProtectedLayout>
     );
@@ -166,8 +166,8 @@ export default function SettingsPage() {
     <ProtectedLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Settings</h1>
-          <p className="text-slate-600 mt-2">
+          <h1 className="text-3xl font-bold text-white">Settings</h1>
+          <p className="text-slate-300 mt-2">
             Configure business settings and preferences
           </p>
         </div>
@@ -185,10 +185,10 @@ export default function SettingsPage() {
         )}
 
         {/* Working Hours */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 mb-4">
-            <Calendar className="w-5 h-5 text-slate-700" />
-            <h2 className="text-xl font-bold text-slate-800">Working Hours</h2>
+            <Calendar className="w-5 h-5 text-white" />
+            <h2 className="text-xl font-bold text-white">Working Hours</h2>
           </div>
           <div className="space-y-3">
             {DAYS.map((day) => (
@@ -209,7 +209,7 @@ export default function SettingsPage() {
                       }
                       className="rounded"
                     />
-                    <span className="text-sm font-medium text-slate-700">
+                    <span className="text-sm font-medium text-white">
                       {DAY_LABELS[day]}
                     </span>
                   </label>
@@ -228,9 +228,9 @@ export default function SettingsPage() {
                       })
                     }
                     disabled={!workingHours[day].enabled}
-                    className="px-3 py-2 border border-slate-300 rounded-lg disabled:bg-slate-100 disabled:text-slate-500"
+                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-100 disabled:text-slate-500"
                   />
-                  <span className="text-slate-600">-</span>
+                  <span className="text-slate-300">-</span>
                   <input
                     type="time"
                     value={workingHours[day].to}
@@ -244,7 +244,7 @@ export default function SettingsPage() {
                       })
                     }
                     disabled={!workingHours[day].enabled}
-                    className="px-3 py-2 border border-slate-300 rounded-lg disabled:bg-slate-100 disabled:text-slate-500"
+                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-100 disabled:text-slate-500"
                   />
                 </div>
               </div>
@@ -254,22 +254,22 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Slot Durations */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
             <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-5 h-5 text-slate-700" />
-              <h2 className="text-xl font-bold text-slate-800">
+              <Clock className="w-5 h-5 text-white" />
+              <h2 className="text-xl font-bold text-white">
                 Slot Duration Options
               </h2>
             </div>
             <div className="space-y-3">
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-slate-300">
                 Available duration options (minutes)
               </p>
               <div className="flex flex-wrap gap-2">
                 {[15, 30, 45, 60, 90, 120].map((duration) => (
                   <label
                     key={duration}
-                    className="flex items-center gap-2 px-3 py-2 border border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50"
+                    className="flex items-center gap-2 px-3 py-2 border border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700"
                   >
                     <input
                       type="checkbox"
@@ -291,10 +291,10 @@ export default function SettingsPage() {
           </div>
 
           {/* Currency */}
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
             <div className="flex items-center gap-2 mb-4">
-              <DollarSign className="w-5 h-5 text-slate-700" />
-              <h2 className="text-xl font-bold text-slate-800">
+              <DollarSign className="w-5 h-5 text-white" />
+              <h2 className="text-xl font-bold text-white">
                 Default Currency
               </h2>
             </div>
@@ -302,7 +302,8 @@ export default function SettingsPage() {
               <select
                 value={defaultCurrency}
                 onChange={(e) => setDefaultCurrency(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f" }}
               >
                 <option value="EUR">EUR (€)</option>
                 <option value="USD">USD ($)</option>
@@ -313,19 +314,19 @@ export default function SettingsPage() {
         </div>
 
         {/* Payment Rules */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-slate-800 mb-4">
+        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+          <h2 className="text-xl font-bold text-white mb-4">
             Payment Rules
           </h2>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Card Payment Receiver
             </label>
-            <p className="text-sm text-slate-600 mb-3">
+            <p className="text-sm text-slate-300 mb-3">
               Choose who receives card payments by default
             </p>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50">
+              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
                 <input
                   type="radio"
                   name="cardReceiver"
@@ -333,9 +334,9 @@ export default function SettingsPage() {
                   onChange={() => setCardPaymentReceiver("FRIEND")}
                   className="text-slate-800"
                 />
-                <span className="font-medium">Friend</span>
+                <span className="font-medium text-white">Friend</span>
               </label>
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-300 rounded-lg cursor-pointer hover:bg-slate-50">
+              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
                 <input
                   type="radio"
                   name="cardReceiver"
@@ -343,21 +344,21 @@ export default function SettingsPage() {
                   onChange={() => setCardPaymentReceiver("ME")}
                   className="text-slate-800"
                 />
-                <span className="font-medium">Me</span>
+                <span className="font-medium text-white">Me</span>
               </label>
             </div>
           </div>
         </div>
 
         {/* Email Settings */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 mb-4">
-            <Mail className="w-5 h-5 text-slate-700" />
-            <h2 className="text-xl font-bold text-slate-800">Email Settings</h2>
+            <Mail className="w-5 h-5 text-white" />
+            <h2 className="text-xl font-bold text-white">Email Settings</h2>
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Sender Name
               </label>
               <input
@@ -365,11 +366,12 @@ export default function SettingsPage() {
                 value={emailSenderName}
                 onChange={(e) => setEmailSenderName(e.target.value)}
                 placeholder="Racegarage Simulator"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f" }}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 From Email Address
               </label>
               <input
@@ -377,28 +379,30 @@ export default function SettingsPage() {
                 value={emailFromAddress}
                 onChange={(e) => setEmailFromAddress(e.target.value)}
                 placeholder="noreply@racegarage.local"
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f" }}
               />
             </div>
           </div>
         </div>
 
         {/* Newsletter Subscribers */}
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-slate-700" />
-              <h2 className="text-xl font-bold text-slate-800">Newsletter</h2>
+              <Users className="w-5 h-5 text-white" />
+              <h2 className="text-xl font-bold text-white">Newsletter</h2>
             </div>
             <button
               onClick={handleShowNewsletterModal}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+              style={{ backgroundColor: "#c20003" }}
             >
               <Users className="w-4 h-4" />
               Zobraziť odberateľov
             </button>
           </div>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-slate-300">
             Zoznam zákazníkov, ktorí majú záujem o newsletter a propagačné materiály
           </p>
         </div>
@@ -407,7 +411,8 @@ export default function SettingsPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: "#c20003" }}
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -417,22 +422,22 @@ export default function SettingsPage() {
       {/* Newsletter Subscribers Modal */}
       {showNewsletterModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">
+                <h2 className="text-2xl font-bold text-white">
                   Odberatelia Newslettera
                 </h2>
                 <button
                   onClick={() => setShowNewsletterModal(false)}
-                  className="text-slate-400 hover:text-slate-600"
+                  className="text-slate-400 hover:text-slate-300"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
               <div className="mb-4 flex items-center justify-between">
-                <p className="text-slate-600">
+                <p className="text-slate-300">
                   Celkový počet odberateľov: <span className="font-semibold">{newsletterSubscribers.length}</span>
                 </p>
                 <button
@@ -446,58 +451,58 @@ export default function SettingsPage() {
               </div>
 
               {loadingSubscribers ? (
-                <div className="text-center py-8 text-slate-600">
+                <div className="text-center py-8 text-slate-300">
                   Načítavam...
                 </div>
               ) : newsletterSubscribers.length === 0 ? (
-                <div className="text-center py-8 text-slate-600">
+                <div className="text-center py-8 text-slate-300">
                   Zatiaľ nemáte žiadnych odberateľov newslettera.
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-slate-50 border-b border-slate-200">
+                    <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                           Meno
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                           Email
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                           Mesto
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                           Telefón
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                           Registrovaný
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-slate-200">
+                    <tbody className="divide-y divide-slate-700" style={{ backgroundColor: "#292929" }}>
                       {newsletterSubscribers.map((subscriber: any) => (
-                        <tr key={subscriber.id} className="hover:bg-slate-50">
+                        <tr key={subscriber.id} className="hover:bg-slate-700">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-slate-900">
+                            <div className="text-sm font-medium text-white">
                               {subscriber.firstName} {subscriber.lastName}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-600">{subscriber.email}</div>
+                            <div className="text-sm text-slate-300">{subscriber.email}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-600">
+                            <div className="text-sm text-slate-300">
                               {subscriber.city || "-"}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-600">
+                            <div className="text-sm text-slate-300">
                               {subscriber.phone || "-"}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-600">
+                            <div className="text-sm text-slate-300">
                               {formatDate(subscriber.createdAt)}
                             </div>
                           </td>
@@ -511,7 +516,7 @@ export default function SettingsPage() {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowNewsletterModal(false)}
-                  className="px-6 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+                  className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                 >
                   Zavrieť
                 </button>

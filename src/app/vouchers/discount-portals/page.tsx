@@ -136,25 +136,25 @@ export default function DiscountPortalsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Zľavové portály</h1>
-          <p className="text-slate-600 mt-2">
+          <h1 className="text-3xl font-bold text-white">Zľavové portály</h1>
+          <p className="text-slate-300 mt-2">
             Správa voucherov zakúpených cez partnerské portály
           </p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-slate-200">
+        <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+          <div className="border-b border-slate-700">
             <nav className="flex -mb-px">
               <a
                 href="/vouchers"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600"
               >
                 Moje vouchery
               </a>
               <a
                 href="/vouchers/discount-portals"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-slate-800 text-slate-800"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-red-600 text-white"
               >
                 Zľavové portály
               </a>
@@ -164,25 +164,25 @@ export default function DiscountPortalsPage() {
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-slate-600">Celkom voucherov</p>
-            <p className="text-3xl font-bold text-slate-900">{vouchers.length}</p>
+          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+            <p className="text-sm text-slate-400">Celkom voucherov</p>
+            <p className="text-3xl font-bold text-white">{vouchers.length}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-slate-600">Neuplatnené</p>
-            <p className="text-3xl font-bold text-orange-600">{unclaimedCount}</p>
+          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+            <p className="text-sm text-slate-400">Neuplatnené</p>
+            <p className="text-3xl font-bold text-orange-400">{unclaimedCount}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <p className="text-sm text-slate-600">Uplatnené</p>
-            <p className="text-3xl font-bold text-green-600">{claimedCount}</p>
+          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+            <p className="text-sm text-slate-400">Uplatnené</p>
+            <p className="text-3xl font-bold text-green-400">{claimedCount}</p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
           <div className="flex flex-wrap gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Stav
               </label>
               <select
@@ -199,7 +199,7 @@ export default function DiscountPortalsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Partner
               </label>
               <select
@@ -218,49 +218,49 @@ export default function DiscountPortalsPage() {
         </div>
 
         {/* Vouchers Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200">
-              <thead className="bg-slate-50">
+            <table className="min-w-full divide-y divide-slate-700">
+              <thead style={{ backgroundColor: "#1f1f1f" }}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Kód voucheru
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Partner
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Zákazník
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Dátum jazdy
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Stav
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Uplatnené dňa
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                     Akcie
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-slate-200">
+              <tbody className="divide-y divide-slate-700">
                 {filteredVouchers.length === 0 ? (
                   <tr>
                     <td
                       colSpan={7}
-                      className="px-6 py-4 text-center text-slate-500"
+                      className="px-6 py-4 text-center text-slate-400"
                     >
                       Žiadne vouchery
                     </td>
                   </tr>
                 ) : (
                   filteredVouchers.map((voucher) => (
-                    <tr key={voucher.id} className="hover:bg-slate-50">
+                    <tr key={voucher.id} className="hover:bg-slate-700">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="font-mono text-sm font-semibold text-slate-900">
+                        <span className="font-mono text-sm font-semibold text-white">
                           {voucher.code}
                         </span>
                       </td>
@@ -271,15 +271,15 @@ export default function DiscountPortalsPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm">
-                          <div className="font-medium text-slate-900">
+                          <div className="font-medium text-white">
                             {voucher.customerName}
                           </div>
-                          <div className="text-slate-500">
+                          <div className="text-slate-400">
                             {voucher.customerEmail}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                         {new Date(voucher.rideDate).toLocaleDateString("sk-SK", {
                           day: "2-digit",
                           month: "2-digit",
@@ -299,7 +299,7 @@ export default function DiscountPortalsPage() {
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                         {voucher.claimedAt
                           ? new Date(voucher.claimedAt).toLocaleDateString(
                               "sk-SK",
@@ -317,14 +317,14 @@ export default function DiscountPortalsPage() {
                         {voucher.status === "UNCLAIMED" ? (
                           <button
                             onClick={() => handleMarkAsClaimed(voucher.id)}
-                            className="text-green-600 hover:text-green-900 font-medium"
+                            className="text-green-400 hover:text-green-300 font-medium"
                           >
                             Označiť ako uplatnený
                           </button>
                         ) : (
                           <button
                             onClick={() => handleMarkAsUnclaimed(voucher.id)}
-                            className="text-orange-600 hover:text-orange-900 font-medium"
+                            className="text-orange-400 hover:text-orange-300 font-medium"
                           >
                             Označiť ako neuplatnený
                           </button>
@@ -339,11 +339,11 @@ export default function DiscountPortalsPage() {
         </div>
 
         {/* Help Text */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">
+        <div className="border rounded-lg p-4" style={{ backgroundColor: "#1f1f1f", borderColor: "#3b82f6" }}>
+          <h3 className="text-sm font-semibold text-blue-400 mb-2">
             Ako to funguje:
           </h3>
-          <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+          <ul className="text-sm text-slate-300 space-y-1 list-disc list-inside">
             <li>
               Keď zákazník použije voucher z partnerského portálu, zobrazí sa tu ako{" "}
               <strong>Neuplatnený</strong>

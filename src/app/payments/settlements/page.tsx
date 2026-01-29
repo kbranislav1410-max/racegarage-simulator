@@ -170,27 +170,27 @@ export default function SettlementsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-3xl font-bold text-white">
             Platby a Vyúčtovania
           </h1>
-          <p className="text-slate-600 mt-1">
+          <p className="text-slate-300 mt-1">
             Mesačné vyúčtovania a faktúry
           </p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-slate-200">
+        <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+          <div className="border-b border-slate-700">
             <nav className="flex -mb-px">
               <a
                 href="/payments"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600"
               >
                 Platby
               </a>
               <a
                 href="/payments/settlements"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-slate-800 text-slate-800"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-red-600 text-white"
               >
                 Vyúčtovania
               </a>
@@ -235,61 +235,61 @@ export default function SettlementsPage() {
         </div>
 
         {/* Settlements Table */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
+        <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
+          <table className="min-w-full divide-y divide-slate-700">
+            <thead style={{ backgroundColor: "#1f1f1f" }}>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                   Mesiac
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                   Celková suma
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                   Vyúčtovanie
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                   Faktúra č.
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                   Akcie
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-700">
               {settlements.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
                     Žiadne vyúčtovania. Vytvorte nové vyúčtovanie pre mesiac.
                   </td>
                 </tr>
               ) : (
                 settlements.map((settlement) => (
-                  <tr key={settlement.id} className="hover:bg-slate-50">
+                  <tr key={settlement.id} className="hover:bg-slate-700">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-slate-900">
+                      <div className="text-sm font-medium text-white">
                         {monthNames[settlement.month - 1]} {settlement.year}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">
+                      <div className="text-sm text-white">
                         {formatAmount(settlement.totalAmountCents)}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-slate-400">
                         PD: {formatAmount(settlement.friendAmountCents)} | RG: {formatAmount(settlement.meAmountCents)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">
+                      <div className="text-sm text-white">
                         {settlement.settlementCents > 0 ? (
-                          <span className="text-green-600">PD Drive Club mi dlhuje {formatAmount(Math.abs(settlement.settlementCents))}</span>
+                          <span className="text-green-400">PD Drive Club mi dlhuje {formatAmount(Math.abs(settlement.settlementCents))}</span>
                         ) : settlement.settlementCents < 0 ? (
-                          <span className="text-red-600">Racegarage dlhuje {formatAmount(Math.abs(settlement.settlementCents))}</span>
+                          <span className="text-red-400">Racegarage dlhuje {formatAmount(Math.abs(settlement.settlementCents))}</span>
                         ) : (
-                          <span className="text-slate-600">Vyrovnané</span>
+                          <span className="text-slate-300">Vyrovnané</span>
                         )}
                       </div>
                     </td>
@@ -298,19 +298,19 @@ export default function SettlementsPage() {
                         {statusLabels[settlement.status]}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                       {settlement.invoiceNumber || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => openStatusModal(settlement)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-blue-400 hover:text-blue-300"
                       >
                         Zmeniť stav
                       </button>
                       <button
                         onClick={() => handleDeleteSettlement(settlement.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-400 hover:text-red-300"
                       >
                         Zmazať
                       </button>
@@ -325,30 +325,32 @@ export default function SettlementsPage() {
         {/* Create Settlement Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4 text-slate-800">
+            <div className="rounded-lg p-6 w-full max-w-md" style={{ backgroundColor: "#292929" }}>
+              <h2 className="text-xl font-bold mb-4 text-white">
                 Vytvoriť nové vyúčtovanie
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-white mb-1">
                     Rok
                   </label>
                   <input
                     type="number"
                     value={createYear}
                     onChange={(e) => setCreateYear(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+                    className="w-full px-3 py-2 border border-slate-600 rounded-lg text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                  <label className="block text-sm font-medium text-white mb-1">
                     Mesiac
                   </label>
                   <select
                     value={createMonth}
                     onChange={(e) => setCreateMonth(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+                    className="w-full px-3 py-2 border border-slate-600 rounded-lg text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
                   >
                     {monthNames.map((name, index) => (
                       <option key={index + 1} value={index + 1}>
@@ -367,7 +369,7 @@ export default function SettlementsPage() {
                 </button>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
                 >
                   Zrušiť
                 </button>
@@ -379,21 +381,22 @@ export default function SettlementsPage() {
         {/* Update Status Modal */}
         {showStatusModal && selectedSettlement && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h2 className="text-xl font-bold mb-4 text-slate-800">
+            <div className="rounded-lg p-6 w-full max-w-md" style={{ backgroundColor: "#292929" }}>
+              <h2 className="text-xl font-bold mb-4 text-white">
                 Zmeniť stav vyúčtovania
               </h2>
               <div className="mb-4">
-                <p className="text-sm text-slate-600 mb-2">
+                <p className="text-sm text-slate-300 mb-2">
                   {monthNames[selectedSettlement.month - 1]} {selectedSettlement.year}
                 </p>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-medium text-white mb-1">
                   Nový stav
                 </label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+                  className="w-full px-3 py-2 border border-slate-600 rounded-lg text-white"
+                  style={{ backgroundColor: "#1f1f1f" }}
                 >
                   <option value="NOT_INVOICED">Nevyfakturované</option>
                   <option value="INVOICE_SENT">Poslaná faktúra</option>
@@ -412,7 +415,7 @@ export default function SettlementsPage() {
                     setShowStatusModal(false);
                     setSelectedSettlement(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
                 >
                   Zrušiť
                 </button>

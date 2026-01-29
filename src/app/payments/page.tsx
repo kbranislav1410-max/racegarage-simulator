@@ -167,27 +167,27 @@ export default function PaymentsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">
+          <h1 className="text-3xl font-bold text-white">
             Platby a Vyúčtovania
           </h1>
-          <p className="text-slate-600 mt-2">
+          <p className="text-slate-300 mt-2">
             50/50 vyúčtovanie a sledovanie platieb
           </p>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="border-b border-slate-200">
+        <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+          <div className="border-b border-slate-700">
             <nav className="flex -mb-px">
               <a
                 href="/payments"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-slate-800 text-slate-800"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-red-600 text-white"
               >
                 Platby
               </a>
               <a
                 href="/payments/settlements"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600"
               >
                 Vyúčtovania
               </a>
@@ -196,7 +196,7 @@ export default function PaymentsPage() {
         </div>
 
         {/* Month Selector & Export */}
-        <div className="bg-white rounded-lg shadow p-4 flex items-center gap-4">
+        <div className="rounded-lg shadow p-4 flex items-center gap-4" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 flex-1">
             <Calendar className="w-5 h-5 text-slate-400" />
             <select
@@ -231,7 +231,7 @@ export default function PaymentsPage() {
           <button
             onClick={handleExportCSV}
             disabled={!settlement || settlement.payments.length === 0}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
             Exportovať CSV
@@ -246,63 +246,64 @@ export default function PaymentsPage() {
         )}
 
         {loading ? (
-          <div className="bg-white rounded-lg shadow p-8 text-center">
-            <div className="text-slate-600">Načítavam údaje o vyúčtovaní...</div>
+          <div className="rounded-lg shadow p-8 text-center" style={{ backgroundColor: "#292929" }}>
+            <div className="text-slate-300">Načítavam údaje o vyúčtovaní...</div>
           </div>
         ) : settlement ? (
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Celkové Príjmy</h3>
-                <p className="text-3xl font-bold text-slate-800 mt-2">
+              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+                <h3 className="text-sm font-medium text-slate-400">Celkové Príjmy</h3>
+                <p className="text-3xl font-bold text-white mt-2">
                   {formatCurrency(settlement.summary.totalRevenue)}
                 </p>
-                <p className="text-sm text-slate-500 mt-1">
+                <p className="text-sm text-slate-400 mt-1">
                   {settlement.summary.totalPayments} platieb
                 </p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Celkom pre PD Drive Club</h3>
-                <p className="text-3xl font-bold text-blue-600 mt-2">
+              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+                <h3 className="text-sm font-medium text-slate-400">Celkom pre PD Drive Club</h3>
+                <p className="text-3xl font-bold text-blue-400 mt-2">
                   {formatCurrency(settlement.summary.sumFriend)}
                 </p>
-                <p className="text-sm text-slate-500 mt-1">PD Drive club platby</p>
+                <p className="text-sm text-slate-400 mt-1">PD Drive club platby</p>
               </div>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-sm font-medium text-slate-600">Celkom pre Racegarage</h3>
-                <p className="text-3xl font-bold text-green-600 mt-2">
+              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+                <h3 className="text-sm font-medium text-slate-400">Celkom pre Racegarage</h3>
+                <p className="text-3xl font-bold text-green-400 mt-2">
                   {formatCurrency(settlement.summary.sumMe)}
                 </p>
-                <p className="text-sm text-slate-500 mt-1">Poukazy a ostatné</p>
+                <p className="text-sm text-slate-400 mt-1">Poukazy a ostatné</p>
               </div>
 
               <div
-                className={`bg-white rounded-lg shadow p-6 ${
+                className={`rounded-lg shadow p-6 ${
                   settlement.summary.friendOwesMe > 0
                     ? "border-2 border-green-500"
                     : settlement.summary.friendOwesMe < 0
                     ? "border-2 border-orange-500"
-                    : "border-2 border-slate-300"
+                    : "border-2 border-slate-600"
                 }`}
+                style={{ backgroundColor: "#292929" }}
               >
-                <h3 className="text-sm font-medium text-slate-600">Vyúčtovanie</h3>
+                <h3 className="text-sm font-medium text-slate-400">Vyúčtovanie</h3>
                 <p
                   className={`text-3xl font-bold mt-2 ${
                     settlement.summary.friendOwesMe > 0
-                      ? "text-green-600"
+                      ? "text-green-400"
                       : settlement.summary.friendOwesMe < 0
-                      ? "text-orange-600"
-                      : "text-slate-800"
+                      ? "text-orange-400"
+                      : "text-white"
                   }`}
                 >
                   {settlement.summary.friendOwesMe === 0
                     ? "€0.00"
                     : formatCurrency(Math.abs(settlement.summary.friendOwesMe))}
                 </p>
-                <p className="text-sm text-slate-600 mt-1 font-medium">
+                <p className="text-sm text-slate-300 mt-1 font-medium">
                   {settlement.summary.friendOwesMe > 0
                     ? "PD Drive Club mi dlhuje"
                     : settlement.summary.friendOwesMe < 0
@@ -313,8 +314,8 @@ export default function PaymentsPage() {
             </div>
 
             {/* Settlement Message */}
-            <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white rounded-lg shadow p-6">
-              <div className="flex items-center gap-3">
+            <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#c20003" }}>
+              <div className="flex items-center gap-3 text-white">
                 <Euro className="w-8 h-8" />
                 <div>
                   <h3 className="text-sm font-medium opacity-90">Výsledok 50/50 vyúčtovania</h3>
@@ -327,20 +328,20 @@ export default function PaymentsPage() {
 
             {/* Payment Methods Breakdown */}
             {Object.keys(settlement.byMethod).length > 0 && (
-              <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-bold text-slate-800 mb-4">
+              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+                <h2 className="text-xl font-bold text-white mb-4">
                   Rozdelenie podľa metód platby
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {Object.entries(settlement.byMethod).map(([method, data]) => (
-                    <div key={method} className="border border-slate-200 rounded-lg p-4">
-                      <h4 className="text-sm font-medium text-slate-600">
+                    <div key={method} className="border border-slate-700 rounded-lg p-4">
+                      <h4 className="text-sm font-medium text-slate-400">
                         {getMethodLabel(method as any)}
                       </h4>
-                      <p className="text-2xl font-bold text-slate-800 mt-2">
+                      <p className="text-2xl font-bold text-white mt-2">
                         {formatCurrency(data.total)}
                       </p>
-                      <p className="text-sm text-slate-500 mt-1">{data.count} platieb</p>
+                      <p className="text-sm text-slate-400 mt-1">{data.count} platieb</p>
                     </div>
                   ))}
                 </div>
@@ -348,72 +349,72 @@ export default function PaymentsPage() {
             )}
 
             {/* Payments Table */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-              <div className="p-6 border-b border-slate-200">
-                <h2 className="text-xl font-bold text-slate-800">História platieb</h2>
+            <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
+              <div className="p-6 border-b border-slate-700">
+                <h2 className="text-xl font-bold text-white">História platieb</h2>
               </div>
               
               {settlement.payments.length === 0 ? (
-                <div className="p-8 text-center text-slate-500">
+                <div className="p-8 text-center text-slate-400">
                   Žiadne platby zaznamenané pre {settlement.monthName} {settlement.year}
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-slate-50 border-b border-slate-200">
+                    <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Dátum a Čas
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Zákazník
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Suma
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Metóda
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Príjemca
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Jazda
                         </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">
                           Akcie
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-slate-200">
+                    <tbody className="divide-y divide-slate-700">
                       {settlement.payments.map((payment) => {
                         const date = new Date(payment.createdAt);
                         return (
-                          <tr key={payment.id} className="hover:bg-slate-50">
+                          <tr key={payment.id} className="hover:bg-slate-700">
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-medium text-slate-900">
+                              <div className="text-sm font-medium text-white">
                                 {date.toLocaleDateString()}
                               </div>
-                              <div className="text-sm text-slate-500">
+                              <div className="text-sm text-slate-400">
                                 {date.toLocaleTimeString()}
                               </div>
                             </td>
                             <td className="px-6 py-4">
                               {payment.customer ? (
                                 <div>
-                                  <div className="text-sm font-medium text-slate-900">
+                                  <div className="text-sm font-medium text-white">
                                     {payment.customer.firstName} {payment.customer.lastName}
                                   </div>
-                                  <div className="text-sm text-slate-500">
+                                  <div className="text-sm text-slate-400">
                                     {payment.customer.email}
                                   </div>
                                 </div>
                               ) : (
-                                <span className="text-sm text-slate-500">N/A</span>
+                                <span className="text-sm text-slate-400">N/A</span>
                               )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-bold text-slate-900">
+                              <div className="text-sm font-bold text-white">
                                 {formatCurrency(payment.amountCents)}
                               </div>
                             </td>
@@ -437,17 +438,17 @@ export default function PaymentsPage() {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                               {payment.session ? (
-                                <div className="text-sm text-slate-600">
+                                <div className="text-sm text-slate-300">
                                   {payment.session.minutes} min
                                 </div>
                               ) : (
-                                <span className="text-sm text-slate-500">-</span>
+                                <span className="text-sm text-slate-400">-</span>
                               )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
                               <button
                                 onClick={() => handleDeletePayment(payment.id)}
-                                className="text-red-600 hover:text-red-800 transition-colors"
+                                className="text-red-400 hover:text-red-300 transition-colors"
                                 title="Odstrániť platbu"
                               >
                                 <Trash2 className="w-5 h-5" />
