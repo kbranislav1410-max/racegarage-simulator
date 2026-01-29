@@ -319,25 +319,26 @@ export default function RidesPage() {
           </div>
           <button
             onClick={() => setShowRecordModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+            style={{ backgroundColor: "#c20003" }}
           >
             <Plus className="w-4 h-4" />
-            Záznam jazdy
+            Nová jazda
           </button>
         </div>
 
         {/* Date Range Filter & Export */}
         <div className="rounded-lg shadow p-4 flex items-center gap-4" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-4 flex-1">
-            <Calendar className="w-5 h-5 text-slate-400" />
+            <Calendar className="w-5 h-5 text-white" />
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-white">Od:</label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f" }}
+                className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f", border: "none" }}
               />
             </div>
             <div className="flex items-center gap-2">
@@ -346,14 +347,15 @@ export default function RidesPage() {
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f" }}
+                className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                style={{ backgroundColor: "#1f1f1f", border: "none" }}
               />
             </div>
           </div>
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+            style={{ backgroundColor: "#c20003" }}
           >
             <Download className="w-4 h-4" />
             Exportovať CSV
