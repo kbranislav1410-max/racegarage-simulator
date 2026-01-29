@@ -550,62 +550,61 @@ export default function DashboardPage() {
                   const maxValue = Math.max(...chartData.map(d => d.count), 1);
                   
                   return (
-                    <div className="space-y-1">
+                    <div className="flex gap-2">
                       {/* Y-axis labels */}
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                      <div className="flex flex-col justify-between text-xs text-slate-400 pt-0 pb-10">
                         <span>{maxValue}</span>
-                      </div>
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
                         <span>{Math.round(maxValue / 2)}</span>
-                      </div>
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
                         <span>0</span>
                       </div>
                       
-                      {/* Chart with grid lines */}
-                      <div className="relative h-48 border-b border-slate-700">
-                        {/* Horizontal grid lines */}
-                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                          <div className="border-t border-slate-700"></div>
-                          <div className="border-t border-slate-700"></div>
-                          <div className="border-t border-slate-700"></div>
+                      {/* Chart area */}
+                      <div className="flex-1 space-y-1">
+                        {/* Chart with grid lines */}
+                        <div className="relative h-48 border-b border-slate-700">
+                          {/* Horizontal grid lines */}
+                          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                            <div className="border-t border-slate-700"></div>
+                            <div className="border-t border-slate-700"></div>
+                            <div className="border-t border-slate-700"></div>
+                          </div>
+                          
+                          {/* Bars */}
+                          <div className="flex items-end justify-between h-full gap-2">
+                            {chartData.map((data, index) => {
+                              const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
+                              
+                              return (
+                                <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                  <div 
+                                    className="w-full rounded-t relative"
+                                    style={{ 
+                                      backgroundColor: getCustomerChartColor(),
+                                      height: `${height}%`,
+                                      minHeight: data.count > 0 ? "8px" : "0px"
+                                    }}
+                                    title={`${data.monthName}: ${data.count}`}
+                                  >
+                                    {data.count > 0 && (
+                                      <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
+                                        {data.count}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                         
-                        {/* Bars */}
-                        <div className="flex items-end justify-between h-full gap-2">
-                          {chartData.map((data, index) => {
-                            const height = maxValue > 0 ? (data.count / maxValue) * 100 : 0;
-                            
-                            return (
-                              <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <div 
-                                  className="w-full rounded-t relative"
-                                  style={{ 
-                                    backgroundColor: getCustomerChartColor(),
-                                    height: `${height}%`,
-                                    minHeight: data.count > 0 ? "8px" : "0px"
-                                  }}
-                                  title={`${data.monthName}: ${data.count}`}
-                                >
-                                  {data.count > 0 && (
-                                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
-                                      {data.count}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
+                        {/* Month labels */}
+                        <div className="flex items-center justify-between gap-2 pt-4">
+                          {chartData.map((data, index) => (
+                            <span key={index} className="flex-1 text-xs text-slate-300 text-center">
+                              {data.monthName.slice(0, 3)}
+                            </span>
+                          ))}
                         </div>
-                      </div>
-                      
-                      {/* Month labels */}
-                      <div className="flex items-center justify-between gap-2 pt-2">
-                        {chartData.map((data, index) => (
-                          <span key={index} className="flex-1 text-xs text-slate-300 text-center">
-                            {data.monthName.slice(0, 3)}
-                          </span>
-                        ))}
                       </div>
                     </div>
                   );
@@ -728,62 +727,61 @@ export default function DashboardPage() {
                   const maxValue = Math.max(...chartData.map(d => d.value), 1);
                   
                   return (
-                    <div className="space-y-1">
+                    <div className="flex gap-2">
                       {/* Y-axis labels */}
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
+                      <div className="flex flex-col justify-between text-xs text-slate-400 pt-0 pb-10">
                         <span>€{maxValue.toFixed(0)}</span>
-                      </div>
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
                         <span>€{(maxValue / 2).toFixed(0)}</span>
-                      </div>
-                      <div className="flex justify-between text-xs text-slate-400 mb-1">
                         <span>€0</span>
                       </div>
                       
-                      {/* Chart with grid lines */}
-                      <div className="relative h-48 border-b border-slate-700">
-                        {/* Horizontal grid lines */}
-                        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                          <div className="border-t border-slate-700"></div>
-                          <div className="border-t border-slate-700"></div>
-                          <div className="border-t border-slate-700"></div>
+                      {/* Chart area */}
+                      <div className="flex-1 space-y-1">
+                        {/* Chart with grid lines */}
+                        <div className="relative h-48 border-b border-slate-700">
+                          {/* Horizontal grid lines */}
+                          <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                            <div className="border-t border-slate-700"></div>
+                            <div className="border-t border-slate-700"></div>
+                            <div className="border-t border-slate-700"></div>
+                          </div>
+                          
+                          {/* Bars */}
+                          <div className="flex items-end justify-between h-full gap-2">
+                            {chartData.map((data, index) => {
+                              const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
+                              
+                              return (
+                                <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                  <div 
+                                    className="w-full rounded-t relative"
+                                    style={{ 
+                                      backgroundColor: "#a6a6a6",
+                                      height: `${height}%`,
+                                      minHeight: data.value > 0 ? "8px" : "0px"
+                                    }}
+                                    title={`${data.month}: €${data.value.toFixed(2)}`}
+                                  >
+                                    {data.value > 0 && (
+                                      <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
+                                        €{data.value.toFixed(0)}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                         
-                        {/* Bars */}
-                        <div className="flex items-end justify-between h-full gap-2">
-                          {chartData.map((data, index) => {
-                            const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
-                            
-                            return (
-                              <div key={index} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <div 
-                                  className="w-full rounded-t relative"
-                                  style={{ 
-                                    backgroundColor: "#a6a6a6",
-                                    height: `${height}%`,
-                                    minHeight: data.value > 0 ? "8px" : "0px"
-                                  }}
-                                  title={`${data.month}: €${data.value.toFixed(2)}`}
-                                >
-                                  {data.value > 0 && (
-                                    <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-white whitespace-nowrap">
-                                      €{data.value.toFixed(0)}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
+                        {/* Month labels */}
+                        <div className="flex items-center justify-between gap-2 pt-4">
+                          {chartData.map((data, index) => (
+                            <span key={index} className="flex-1 text-xs text-slate-300 text-center">
+                              {data.month.slice(0, 3)}
+                            </span>
+                          ))}
                         </div>
-                      </div>
-                      
-                      {/* Month labels */}
-                      <div className="flex items-center justify-between gap-2 pt-2">
-                        {chartData.map((data, index) => (
-                          <span key={index} className="flex-1 text-xs text-slate-300 text-center">
-                            {data.month.slice(0, 3)}
-                          </span>
-                        ))}
                       </div>
                     </div>
                   );
