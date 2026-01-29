@@ -80,3 +80,9 @@ select:focus {
   outline: none;
   border: none !important;
 }
+
+/* Style native date input calendar icon to white for dark theme */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
