@@ -2,7 +2,7 @@
 
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { useEffect, useState } from "react";
-import { Plus, Search, X, Calendar, UserPlus, Ticket } from "lucide-react";
+import { Plus, Search, X, Calendar, UserPlus, Ticket, Trophy, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface DashboardStats {
@@ -55,16 +55,21 @@ interface DashboardStats {
   yearlyRides: number;
   yearlyMinutes: number;
   activeReservations: number;
-  recentRidesActivity: Array<{
-    type: "ride";
-    description: string;
-    timestamp: string;
-  }>;
-  recentCustomersActivity: Array<{
-    type: "customer";
-    description: string;
-    timestamp: string;
-  }>;
+  challengeLeaderboard: {
+    challenge: {
+      id: string;
+      trackName: string;
+      carName: string;
+      durationMinutes: number;
+    };
+    topAttempts: Array<{
+      rank: number;
+      customerId: string;
+      customerName: string;
+      lapTimeMs: number;
+      recordedAt: string;
+    }>;
+  } | null;
 }
 
 interface Customer {
@@ -110,8 +115,7 @@ export default function DashboardPage() {
     yearlyRides: 0,
     yearlyMinutes: 0,
     activeReservations: 0,
-    recentRidesActivity: [],
-    recentCustomersActivity: [],
+    challengeLeaderboard: null,
   });
   const [loading, setLoading] = useState(true);
   const [revenueFilter, setRevenueFilter] = useState<"all" | "racegarage" | "pdDriveClub">("all");
@@ -218,6 +222,16 @@ export default function DashboardPage() {
     if (customerFilter === "rides") return `Počet jázd po mesiacoch - ${new Date().getFullYear()}`;
     if (customerFilter === "newCustomers") return `Noví zákazníci po mesiacoch - ${new Date().getFullYear()}`;
     return `Vracajúci sa zákazníci po mesiacoch - ${new Date().getFullYear()}`;
+  };
+
+  // Format lap time from milliseconds to MM:SS.mmm
+  const formatLapTime = (lapTimeMs: number) => {
+    const totalSeconds = lapTimeMs / 1000;
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+    const milliseconds = Math.floor((totalSeconds % 1) * 1000);
+    
+    return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
   };
 
   useEffect(() => {
@@ -763,76 +777,96 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Recent Rides Activity */}
+        {/* Challenge Leaderboard - TOP 3 */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-bold text-slate-800 mb-4">
-            Posledné jazdy
-          </h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+              <Trophy className="text-yellow-500" size={24} />
+              Aktuálna výzva
+            </h2>
+            <button
+              onClick={() => router.push("/challenge")}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              Zobraziť celý rebríček
+              <ChevronRight size={16} />
+            </button>
+          </div>
+          
           {loading ? (
             <p className="text-slate-600">Načítavam...</p>
-          ) : stats.recentRidesActivity.length === 0 ? (
-            <p className="text-slate-600">Žiadne jazdy na zobrazenie</p>
-          ) : (
-            <div className="space-y-3">
-              {stats.recentRidesActivity.map((activity, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 p-3 rounded-md hover:bg-slate-50 border border-slate-100"
-                >
-                  <div className="mt-1 w-2 h-2 rounded-full bg-blue-500" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-800">
-                      {activity.description}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {new Date(activity.timestamp).toLocaleString("sk-SK", {
-                        day: "numeric",
-                        month: "numeric",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          ) : !stats.challengeLeaderboard ? (
+            <div className="text-center py-8">
+              <Trophy className="mx-auto text-slate-300 mb-3" size={48} />
+              <p className="text-slate-600">Žiadna aktívna výzva pre tento mesiac</p>
             </div>
-          )}
-        </div>
-
-        {/* Recent Customers Activity */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-bold text-slate-800 mb-4">
-            Noví jazdci
-          </h2>
-          {loading ? (
-            <p className="text-slate-600">Načítavam...</p>
-          ) : stats.recentCustomersActivity.length === 0 ? (
-            <p className="text-slate-600">Žiadni noví jazdci na zobrazenie</p>
           ) : (
-            <div className="space-y-3">
-              {stats.recentCustomersActivity.map((activity, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-3 p-3 rounded-md hover:bg-slate-50 border border-slate-100"
-                >
-                  <div className="mt-1 w-2 h-2 rounded-full bg-green-500" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-800">
-                      {activity.description}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      {new Date(activity.timestamp).toLocaleString("sk-SK", {
-                        day: "numeric",
-                        month: "numeric",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
+            <div className="space-y-4">
+              {/* Challenge Info */}
+              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-slate-600">Trať:</span>
+                    <span className="ml-2 font-semibold text-slate-800">
+                      {stats.challengeLeaderboard.challenge.trackName}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-slate-600">Auto:</span>
+                    <span className="ml-2 font-semibold text-slate-800">
+                      {stats.challengeLeaderboard.challenge.carName}
+                    </span>
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* TOP 3 Leaderboard */}
+              {stats.challengeLeaderboard.topAttempts.length === 0 ? (
+                <p className="text-center text-slate-600 py-4">
+                  Zatiaľ žiadne pokusy. Buď prvý!
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {stats.challengeLeaderboard.topAttempts.map((attempt) => {
+                    const medalColors = {
+                      1: "bg-yellow-500 text-white",
+                      2: "bg-slate-400 text-white",
+                      3: "bg-amber-700 text-white",
+                    };
+                    const medalColor = medalColors[attempt.rank as keyof typeof medalColors];
+
+                    return (
+                      <div
+                        key={attempt.rank}
+                        className="flex items-center gap-3 p-4 rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-colors"
+                      >
+                        {/* Rank Medal */}
+                        <div className={`w-10 h-10 rounded-full ${medalColor} flex items-center justify-center font-bold text-lg flex-shrink-0`}>
+                          {attempt.rank}
+                        </div>
+                        
+                        {/* Customer Name */}
+                        <div className="flex-1">
+                          <p className="font-semibold text-slate-800">
+                            {attempt.customerName}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {new Date(attempt.recordedAt).toLocaleDateString("sk-SK")}
+                          </p>
+                        </div>
+                        
+                        {/* Lap Time */}
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-blue-600">
+                            {formatLapTime(attempt.lapTimeMs)}
+                          </p>
+                          <p className="text-xs text-slate-500">čas kola</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>

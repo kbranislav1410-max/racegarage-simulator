@@ -390,57 +390,54 @@ export async function GET() {
       },
     });
 
-    // Get recent rides (last 10)
-    const recentRides = await prisma.rideSession.findMany({
-      take: 10,
-      orderBy: { createdAt: "desc" },
-      include: {
-        customer: {
-          select: {
-            firstName: true,
-            lastName: true,
-          },
-        },
-        paymentRecords: {
-          select: {
-            amountCents: true,
-          },
+    // Get current month's challenge
+    const currentChallenge = await prisma.challengeMonth.findUnique({
+      where: {
+        year_month: {
+          year: now.getFullYear(),
+          month: now.getMonth() + 1, // JavaScript months are 0-indexed
         },
       },
     });
 
-    // Get recent customers (last 10)
-    const recentCustomers = await prisma.customer.findMany({
-      take: 10,
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        createdAt: true,
-      },
-    });
+    // Get TOP 3 challenge attempts for current month
+    let challengeLeaderboard = null;
+    if (currentChallenge) {
+      const topAttempts = await prisma.challengeAttempt.findMany({
+        where: {
+          challengeMonthId: currentChallenge.id,
+        },
+        take: 3,
+        orderBy: {
+          lapTimeMs: "asc", // Fastest times first
+        },
+        include: {
+          customer: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
 
-    // Format recent rides with amounts
-    const recentRidesActivity = recentRides.map((ride) => {
-      const totalAmount = ride.paymentRecords.reduce(
-        (sum: number, payment) => sum + payment.amountCents,
-        0
-      ) / 100;
-      
-      return {
-        type: "ride" as const,
-        description: `${ride.customer.firstName} ${ride.customer.lastName} - Jazda ${ride.minutes} min${totalAmount > 0 ? ` (${totalAmount.toFixed(2)}€)` : ""}`,
-        timestamp: ride.createdAt,
+      challengeLeaderboard = {
+        challenge: {
+          id: currentChallenge.id,
+          trackName: currentChallenge.trackName,
+          carName: currentChallenge.carName,
+          durationMinutes: currentChallenge.durationMinutes,
+        },
+        topAttempts: topAttempts.map((attempt, index) => ({
+          rank: index + 1,
+          customerId: attempt.customerId,
+          customerName: `${attempt.customer.firstName} ${attempt.customer.lastName}`,
+          lapTimeMs: attempt.lapTimeMs,
+          recordedAt: attempt.recordedAt.toISOString(),
+        })),
       };
-    });
-
-    // Format recent customers
-    const recentCustomersActivity = recentCustomers.map((customer) => ({
-      type: "customer" as const,
-      description: `Nový zákazník: ${customer.firstName} ${customer.lastName}`,
-      timestamp: customer.createdAt,
-    }));
+    }
 
     return NextResponse.json({
       // All-time stats
@@ -493,9 +490,8 @@ export async function GET() {
       // Other stats
       activeReservations,
       
-      // Recent activity - separate rides and customers
-      recentRidesActivity,
-      recentCustomersActivity,
+      // Challenge leaderboard (TOP 3)
+      challengeLeaderboard,
     });
   } catch (error) {
     console.error("Failed to fetch dashboard stats:", error);
