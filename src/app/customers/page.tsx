@@ -227,7 +227,7 @@ export default function CustomersPage() {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                style={{ backgroundColor: "#1f1f1f", border: "none", color: "white" }}
               />
             </div>
             <button
