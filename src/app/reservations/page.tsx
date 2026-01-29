@@ -178,26 +178,26 @@ export default function ReservationsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">Reservations</h1>
-            <p className="text-slate-600 mt-2">
+            <h1 className="text-3xl font-bold text-white">Reservations</h1>
+            <p className="text-slate-300 mt-2">
               Manage booking and reservation schedules
             </p>
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-slate-600" />
-              <span className="text-sm font-medium text-slate-700">Filters:</span>
+              <Filter className="w-5 h-5 text-slate-300" />
+              <span className="text-sm font-medium text-white">Filters:</span>
             </div>
             <div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
-                style={{ backgroundColor: '#292929', border: 'none' }}
+                className="px-3 py-2 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white border-slate-600"
+                style={{ backgroundColor: '#1f1f1f' }}
               >
                 {STATUS_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -211,14 +211,15 @@ export default function ReservationsPage() {
                 type="date"
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
-                className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent"
+                className="px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
+                style={{ backgroundColor: '#1f1f1f' }}
                 placeholder="Filter by date"
               />
             </div>
             {dateFilter && (
               <button
                 onClick={() => setDateFilter("")}
-                className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800"
+                className="px-3 py-2 text-sm text-slate-300 hover:text-white"
               >
                 Clear date
               </button>
@@ -227,39 +228,39 @@ export default function ReservationsPage() {
         </div>
 
         {/* Reservations Table */}
-        <div className="bg-white rounded-lg shadow">
+        <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
           <div className="p-6">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4">
+            <h2 className="text-lg font-semibold text-white mb-4">
               {statusFilter === "ALL" ? "All Reservations" : `${statusFilter} Reservations`}
               {dateFilter && ` on ${new Date(dateFilter).toLocaleDateString()}`}
             </h2>
 
             {loading ? (
-              <div className="text-center py-8 text-slate-600">
+              <div className="text-center py-8 text-slate-300">
                 Loading reservations...
               </div>
             ) : reservations.length === 0 ? (
-              <div className="text-center py-8 text-slate-600">
+              <div className="text-center py-8 text-slate-300">
                 No reservations found.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-200">
-                      <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
+                  <thead style={{ backgroundColor: "#1f1f1f" }}>
+                    <tr className="border-b border-slate-700">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
                         Customer
                       </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
                         Scheduled
                       </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
                         Duration
                       </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
                         Status
                       </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-slate-700">
+                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
                         Actions
                       </th>
                     </tr>
@@ -270,25 +271,25 @@ export default function ReservationsPage() {
                       return (
                         <tr
                           key={reservation.id}
-                          className="border-b border-slate-100 hover:bg-slate-50"
+                          className="border-b border-slate-700 hover:bg-slate-700"
                         >
                           <td className="py-3 px-4">
                             <div>
-                              <div className="font-medium text-slate-800">
+                              <div className="font-medium text-white">
                                 {customerInfo.name}
                                 {!customerInfo.isRegistered && (
-                                  <span className="ml-2 text-xs text-slate-500">(Guest)</span>
+                                  <span className="ml-2 text-xs text-slate-400">(Guest)</span>
                                 )}
                               </div>
-                              <div className="text-sm text-slate-600">
+                              <div className="text-sm text-slate-300">
                                 {customerInfo.email}
                               </div>
                             </div>
                           </td>
-                          <td className="py-3 px-4 text-sm text-slate-800">
+                          <td className="py-3 px-4 text-sm text-white">
                             {formatDateTime(new Date(reservation.scheduledAt))}
                           </td>
-                          <td className="py-3 px-4 text-sm text-slate-800">
+                          <td className="py-3 px-4 text-sm text-white">
                             {reservation.durationMinutes} min
                           </td>
                           <td className="py-3 px-4">
@@ -306,7 +307,7 @@ export default function ReservationsPage() {
                                 setSelectedReservation(reservation);
                                 setShowDetailModal(true);
                               }}
-                              className="px-3 py-1 text-sm text-slate-800 hover:bg-slate-100 rounded"
+                              className="px-3 py-1 text-sm text-white hover:bg-slate-700 rounded"
                             >
                               View Details
                             </button>
@@ -325,10 +326,10 @@ export default function ReservationsPage() {
       {/* Detail Modal */}
       {showDetailModal && selectedReservation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">
+                <h2 className="text-2xl font-bold text-white">
                   Reservation Details
                 </h2>
                 <button
@@ -336,7 +337,7 @@ export default function ReservationsPage() {
                     setShowDetailModal(false);
                     setActionNotes("");
                   }}
-                  className="text-slate-600 hover:text-slate-800"
+                  className="text-slate-300 hover:text-white"
                 >
                   <XCircle className="w-6 h-6" />
                 </button>
@@ -345,27 +346,27 @@ export default function ReservationsPage() {
               <div className="space-y-4">
                 {/* Customer Info */}
                 <div>
-                  <h3 className="text-sm font-medium text-slate-700 mb-2">
+                  <h3 className="text-sm font-medium text-white mb-2">
                     Customer Information
                   </h3>
-                  <div className="bg-slate-50 p-4 rounded-lg">
+                  <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-600">Name</p>
-                        <p className="font-medium text-slate-800">
+                        <p className="text-sm text-slate-300">Name</p>
+                        <p className="font-medium text-white">
                           {getCustomerInfo(selectedReservation).name}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-600">Email</p>
-                        <p className="font-medium text-slate-800">
+                        <p className="text-sm text-slate-300">Email</p>
+                        <p className="font-medium text-white">
                           {getCustomerInfo(selectedReservation).email}
                         </p>
                       </div>
                       {selectedReservation.customer?.phone && (
                         <div>
-                          <p className="text-sm text-slate-600">Phone</p>
-                          <p className="font-medium text-slate-800">
+                          <p className="text-sm text-slate-300">Phone</p>
+                          <p className="font-medium text-white">
                             {selectedReservation.customer.phone}
                           </p>
                         </div>
@@ -376,25 +377,25 @@ export default function ReservationsPage() {
 
                 {/* Reservation Details */}
                 <div>
-                  <h3 className="text-sm font-medium text-slate-700 mb-2">
+                  <h3 className="text-sm font-medium text-white mb-2">
                     Reservation Details
                   </h3>
-                  <div className="bg-slate-50 p-4 rounded-lg">
+                  <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-600">Scheduled At</p>
-                        <p className="font-medium text-slate-800">
+                        <p className="text-sm text-slate-300">Scheduled At</p>
+                        <p className="font-medium text-white">
                           {formatDateTime(new Date(selectedReservation.scheduledAt))}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-600">Duration</p>
-                        <p className="font-medium text-slate-800">
+                        <p className="text-sm text-slate-300">Duration</p>
+                        <p className="font-medium text-white">
                           {selectedReservation.durationMinutes} minutes
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-600">Status</p>
+                        <p className="text-sm text-slate-300">Status</p>
                         <p>
                           <span
                             className={`inline-block px-2 py-1 text-xs font-medium rounded ${getStatusBadgeClass(
@@ -406,16 +407,16 @@ export default function ReservationsPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-600">Created</p>
-                        <p className="font-medium text-slate-800">
+                        <p className="text-sm text-slate-300">Created</p>
+                        <p className="font-medium text-white">
                           {formatDateTime(new Date(selectedReservation.createdAt))}
                         </p>
                       </div>
                     </div>
                     {selectedReservation.notes && (
                       <div className="mt-4">
-                        <p className="text-sm text-slate-600">Notes</p>
-                        <p className="font-medium text-slate-800">
+                        <p className="text-sm text-slate-300">Notes</p>
+                        <p className="font-medium text-white">
                           {selectedReservation.notes}
                         </p>
                       </div>
@@ -425,13 +426,14 @@ export default function ReservationsPage() {
 
                 {/* Action Notes */}
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-white mb-2">
                     Action Notes (optional)
                   </label>
                   <textarea
                     value={actionNotes}
                     onChange={(e) => setActionNotes(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
                     rows={3}
                     placeholder="Add notes for rejection or cancellation..."
                   />
