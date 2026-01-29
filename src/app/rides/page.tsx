@@ -562,8 +562,8 @@ export default function RidesPage() {
                           onChange={(e) =>
                             setRideFormData({ ...rideFormData, date: e.target.value })
                           }
-                          className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                          style={{ backgroundColor: "#1f1f1f" }}
+                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
                           required
                         />
                       </div>
@@ -577,8 +577,8 @@ export default function RidesPage() {
                           onChange={(e) =>
                             setRideFormData({ ...rideFormData, time: e.target.value })
                           }
-                          className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                          style={{ backgroundColor: "#1f1f1f" }}
+                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
                           required
                         />
                       </div>
@@ -601,11 +601,10 @@ export default function RidesPage() {
                             onChange={(e) =>
                               setRideFormData({ ...rideFormData, amount: e.target.value })
                             }
-                            className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f" }}
+                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
                             placeholder="0.00"
                           />
-                          <p className="text-xs text-slate-400 mt-1">Nechajte prázdne ak nebola platba</p>
                         </div>
 
                         <div>
@@ -622,8 +621,8 @@ export default function RidesPage() {
                                 voucherCode: "", // Reset voucher code when payment method changes
                               })
                             }
-                            className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f" }}
+                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
                           >
                             <option value="PD_DRIVE_CLUB">PD Drive Club</option>
                             <option value="VOUCHER_PARTNER">Poukaz - Partner</option>
@@ -647,8 +646,8 @@ export default function RidesPage() {
                                 partner: e.target.value as typeof rideFormData.partner,
                               })
                             }
-                            className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f" }}
+                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
                             required
                           >
                             <option value="">Vyberte partnera...</option>
@@ -673,8 +672,8 @@ export default function RidesPage() {
                             onChange={(e) =>
                               setRideFormData({ ...rideFormData, voucherCode: e.target.value })
                             }
-                            className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f" }}
+                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
                             placeholder="Zadajte číslo poukazu"
                             required={rideFormData.paymentMethod === "VOUCHER_PARTNER"}
                           />
@@ -698,8 +697,8 @@ export default function RidesPage() {
                             setRideFormData({ ...rideFormData, minutes: value });
                           }
                         }}
-                        className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                     </div>
@@ -715,8 +714,8 @@ export default function RidesPage() {
                           setRideFormData({ ...rideFormData, notes: e.target.value })
                         }
                         rows={3}
-                        className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         placeholder="Voliteľná poznámka k jazde..."
                       />
                     </div>
