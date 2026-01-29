@@ -797,7 +797,8 @@ export default function DashboardPage() {
             </h2>
             <button
               onClick={() => router.push("/challenge")}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+              className="flex items-center gap-2 px-4 py-2  text-white rounded-lg text-sm font-medium transition-colors hover:bg-opacity-90"
+              style={{ backgroundColor: "#c20003" }}
             >
               Zobraziť celý rebríček
               <ChevronRight size={16} />
@@ -1166,7 +1167,8 @@ export default function DashboardPage() {
                     <button
                       type="submit"
                       disabled={customerFormSubmitting}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium disabled:opacity-50"
+                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:bg-opacity-90"
+                      style={{ backgroundColor: "#c20003" }}
                     >
                       {customerFormSubmitting ? "Vytváram..." : "Vytvoriť a pokračovať"}
                     </button>
@@ -1339,7 +1341,8 @@ export default function DashboardPage() {
                     <button
                       type="submit"
                       disabled={rideFormSubmitting}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium disabled:opacity-50"
+                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:bg-opacity-90"
+                      style={{ backgroundColor: "#c20003" }}
                     >
                       {rideFormSubmitting ? "Zaznamenávam..." : "Zaznamenať jazdu"}
                     </button>

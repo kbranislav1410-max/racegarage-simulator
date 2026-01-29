@@ -56,9 +56,10 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
                 isActive
-                  ? "bg-slate-700 text-white"
+                  ? "text-white"
                   : "text-slate-300 hover:bg-slate-700 hover:text-white"
               )}
+              style={isActive ? { backgroundColor: '#c20003' } : undefined}
             >
               <Icon className="w-5 h-5" />
               <span>{item.label}</span>

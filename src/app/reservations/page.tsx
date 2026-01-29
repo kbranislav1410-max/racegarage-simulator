@@ -445,7 +445,7 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "CONFIRMED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
                       >
                         <CheckCircle className="w-4 h-4" />
                         Confirm
@@ -484,7 +484,7 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "COMPLETED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
                       >
                         <Check className="w-4 h-4" />
                         Complete

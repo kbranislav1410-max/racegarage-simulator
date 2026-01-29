@@ -438,7 +438,7 @@ export default function SettingsPage() {
                 <button
                   onClick={handleExportSubscribers}
                   disabled={newsletterSubscribers.length === 0}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ backgroundColor: "#c20003" }}
                 >
                   <Download className="w-4 h-4" />
                   Exportovať CSV

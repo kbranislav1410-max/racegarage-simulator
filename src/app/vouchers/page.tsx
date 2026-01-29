@@ -692,7 +692,7 @@ export default function VouchersPage() {
                   <button
                     type="submit"
                     disabled={extendLoading}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400"
+                    className="flex-1 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:bg-blue-400" style={{ backgroundColor: "#c20003" }}
                   >
                     {extendLoading ? "Predlžujem..." : "Predĺžiť"}
                   </button>
