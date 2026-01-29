@@ -11,8 +11,21 @@ interface DashboardStats {
   newRidersThisMonth: number;
   returningRidersThisMonth: number;
   monthlyRevenue: number;
+  monthlyRevenueRacegarage: number;
+  monthlyRevenuePDDriveClub: number;
   monthlyRevenueChange: number;
   monthlyRevenueChangePercent: number;
+  weeklyRevenue: number;
+  weeklyRevenueRacegarage: number;
+  weeklyRevenuePDDriveClub: number;
+  monthlyRevenueByMonth: Array<{
+    month: number;
+    monthName: string;
+    total: number;
+    racegarage: number;
+    pdDriveClub: number;
+  }>;
+  settlementAmount: number;
   yearlyRevenue: number;
   yearlyRevenueChange: number;
   yearlyRevenueChangePercent: number;
@@ -47,8 +60,15 @@ export default function DashboardPage() {
     newRidersThisMonth: 0,
     returningRidersThisMonth: 0,
     monthlyRevenue: 0,
+    monthlyRevenueRacegarage: 0,
+    monthlyRevenuePDDriveClub: 0,
     monthlyRevenueChange: 0,
     monthlyRevenueChangePercent: 0,
+    weeklyRevenue: 0,
+    weeklyRevenueRacegarage: 0,
+    weeklyRevenuePDDriveClub: 0,
+    monthlyRevenueByMonth: [],
+    settlementAmount: 0,
     yearlyRevenue: 0,
     yearlyRevenueChange: 0,
     yearlyRevenueChangePercent: 0,
@@ -57,6 +77,7 @@ export default function DashboardPage() {
     recentCustomersActivity: [],
   });
   const [loading, setLoading] = useState(true);
+  const [revenueFilter, setRevenueFilter] = useState<"all" | "racegarage" | "pdDriveClub">("all");
 
   // Record Ride Modal State
   const [showRecordModal, setShowRecordModal] = useState(false);
@@ -94,6 +115,23 @@ export default function DashboardPage() {
   });
   const [rideFormErrors, setRideFormErrors] = useState<Record<string, string>>({});
   const [rideFormSubmitting, setRideFormSubmitting] = useState(false);
+
+  // Helper function to get filtered revenue value
+  const getFilteredRevenue = (total: number, racegarage: number, pdDriveClub: number) => {
+    if (revenueFilter === "racegarage") return racegarage;
+    if (revenueFilter === "pdDriveClub") return pdDriveClub;
+    return total;
+  };
+
+  // Helper function to get chart data based on filter
+  const getChartData = () => {
+    return stats.monthlyRevenueByMonth.map(month => ({
+      month: month.monthName,
+      value: revenueFilter === "racegarage" ? month.racegarage : 
+             revenueFilter === "pdDriveClub" ? month.pdDriveClub : 
+             month.total
+    }));
+  };
 
   useEffect(() => {
     async function fetchStats() {
@@ -357,56 +395,174 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Revenue Statistics */}
+        {/* Financial Indicators Section */}
         <div>
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">Príjmy</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-slate-700">Finančné ukazovatele</h2>
+            <select
+              value={revenueFilter}
+              onChange={(e) => setRevenueFilter(e.target.value as typeof revenueFilter)}
+              className="px-4 py-2 border border-slate-300 rounded-lg bg-white text-slate-900"
+            >
+              <option value="all">Celkové príjmy</option>
+              <option value="racegarage">Racegarage</option>
+              <option value="pdDriveClub">PD Drive Club</option>
+            </select>
+          </div>
+
+          {/* Weekly, Monthly, Settlement Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-sm font-medium text-slate-600">
+                Príjem za tento týždeň
+              </h3>
+              <p className="text-3xl font-bold text-blue-600 mt-2">
+                {loading ? "..." : `€${getFilteredRevenue(
+                  stats.weeklyRevenue,
+                  stats.weeklyRevenueRacegarage,
+                  stats.weeklyRevenuePDDriveClub
+                ).toFixed(2)}`}
+              </p>
+              {!loading && revenueFilter === "all" && (
+                <div className="mt-2 text-xs text-slate-500">
+                  <div>Racegarage: €{stats.weeklyRevenueRacegarage.toFixed(2)}</div>
+                  <div>PD Drive Club: €{stats.weeklyRevenuePDDriveClub.toFixed(2)}</div>
+                </div>
+              )}
+            </div>
+
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-sm font-medium text-slate-600">
                 Príjem za tento mesiac
               </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
-                {loading ? "..." : `€${stats.monthlyRevenue.toFixed(2)}`}
+              <p className="text-3xl font-bold text-green-600 mt-2">
+                {loading ? "..." : `€${getFilteredRevenue(
+                  stats.monthlyRevenue,
+                  stats.monthlyRevenueRacegarage,
+                  stats.monthlyRevenuePDDriveClub
+                ).toFixed(2)}`}
               </p>
+              {!loading && revenueFilter === "all" && (
+                <div className="mt-2 text-xs text-slate-500">
+                  <div>Racegarage: €{stats.monthlyRevenueRacegarage.toFixed(2)}</div>
+                  <div>PD Drive Club: €{stats.monthlyRevenuePDDriveClub.toFixed(2)}</div>
+                </div>
+              )}
               {!loading && stats.monthlyRevenueChange !== 0 && (
                 <div className="mt-2 flex items-center gap-2">
                   <span className={`text-sm font-medium ${stats.monthlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
                     {stats.monthlyRevenueChange > 0 ? "+" : ""}
                     €{Math.abs(stats.monthlyRevenueChange).toFixed(2)}
                   </span>
-                  <span className={`text-sm ${stats.monthlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                  <span className={`text-xs ${stats.monthlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
                     ({stats.monthlyRevenueChange > 0 ? "+" : ""}
                     {stats.monthlyRevenueChangePercent.toFixed(1)}%)
                   </span>
-                  <span className="text-xs text-slate-500">
-                    oproti minulému mesiacu
-                  </span>
                 </div>
               )}
             </div>
+
             <div className="bg-white p-6 rounded-lg shadow">
               <h3 className="text-sm font-medium text-slate-600">
-                Príjem za tento rok
+                Vyrovnanie za aktuálny mesiac
               </h3>
-              <p className="text-3xl font-bold text-slate-800 mt-2">
-                {loading ? "..." : `€${stats.yearlyRevenue.toFixed(2)}`}
+              <p className={`text-3xl font-bold mt-2 ${
+                stats.settlementAmount > 0 ? "text-green-600" : 
+                stats.settlementAmount < 0 ? "text-red-600" : 
+                "text-slate-800"
+              }`}>
+                {loading ? "..." : stats.settlementAmount > 0 
+                  ? `+€${stats.settlementAmount.toFixed(2)}`
+                  : stats.settlementAmount < 0
+                  ? `€${stats.settlementAmount.toFixed(2)}`
+                  : "€0.00"
+                }
               </p>
-              {!loading && stats.yearlyRevenueChange !== 0 && (
-                <div className="mt-2 flex items-center gap-2">
-                  <span className={`text-sm font-medium ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
-                    {stats.yearlyRevenueChange > 0 ? "+" : ""}
-                    €{Math.abs(stats.yearlyRevenueChange).toFixed(2)}
-                  </span>
-                  <span className={`text-sm ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
-                    ({stats.yearlyRevenueChange > 0 ? "+" : ""}
-                    {stats.yearlyRevenueChangePercent.toFixed(1)}%)
-                  </span>
-                  <span className="text-xs text-slate-500">
-                    oproti minulému roku
-                  </span>
-                </div>
+              {!loading && (
+                <p className="text-xs text-slate-500 mt-2">
+                  {stats.settlementAmount > 0 
+                    ? "PD Drive Club mi dlhuje"
+                    : stats.settlementAmount < 0
+                    ? "Racegarage dlhuje"
+                    : "Vyrovnané"
+                  }
+                </p>
               )}
             </div>
+          </div>
+
+          {/* Monthly Revenue Chart */}
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-lg font-semibold text-slate-700 mb-4">
+              Mesačné príjmy za rok {new Date().getFullYear()}
+            </h3>
+            {loading ? (
+              <div className="h-64 flex items-center justify-center">
+                <p className="text-slate-600">Načítavam graf...</p>
+              </div>
+            ) : (
+              <div className="h-64">
+                <div className="flex items-end justify-between h-full gap-2">
+                  {getChartData().map((data, index) => {
+                    const maxValue = Math.max(...getChartData().map(d => d.value));
+                    const height = maxValue > 0 ? (data.value / maxValue) * 100 : 0;
+                    
+                    return (
+                      <div key={index} className="flex-1 flex flex-col items-center gap-2">
+                        <div className="relative w-full" style={{ height: '200px' }}>
+                          <div 
+                            className={`absolute bottom-0 w-full rounded-t-lg transition-all ${
+                              revenueFilter === "racegarage" ? "bg-blue-500" :
+                              revenueFilter === "pdDriveClub" ? "bg-green-500" :
+                              "bg-slate-600"
+                            }`}
+                            style={{ height: `${height}%` }}
+                            title={`${data.month}: €${data.value.toFixed(2)}`}
+                          >
+                            {data.value > 0 && (
+                              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-slate-700 whitespace-nowrap">
+                                €{data.value.toFixed(0)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-xs text-slate-600 text-center">
+                          {data.month.slice(0, 3)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Yearly Revenue Summary */}
+        <div>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">Ročný prehľad</h2>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h3 className="text-sm font-medium text-slate-600">
+              Príjem za tento rok
+            </h3>
+            <p className="text-3xl font-bold text-slate-800 mt-2">
+              {loading ? "..." : `€${stats.yearlyRevenue.toFixed(2)}`}
+            </p>
+            {!loading && stats.yearlyRevenueChange !== 0 && (
+              <div className="mt-2 flex items-center gap-2">
+                <span className={`text-sm font-medium ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                  {stats.yearlyRevenueChange > 0 ? "+" : ""}
+                  €{Math.abs(stats.yearlyRevenueChange).toFixed(2)}
+                </span>
+                <span className={`text-sm ${stats.yearlyRevenueChange > 0 ? "text-green-600" : "text-red-600"}`}>
+                  ({stats.yearlyRevenueChange > 0 ? "+" : ""}
+                  {stats.yearlyRevenueChangePercent.toFixed(1)}%)
+                </span>
+                <span className="text-xs text-slate-500">
+                  oproti minulému roku
+                </span>
+              </div>
+            )}
           </div>
         </div>
 

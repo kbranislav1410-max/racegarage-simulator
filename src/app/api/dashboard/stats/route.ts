@@ -13,6 +13,13 @@ export async function GET() {
     const startOfLastYear = new Date(now.getFullYear() - 1, 0, 1);
     const endOfLastYear = new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59);
 
+    // Calculate start of current week (Monday)
+    const dayOfWeek = now.getDay();
+    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Adjust for Sunday
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() + diff);
+    startOfWeek.setHours(0, 0, 0, 0);
+
     // Get total customers (all time)
     const totalCustomers = await prisma.customer.count();
 
@@ -78,12 +85,85 @@ export async function GET() {
           lte: endOfMonth,
         },
       },
-      select: { amountCents: true },
+      select: { 
+        amountCents: true,
+        receiver: true,
+      },
     });
+    
     const monthlyRevenue = monthlyPayments.reduce(
       (sum: number, payment: typeof monthlyPayments[0]) => sum + payment.amountCents,
       0
     ) / 100;
+
+    const monthlyRevenueRacegarage = monthlyPayments
+      .filter(p => p.receiver === "ME")
+      .reduce((sum: number, payment) => sum + payment.amountCents, 0) / 100;
+
+    const monthlyRevenuePDDriveClub = monthlyPayments
+      .filter(p => p.receiver === "FRIEND")
+      .reduce((sum: number, payment) => sum + payment.amountCents, 0) / 100;
+
+    // Get weekly revenue
+    const weeklyPayments = await prisma.paymentRecord.findMany({
+      where: {
+        createdAt: {
+          gte: startOfWeek,
+        },
+      },
+      select: { 
+        amountCents: true,
+        receiver: true,
+      },
+    });
+    
+    const weeklyRevenue = weeklyPayments.reduce(
+      (sum: number, payment: typeof weeklyPayments[0]) => sum + payment.amountCents,
+      0
+    ) / 100;
+
+    const weeklyRevenueRacegarage = weeklyPayments
+      .filter(p => p.receiver === "ME")
+      .reduce((sum: number, payment) => sum + payment.amountCents, 0) / 100;
+
+    const weeklyRevenuePDDriveClub = weeklyPayments
+      .filter(p => p.receiver === "FRIEND")
+      .reduce((sum: number, payment) => sum + payment.amountCents, 0) / 100;
+
+    // Get monthly revenue data for the entire year (for chart)
+    const monthlyRevenueByMonth = [];
+    for (let month = 0; month < 12; month++) {
+      const monthStart = new Date(now.getFullYear(), month, 1);
+      const monthEnd = new Date(now.getFullYear(), month + 1, 0, 23, 59, 59);
+      
+      const monthPayments = await prisma.paymentRecord.findMany({
+        where: {
+          createdAt: {
+            gte: monthStart,
+            lte: monthEnd,
+          },
+        },
+        select: { 
+          amountCents: true,
+          receiver: true,
+        },
+      });
+
+      const total = monthPayments.reduce((sum, p) => sum + p.amountCents, 0) / 100;
+      const racegarage = monthPayments.filter(p => p.receiver === "ME").reduce((sum, p) => sum + p.amountCents, 0) / 100;
+      const pdDriveClub = monthPayments.filter(p => p.receiver === "FRIEND").reduce((sum, p) => sum + p.amountCents, 0) / 100;
+
+      monthlyRevenueByMonth.push({
+        month: month + 1,
+        monthName: new Date(now.getFullYear(), month).toLocaleString('sk-SK', { month: 'long' }),
+        total,
+        racegarage,
+        pdDriveClub,
+      });
+    }
+
+    // Calculate settlement for current month
+    const settlementAmount = (monthlyRevenuePDDriveClub - monthlyRevenueRacegarage) / 2;
 
     // Get last month revenue for comparison
     const lastMonthPayments = await prisma.paymentRecord.findMany({
@@ -212,8 +292,21 @@ export async function GET() {
       newRidersThisMonth: uniqueNewRiders,
       returningRidersThisMonth: returningRidersCount,
       monthlyRevenue,
+      monthlyRevenueRacegarage,
+      monthlyRevenuePDDriveClub,
       monthlyRevenueChange,
       monthlyRevenueChangePercent,
+      
+      // Weekly stats
+      weeklyRevenue,
+      weeklyRevenueRacegarage,
+      weeklyRevenuePDDriveClub,
+
+      // Monthly revenue by month (for chart)
+      monthlyRevenueByMonth,
+
+      // Settlement
+      settlementAmount,
       
       // Yearly stats
       yearlyRevenue,
