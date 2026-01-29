@@ -1,14 +1,15 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma/client";
 
 // GET /api/settlements/[id] - Get settlement details
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const settlement = await prisma.monthlySettlement.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!settlement) {
@@ -53,10 +54,11 @@ export async function GET(
 
 // PATCH /api/settlements/[id] - Update settlement
 export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const { status, invoiceNumber, invoiceDate, paidDate, notes } = body;
 
@@ -80,7 +82,7 @@ export async function PATCH(
     // Generate invoice number if status is INVOICE_SENT and no invoice number yet
     if (status === "INVOICE_SENT" && !invoiceNumber) {
       const settlement = await prisma.monthlySettlement.findUnique({
-        where: { id: params.id },
+        where: { id },
       });
       if (settlement) {
         updateData.invoiceNumber = `${settlement.year}${String(settlement.month).padStart(2, '0')}001`;
@@ -88,7 +90,7 @@ export async function PATCH(
     }
 
     const settlement = await prisma.monthlySettlement.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 
@@ -104,12 +106,13 @@ export async function PATCH(
 
 // DELETE /api/settlements/[id] - Delete settlement
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await prisma.monthlySettlement.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ success: true });
