@@ -244,7 +244,7 @@ export default function CustomersPage() {
                   setSearch("");
                   setSearchInput("");
                 }}
-                className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90 transition-colors"
+                className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
               >
                 Vymazať
               </button>
@@ -355,7 +355,7 @@ export default function CustomersPage() {
                     setPagination({ ...pagination, page: pagination.page - 1 })
                   }
                   disabled={pagination.page === 1}
-                  className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Predchádzajúce
                 </button>
@@ -364,7 +364,7 @@ export default function CustomersPage() {
                     setPagination({ ...pagination, page: pagination.page + 1 })
                   }
                   disabled={pagination.page === pagination.totalPages}
-                  className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Ďalšie
                 </button>
@@ -527,7 +527,7 @@ export default function CustomersPage() {
                     <button
                       type="button"
                       onClick={() => setShowCreateModal(false)}
-                      className="px-6 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90 transition-colors"
+                      className="px-6 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
                     >
                       Zrušiť
                     </button>

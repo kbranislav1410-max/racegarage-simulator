@@ -496,7 +496,7 @@ export default function RidesPage() {
                           <button
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
-                            className="w-full px-4 py-3 text-left hover:brightness-90 transition-colors"
+                            className="w-full px-4 py-3 text-left hover:bg-slate-800 transition-colors"
                           >
                             <div className="font-medium text-white">
                               {customer.firstName} {customer.lastName}
@@ -741,7 +741,7 @@ export default function RidesPage() {
                       <button
                         type="button"
                         onClick={resetModal}
-                        className="px-6 py-2 border border-slate-600 rounded-lg hover:brightness-90 transition-colors text-white"
+                        className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                       >
                         Zrušiť
                       </button>
@@ -897,7 +897,7 @@ export default function RidesPage() {
                     <button
                       type="button"
                       onClick={() => setShowCreateCustomerModal(false)}
-                      className="px-6 py-2 border border-slate-600 rounded-lg hover:brightness-90 transition-colors text-white"
+                      className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                     >
                       Zrušiť
                     </button>

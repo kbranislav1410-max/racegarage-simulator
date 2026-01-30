@@ -386,7 +386,7 @@ export default function SettlementsPage() {
                 </button>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
                 >
                   Zrušiť
                 </button>
@@ -454,7 +454,7 @@ export default function SettlementsPage() {
                     setSelectedSettlement(null);
                     setCustomInvoiceNumber("");
                   }}
-                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
                 >
                   Zrušiť
                 </button>

@@ -269,7 +269,7 @@ export default function SettingsPage() {
                 {[15, 30, 45, 60, 90, 120].map((duration) => (
                   <label
                     key={duration}
-                    className="flex items-center gap-2 px-3 py-2 border border-slate-600 rounded-lg cursor-pointer hover:brightness-90"
+                    className="flex items-center gap-2 px-3 py-2 border border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700"
                   >
                     <input
                       type="checkbox"
@@ -326,7 +326,7 @@ export default function SettingsPage() {
               Choose who receives card payments by default
             </p>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:brightness-90">
+              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
                 <input
                   type="radio"
                   name="cardReceiver"
@@ -336,7 +336,7 @@ export default function SettingsPage() {
                 />
                 <span className="font-medium text-white">Friend</span>
               </label>
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:brightness-90">
+              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
                 <input
                   type="radio"
                   name="cardReceiver"
@@ -516,7 +516,7 @@ export default function SettingsPage() {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowNewsletterModal(false)}
-                  className="px-6 py-2 border border-slate-600 rounded-lg hover:brightness-90 transition-colors text-white"
+                  className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                 >
                   Zavrieť
                 </button>

@@ -271,7 +271,7 @@ export default function ReservationsPage() {
                       return (
                         <tr
                           key={reservation.id}
-                          className="border-b border-slate-700 hover:brightness-90"
+                          className="border-b border-slate-700 hover:bg-slate-700"
                         >
                           <td className="py-3 px-4">
                             <div>
@@ -307,7 +307,7 @@ export default function ReservationsPage() {
                                 setSelectedReservation(reservation);
                                 setShowDetailModal(true);
                               }}
-                              className="px-3 py-1 text-sm text-white hover:brightness-90 rounded"
+                              className="px-3 py-1 text-sm text-white hover:bg-slate-700 rounded"
                             >
                               View Details
                             </button>

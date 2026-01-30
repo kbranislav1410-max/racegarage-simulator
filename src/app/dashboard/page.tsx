@@ -1013,7 +1013,7 @@ export default function DashboardPage() {
               {stats.frequentRiders.map((rider, index) => (
                 <div
                   key={rider.customerId}
-                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-700 hover:border-slate-600 hover:brightness-90 transition-colors"
+                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-700 hover:border-slate-600 hover:bg-slate-700 transition-colors"
                 >
                   {/* Rank Number */}
                   <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white flex-shrink-0">
@@ -1133,7 +1133,7 @@ export default function DashboardPage() {
                         <button
                           key={customer.id}
                           onClick={() => handleSelectCustomer(customer)}
-                          className="w-full text-left p-4 border border-slate-200 rounded-md hover:brightness-90 hover:border-blue-300"
+                          className="w-full text-left p-4 border border-slate-200 rounded-md hover:bg-slate-700 hover:border-blue-300"
                         >
                           <div className="font-medium text-white">
                             {customer.firstName} {customer.lastName}
@@ -1443,7 +1443,7 @@ export default function DashboardPage() {
                         setSelectedCustomer(null);
                         setRecordStep("choice");
                       }}
-                      className="px-4 py-2 border border-slate-300 text-white rounded-md hover:brightness-90"
+                      className="px-4 py-2 border border-slate-300 text-white rounded-md hover:bg-slate-50"
                     >
                       Zrušiť
                     </button>

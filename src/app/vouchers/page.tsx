@@ -650,7 +650,7 @@ export default function VouchersPage() {
                       setError("");
                       setSuccess("");
                     }}
-                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:brightness-90 transition-colors"
+                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                   >
                     Zrušiť
                   </button>
@@ -719,7 +719,7 @@ export default function VouchersPage() {
                       setNewExpiresAt("");
                       setError("");
                     }}
-                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:brightness-90 transition-colors"
+                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                   >
                     Zrušiť
                   </button>
@@ -770,7 +770,7 @@ export default function VouchersPage() {
                     setDeletingVoucher(null);
                     setError("");
                   }}
-                  className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:brightness-90 transition-colors"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
                 >
                   Zrušiť
                 </button>

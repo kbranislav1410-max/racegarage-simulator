@@ -232,7 +232,7 @@ export default function PaymentsPage() {
           <button
             onClick={handleExportCSV}
             disabled={!settlement || settlement.payments.length === 0}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
             Exportovať CSV
