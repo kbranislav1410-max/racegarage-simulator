@@ -61,6 +61,7 @@ interface DashboardStats {
       trackName: string;
       carName: string;
       durationMinutes: number;
+      prizeDescription?: string | null;
     };
     topAttempts: Array<{
       rank: number;
@@ -924,21 +925,29 @@ export default function DashboardPage() {
           ) : (
             <div className="space-y-4">
               {/* Challenge Info */}
-              <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+              <div className="p-4 rounded-lg" style={{ backgroundColor: "#3a3a3a" }}>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-slate-300">Trať:</span>
+                    <span className="text-slate-400">Trať:</span>
                     <span className="ml-2 font-semibold text-white">
                       {stats.challengeLeaderboard.challenge.trackName}
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-300">Auto:</span>
+                    <span className="text-slate-400">Auto:</span>
                     <span className="ml-2 font-semibold text-white">
                       {stats.challengeLeaderboard.challenge.carName}
                     </span>
                   </div>
                 </div>
+                {stats.challengeLeaderboard.challenge.prizeDescription && (
+                  <div className="mt-3 pt-3 border-t border-slate-600">
+                    <span className="text-slate-400">Výhra:</span>
+                    <span className="ml-2 font-semibold text-white">
+                      {stats.challengeLeaderboard.challenge.prizeDescription} 🏆
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* TOP 3 Leaderboard */}

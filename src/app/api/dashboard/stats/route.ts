@@ -428,6 +428,7 @@ export async function GET() {
           trackName: currentChallenge.trackName,
           carName: currentChallenge.carName,
           durationMinutes: currentChallenge.durationMinutes,
+          prizeDescription: currentChallenge.prizeDescription,
         },
         topAttempts: topAttempts.map((attempt, index) => ({
           rank: index + 1,
