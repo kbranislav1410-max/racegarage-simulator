@@ -4,6 +4,16 @@ import { rideSessionSchema } from "@/lib/validations/ride";
 import { createAuditLog } from "@/lib/audit";
 import { sendRideCompletionEmail } from "@/lib/email/service";
 
+// Helper function to get user-friendly voucher status message
+function getVoucherStatusMessage(status: string): string {
+  const statusMessages: Record<string, string> = {
+    EXPIRED: "expired",
+    CANCELLED: "cancelled",
+    REDEEMED: "already redeemed",
+  };
+  return statusMessages[status] || status.toLowerCase();
+}
+
 // GET /api/rides - List rides with optional date range filter
 export async function GET(request: NextRequest) {
   try {
@@ -122,7 +132,7 @@ export async function POST(request: NextRequest) {
       // Validate voucher is active (NEW or SENT only)
       if (voucher.status !== "NEW" && voucher.status !== "SENT") {
         return NextResponse.json(
-          { error: `This voucher is ${voucher.status.toLowerCase()} and cannot be used` },
+          { error: `This voucher is ${getVoucherStatusMessage(voucher.status)} and cannot be used` },
           { status: 400 }
         );
       }
