@@ -471,7 +471,7 @@ export default function DashboardPage() {
           <button
             onClick={handleNewVoucher}
             style={{ backgroundColor: "#ffd21f" }}
-            className="hover:brightness-90 text-black px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Ticket size={24} />
             <span>Nový poukaz</span>
