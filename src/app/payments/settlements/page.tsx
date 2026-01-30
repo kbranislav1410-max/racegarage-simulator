@@ -102,10 +102,16 @@ export default function SettlementsPage() {
     if (!selectedSettlement) return;
 
     try {
-      const body: any = { status: newStatus };
+      interface UpdateBody {
+        status: string;
+        invoiceNumber?: string;
+      }
       
-      // Include invoice number if status is INVOICE_SENT and user provided one
-      if (newStatus === "INVOICE_SENT" && customInvoiceNumber.trim()) {
+      const body: UpdateBody = { status: newStatus };
+      
+      // Include invoice number if status is INVOICE_SENT
+      // Send the value (even if empty) to allow clearing or setting custom number
+      if (newStatus === "INVOICE_SENT") {
         body.invoiceNumber = customInvoiceNumber.trim();
       }
       
