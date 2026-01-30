@@ -5,6 +5,7 @@ import { createAuditLog } from "@/lib/audit";
 
 // Validation schema
 const createVoucherSchema = z.object({
+  creator: z.enum(["RACEGARAGE", "PD_DRIVE_CLUB"]),
   minutes: z.number().int().positive(),
   soldToEmail: z.string().email(),
   soldToName: z.string().min(1),
@@ -45,8 +46,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createVoucherSchema.parse(body);
 
-    // Generate unique voucher code
-    const code = generateVoucherCode();
+    // Generate unique voucher code with prefix
+    const prefix = validatedData.creator === "RACEGARAGE" ? "RG" : "PD";
+    const code = generateVoucherCode(prefix);
 
     // Set expiration to 6 months from now
     const expiresAt = new Date();
@@ -242,9 +244,9 @@ export async function DELETE(request: NextRequest) {
 }
 
 // Helper function to generate voucher code
-function generateVoucherCode(): string {
+function generateVoucherCode(prefix: string): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Excluding similar looking characters
-  let code = "";
+  let code = prefix + "-";
   for (let i = 0; i < 12; i++) {
     if (i > 0 && i % 4 === 0) code += "-";
     code += chars.charAt(Math.floor(Math.random() * chars.length));

@@ -27,6 +27,7 @@ export default function VouchersPage() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [formData, setFormData] = useState({
+    creator: "RACEGARAGE",
     minutes: "",
     soldToEmail: "",
     soldToName: "",
@@ -79,6 +80,7 @@ export default function VouchersPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          creator: formData.creator,
           minutes: parseInt(formData.minutes),
           soldToEmail: formData.soldToEmail,
           soldToName: formData.soldToName,
@@ -93,7 +95,7 @@ export default function VouchersPage() {
       const newVoucher = await response.json();
       setSuccess(`Voucher vytvorený! Kód: ${newVoucher.code}`);
       setVouchers([newVoucher, ...vouchers]);
-      setFormData({ minutes: "", soldToEmail: "", soldToName: "" });
+      setFormData({ creator: "RACEGARAGE", minutes: "", soldToEmail: "", soldToName: "" });
       
       // Close modal after 2 seconds
       setTimeout(() => {
@@ -567,20 +569,43 @@ export default function VouchersPage() {
               <form onSubmit={handleCreateVoucher} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-300 mb-1">
+                    Vytvorené pre *
+                  </label>
+                  <select
+                    required
+                    value={formData.creator}
+                    onChange={(e) =>
+                      setFormData({ ...formData, creator: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
+                  >
+                    <option value="RACEGARAGE">Racegarage</option>
+                    <option value="PD_DRIVE_CLUB">PD Drive Club</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">
                     Počet minút *
                   </label>
-                  <input
-                    type="number"
+                  <select
                     required
-                    min="1"
                     value={formData.minutes}
                     onChange={(e) =>
                       setFormData({ ...formData, minutes: e.target.value })
                     }
                     className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                     style={{ backgroundColor: "#1f1f1f" }}
-                    placeholder="napr. 30"
-                  />
+                  >
+                    <option value="">Vyberte minúty</option>
+                    <option value="15">15 minút</option>
+                    <option value="30">30 minút</option>
+                    <option value="45">45 minút</option>
+                    <option value="60">60 minút</option>
+                    <option value="90">90 minút</option>
+                    <option value="120">120 minút</option>
+                  </select>
                 </div>
 
                 <div>
