@@ -6,7 +6,7 @@ export const challengeMonthSchema = z.object({
   trackName: z.string().min(1, "Track name is required").max(100),
   carName: z.string().min(1, "Car name is required").max(100),
   durationMinutes: z.number().int().positive().optional(),
-  prizeDescription: z.string().max(500).optional(),
+  prizeDescription: z.string().max(500).optional().transform(val => val && val.trim() ? val : undefined),
 });
 
 export const challengeAttemptSchema = z.object({

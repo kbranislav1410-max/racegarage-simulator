@@ -288,8 +288,8 @@ export default function ChallengePage() {
     : attempts;
 
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "Január", "Február", "Marec", "Apríl", "Máj", "Jún",
+    "Júl", "August", "September", "Október", "November", "December"
   ];
 
   const YEAR_RANGE = 3; // Number of years to show in dropdown
@@ -358,7 +358,7 @@ export default function ChallengePage() {
         )}
 
         {loading ? (
-          <div className="text-center py-12 text-slate-400">Loading...</div>
+          <div className="text-center py-12 text-slate-400">Načítavam...</div>
         ) : !challengeMonth ? (
           <div className="rounded-lg shadow p-8 text-center" style={{ backgroundColor: "#292929" }}>
             <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-4" />
