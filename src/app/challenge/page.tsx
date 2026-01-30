@@ -566,7 +566,7 @@ export default function ChallengePage() {
                       onChange={(e) =>
                         setChallengeFormData({ ...challengeFormData, trackName: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                       style={{ backgroundColor: "#1f1f1f" }}
                       placeholder="napr. Nürburgring Nordschleife"
                       required
@@ -583,30 +583,11 @@ export default function ChallengePage() {
                       onChange={(e) =>
                         setChallengeFormData({ ...challengeFormData, carName: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                       style={{ backgroundColor: "#1f1f1f" }}
                       placeholder="napr. Porsche 911 GT3 RS"
                       required
                     />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Trvanie (minúty)
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      step="1"
-                      value={challengeFormData.durationMinutes}
-                      onChange={(e) =>
-                        setChallengeFormData({ ...challengeFormData, durationMinutes: e.target.value })
-                      }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
-                      placeholder="napr. 30"
-                    />
-                    <p className="text-xs text-slate-400 mt-1">Voliteľné - dĺžka časovky v minútach</p>
                   </div>
 
                   <div>
@@ -619,7 +600,7 @@ export default function ChallengePage() {
                       onChange={(e) =>
                         setChallengeFormData({ ...challengeFormData, prizeDescription: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                       style={{ backgroundColor: "#1f1f1f" }}
                       placeholder="napr. 50€ voucher, pohár, tričko..."
                     />
@@ -676,7 +657,7 @@ export default function ChallengePage() {
                         placeholder="Hľadať podľa mena, emailu alebo adresy..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                        className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                         style={{ backgroundColor: "#1f1f1f" }}
                         autoFocus
                       />
@@ -772,23 +753,6 @@ export default function ChallengePage() {
                       <p className="text-xs text-slate-400 mt-1">
                         Zadajte čas ako mm:ss.mmm (napr. 01:23.456) alebo milisekundy (napr. 83456)
                       </p>
-                    </div>
-
-                    {/* Session ID (Optional) */}
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">
-                        Odkaz na jazdu (voliteľné)
-                      </label>
-                      <input
-                        type="text"
-                        value={attemptFormData.sessionId}
-                        onChange={(e) =>
-                          setAttemptFormData({ ...attemptFormData, sessionId: e.target.value })
-                        }
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
-                        placeholder="ID jazdy (voliteľné)"
-                      />
                     </div>
 
                     {/* Actions */}
