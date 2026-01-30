@@ -266,7 +266,7 @@ export default function PaymentsPage() {
 
               <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
                 <h3 className="text-sm font-medium text-slate-400">Celkom pre PD Drive Club</h3>
-                <p className="text-3xl font-bold text-blue-400 mt-2">
+                <p className="text-3xl font-bold text-white mt-2">
                   {formatCurrency(settlement.summary.sumFriend)}
                 </p>
                 <p className="text-sm text-slate-400 mt-1">PD Drive club platby</p>
@@ -274,7 +274,7 @@ export default function PaymentsPage() {
 
               <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
                 <h3 className="text-sm font-medium text-slate-400">Celkom pre Racegarage</h3>
-                <p className="text-3xl font-bold text-green-400 mt-2">
+                <p className="text-3xl font-bold text-white mt-2">
                   {formatCurrency(settlement.summary.sumMe)}
                 </p>
                 <p className="text-sm text-slate-400 mt-1">Poukazy a ostatné</p>
