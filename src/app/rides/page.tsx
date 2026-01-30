@@ -206,7 +206,7 @@ export default function RidesPage() {
           customerId: selectedCustomer.id,
           startAt,
           minutes: rideFormData.minutes,
-          source: "RESERVATION", // Default source since we removed the field
+          source: rideFormData.paymentMethod === "VOUCHER_PARTNER" ? "VOUCHER_PARTNER" : "RESERVATION", // Set correct source for partner vouchers
           partner: rideFormData.paymentMethod === "VOUCHER_PARTNER" && rideFormData.partner ? rideFormData.partner : undefined,
           voucherCode: (rideFormData.paymentMethod === "VOUCHER_PARTNER" || rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && rideFormData.voucherCode ? rideFormData.voucherCode : undefined,
           notes: rideFormData.notes || undefined,
