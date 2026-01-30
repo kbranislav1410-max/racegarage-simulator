@@ -96,35 +96,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate endAt based on startAt and minutes
-    const startAt = new Date(data.startAt);
-    const endAt = new Date(startAt.getTime() + data.minutes * 60000);
-
-    // Create ride session
-    const ride = await prisma.rideSession.create({
-      data: {
-        customerId: data.customerId,
-        startAt,
-        endAt,
-        minutes: data.minutes,
-        source: data.source,
-        partner: data.partner || null,
-        voucherCode: data.voucherCode || null,
-        notes: data.notes || null,
-      },
-      include: {
-        customer: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-          },
-        },
-      },
-    });
-
-    // If voucher code was used, validate and mark it as redeemed
+    // If voucher code was provided, validate it BEFORE creating the ride
+    let voucherToRedeem: { id: string; code: string } | null = null;
     if (data.voucherCode) {
       const voucher = await prisma.voucher.findUnique({
         where: { code: data.voucherCode.toUpperCase() },
@@ -138,7 +111,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Validate voucher is not already redeemed
+      // Validate voucher is not already redeemed (specific error message)
       if (voucher.status === "REDEEMED") {
         return NextResponse.json(
           { error: "This voucher has already been redeemed" },
@@ -162,9 +135,42 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // All validations passed - mark voucher as redeemed
+      // Store voucher info for redemption after ride creation
+      voucherToRedeem = { id: voucher.id, code: voucher.code };
+    }
+
+    // Calculate endAt based on startAt and minutes
+    const startAt = new Date(data.startAt);
+    const endAt = new Date(startAt.getTime() + data.minutes * 60000);
+
+    // Create ride session (only after voucher validation passes)
+    const ride = await prisma.rideSession.create({
+      data: {
+        customerId: data.customerId,
+        startAt,
+        endAt,
+        minutes: data.minutes,
+        source: data.source,
+        partner: data.partner || null,
+        voucherCode: data.voucherCode || null,
+        notes: data.notes || null,
+      },
+      include: {
+        customer: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    // Mark voucher as redeemed (validation already done above)
+    if (voucherToRedeem) {
       await prisma.voucher.update({
-        where: { code: data.voucherCode.toUpperCase() },
+        where: { code: voucherToRedeem.code.toUpperCase() },
         data: {
           status: "REDEEMED",
           redeemedAt: new Date(),
@@ -173,7 +179,7 @@ export async function POST(request: NextRequest) {
       });
 
       // Log voucher redemption
-      await createAuditLog("UPDATE", "VOUCHER", voucher.id, {
+      await createAuditLog("UPDATE", "VOUCHER", voucherToRedeem.id, {
         status: "REDEEMED",
         redeemedBy: `${customer.firstName} ${customer.lastName}`,
       });
