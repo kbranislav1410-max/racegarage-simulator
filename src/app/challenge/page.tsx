@@ -13,6 +13,7 @@ interface ChallengeMonth {
   trackName: string;
   carName: string;
   durationMinutes: number | null;
+  prizeDescription: string | null;
   createdAt: string;
 }
 
@@ -53,6 +54,7 @@ export default function ChallengePage() {
     trackName: "",
     carName: "",
     durationMinutes: "",
+    prizeDescription: "",
   });
   const [challengeFormErrors, setChallengeFormErrors] = useState<Record<string, string>>({});
   const [challengeFormSubmitting, setChallengeFormSubmitting] = useState(false);
@@ -162,6 +164,7 @@ export default function ChallengePage() {
           trackName: challengeFormData.trackName,
           carName: challengeFormData.carName,
           durationMinutes: challengeFormData.durationMinutes ? parseInt(challengeFormData.durationMinutes) : undefined,
+          prizeDescription: challengeFormData.prizeDescription || undefined,
         }),
       });
 
@@ -173,7 +176,7 @@ export default function ChallengePage() {
 
       // Success - refresh data and close modal
       setShowCreateChallengeModal(false);
-      setChallengeFormData({ trackName: "", carName: "", durationMinutes: "" });
+      setChallengeFormData({ trackName: "", carName: "", durationMinutes: "", prizeDescription: "" });
       fetchChallengeData();
     } catch (err) {
       setChallengeFormErrors({ general: "An error occurred" });
@@ -298,10 +301,10 @@ export default function ChallengePage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-white">
-              Monthly Challenges
+              Mesačné výzvy
             </h1>
             <p className="text-slate-300 mt-2">
-              Track monthly lap time challenges and leaderboards
+              Sledujte mesačné výzvy najrýchlejších okruhových časov a rebríčky
             </p>
           </div>
           {challengeMonth && (
@@ -311,7 +314,7 @@ export default function ChallengePage() {
               style={{ backgroundColor: "#c20003" }}
             >
               <Plus className="w-4 h-4" />
-              Record Attempt
+              Zaznamenať pokus
             </button>
           )}
         </div>
@@ -360,17 +363,17 @@ export default function ChallengePage() {
           <div className="rounded-lg shadow p-8 text-center" style={{ backgroundColor: "#292929" }}>
             <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-4" />
             <h2 className="text-xl font-bold text-white mb-2">
-              No Challenge for {monthNames[selectedMonth - 1]} {selectedYear}
+              Žiadna výzva pre {monthNames[selectedMonth - 1]} {selectedYear}
             </h2>
             <p className="text-slate-300 mb-6">
-              Create a challenge to start tracking lap times and leaderboards
+              Vytvorte výzvu pre sledovanie okruhových časov a rebríčkov
             </p>
             <button
               onClick={() => setShowCreateChallengeModal(true)}
               className="px-6 py-2 text-white rounded-lg transition-colors"
               style={{ backgroundColor: "#c20003" }}
             >
-              Create Challenge
+              Vytvoriť výzvu
             </button>
           </div>
         ) : (
@@ -378,21 +381,27 @@ export default function ChallengePage() {
             {/* Challenge Info */}
             <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
               <h2 className="text-xl font-bold text-white mb-4">
-                {monthNames[challengeMonth.month - 1]} {challengeMonth.year} Challenge
+                Výzva {monthNames[challengeMonth.month - 1]} {challengeMonth.year}
               </h2>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-sm text-slate-300">Track</p>
+                  <p className="text-sm text-slate-300">Trať</p>
                   <p className="font-medium text-white">{challengeMonth.trackName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-300">Car</p>
+                  <p className="text-sm text-slate-300">Auto</p>
                   <p className="font-medium text-white">{challengeMonth.carName}</p>
                 </div>
                 {challengeMonth.durationMinutes && (
                   <div>
                     <p className="text-sm text-slate-300">Trvanie</p>
                     <p className="font-medium text-white">{challengeMonth.durationMinutes} minút</p>
+                  </div>
+                )}
+                {challengeMonth.prizeDescription && (
+                  <div>
+                    <p className="text-sm text-slate-300">Výhra</p>
+                    <p className="font-medium text-white">{challengeMonth.prizeDescription}</p>
                   </div>
                 )}
               </div>
@@ -524,7 +533,7 @@ export default function ChallengePage() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-white">
-                    Create Challenge
+                    Vytvoriť výzvu
                   </h2>
                   <button
                     onClick={() => setShowCreateChallengeModal(false)}
@@ -543,13 +552,13 @@ export default function ChallengePage() {
 
                   <div>
                     <p className="text-sm text-slate-300 mb-2">
-                      Creating challenge for: <strong>{monthNames[selectedMonth - 1]} {selectedYear}</strong>
+                      Vytváram výzvu pre: <strong>{monthNames[selectedMonth - 1]} {selectedYear}</strong>
                     </p>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Track Name *
+                      Názov trate *
                     </label>
                     <input
                       type="text"
@@ -559,14 +568,14 @@ export default function ChallengePage() {
                       }
                       className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                       style={{ backgroundColor: "#1f1f1f" }}
-                      placeholder="e.g., Nürburgring Nordschleife"
+                      placeholder="napr. Nürburgring Nordschleife"
                       required
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Car Name *
+                      Názov auta *
                     </label>
                     <input
                       type="text"
@@ -576,7 +585,7 @@ export default function ChallengePage() {
                       }
                       className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                       style={{ backgroundColor: "#1f1f1f" }}
-                      placeholder="e.g., Porsche 911 GT3 RS"
+                      placeholder="napr. Porsche 911 GT3 RS"
                       required
                     />
                   </div>
@@ -600,6 +609,23 @@ export default function ChallengePage() {
                     <p className="text-xs text-slate-400 mt-1">Voliteľné - dĺžka časovky v minútach</p>
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                      Výhra
+                    </label>
+                    <input
+                      type="text"
+                      value={challengeFormData.prizeDescription}
+                      onChange={(e) =>
+                        setChallengeFormData({ ...challengeFormData, prizeDescription: e.target.value })
+                      }
+                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f" }}
+                      placeholder="napr. 50€ voucher, pohár, tričko..."
+                    />
+                    <p className="text-xs text-slate-400 mt-1">Voliteľné - čo je výhrou daného mesiaca</p>
+                  </div>
+
                   <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
@@ -607,14 +633,14 @@ export default function ChallengePage() {
                       className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ backgroundColor: "#c20003" }}
                     >
-                      {challengeFormSubmitting ? "Creating..." : "Create Challenge"}
+                      {challengeFormSubmitting ? "Vytváram..." : "Vytvoriť výzvu"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowCreateChallengeModal(false)}
                       className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                     >
-                      Cancel
+                      Zrušiť
                     </button>
                   </div>
                 </form>
@@ -630,7 +656,7 @@ export default function ChallengePage() {
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-white">
-                    {attemptStep === "search" ? "Select Customer" : "Record Lap Time"}
+                    {attemptStep === "search" ? "Vybrať zákazníka" : "Zaznamenať čas okruhu"}
                   </h2>
                   <button
                     onClick={resetAttemptModal}
@@ -647,7 +673,7 @@ export default function ChallengePage() {
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
                       <input
                         type="text"
-                        placeholder="Search by name, email, or address..."
+                        placeholder="Hľadať podľa mena, emailu alebo adresy..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
@@ -659,7 +685,7 @@ export default function ChallengePage() {
                     {/* Search Results */}
                     {searchLoading && (
                       <div className="text-center py-4 text-slate-400">
-                        Searching...
+                        Hľadám...
                       </div>
                     )}
 
@@ -687,13 +713,13 @@ export default function ChallengePage() {
 
                     {!searchLoading && searchQuery.length >= 2 && searchResults.length === 0 && (
                       <div className="text-center py-8 text-slate-300">
-                        No customers found matching &quot;{searchQuery}&quot;
+                        Nenašli sa žiadni zákazníci zodpovedajúci &quot;{searchQuery}&quot;
                       </div>
                     )}
 
                     {searchQuery.length < 2 && (
                       <div className="text-center py-8 text-slate-400">
-                        Start typing to search for customers...
+                        Začnite písať pre vyhľadanie zákazníkov...
                       </div>
                     )}
                   </div>
@@ -701,7 +727,7 @@ export default function ChallengePage() {
                   <form onSubmit={handleRecordAttempt} className="space-y-4">
                     {/* Selected Customer */}
                     <div className="rounded-lg p-4 mb-4" style={{ backgroundColor: "#1f1f1f" }}>
-                      <p className="text-sm text-slate-300 mb-1">Customer</p>
+                      <p className="text-sm text-slate-300 mb-1">Zákazník</p>
                       <p className="font-medium text-white">
                         {selectedCustomer?.firstName} {selectedCustomer?.lastName}
                       </p>
@@ -714,7 +740,7 @@ export default function ChallengePage() {
                         }}
                         className="text-sm text-slate-300 hover:text-white mt-2"
                       >
-                        Change customer
+                        Zmeniť zákazníka
                       </button>
                     </div>
 
@@ -727,7 +753,7 @@ export default function ChallengePage() {
                     {/* Lap Time */}
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">
-                        Lap Time *
+                        Čas okruhu *
                       </label>
                       <input
                         type="text"
@@ -737,21 +763,21 @@ export default function ChallengePage() {
                         }
                         className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
                         style={{ backgroundColor: "#1f1f1f", border: "none" }}
-                        placeholder="mm:ss.mmm (e.g., 01:23.456) or ms (e.g., 83456)"
+                        placeholder="mm:ss.mmm (napr. 01:23.456) alebo ms (napr. 83456)"
                         required
                       />
                       {attemptFormErrors.lapTime && (
                         <p className="text-red-600 text-sm mt-1">{attemptFormErrors.lapTime}</p>
                       )}
                       <p className="text-xs text-slate-400 mt-1">
-                        Enter time as mm:ss.mmm (e.g., 01:23.456) or milliseconds (e.g., 83456)
+                        Zadajte čas ako mm:ss.mmm (napr. 01:23.456) alebo milisekundy (napr. 83456)
                       </p>
                     </div>
 
                     {/* Session ID (Optional) */}
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">
-                        Link to Ride Session (Optional)
+                        Odkaz na jazdu (voliteľné)
                       </label>
                       <input
                         type="text"
@@ -761,7 +787,7 @@ export default function ChallengePage() {
                         }
                         className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
                         style={{ backgroundColor: "#1f1f1f", border: "none" }}
-                        placeholder="Ride Session ID (optional)"
+                        placeholder="ID jazdy (voliteľné)"
                       />
                     </div>
 
@@ -773,14 +799,14 @@ export default function ChallengePage() {
                         className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{ backgroundColor: "#c20003" }}
                       >
-                        {attemptFormSubmitting ? "Recording..." : "Record Attempt"}
+                        {attemptFormSubmitting ? "Zaznamenávam..." : "Zaznamenať pokus"}
                       </button>
                       <button
                         type="button"
                         onClick={resetAttemptModal}
                         className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
                       >
-                        Cancel
+                        Zrušiť
                       </button>
                     </div>
                   </form>

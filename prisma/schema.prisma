@@ -96,6 +96,7 @@ model ChallengeMonth {
   trackName       String
   carName         String
   durationMinutes Int?
+  prizeDescription String? // What prize/reward is being competed for
   createdAt       DateTime @default(now())
 
   // Relations

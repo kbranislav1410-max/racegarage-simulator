@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
         trackName: data.trackName,
         carName: data.carName,
         durationMinutes: data.durationMinutes,
+        prizeDescription: data.prizeDescription,
       },
     });
 
