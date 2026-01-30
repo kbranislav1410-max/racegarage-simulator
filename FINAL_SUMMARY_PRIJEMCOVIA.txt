@@ -1,0 +1,188 @@
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║  ✅ SYSTÉM PRÍJEMCOV PLATIEB - FINÁLNE ZHRNUTIE ✅          ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+STAV: ✅ SPRÁVNE NAKONFIGUROVANÝ
+DÁTUM: 28.1.2026
+COMMIT: b6c95cb
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  MAPOVANIE PRÍJEMCOV (PAYMENT METHOD → RECEIVER)             │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  PD Drive Club            → FRIEND (Kamarát) ✅              │
+│  Poukaz - partner         → ME (Ja) ✅                       │
+│  Poukaz - Racegarage      → ME (Ja) ✅                       │
+│  Poukaz - PD Drive club   → FRIEND (Kamarát) ✅              │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  50/50 VYÚČTOVANIE - AKO TO FUNGUJE                         │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Sčítajú sa platby podľa príjemcu:                       │
+│     sumFriend = suma všetkých platieb FRIEND                │
+│     sumMe = suma všetkých platieb ME                        │
+│                                                              │
+│  2. Vypočíta sa dlh:                                        │
+│     friendOwesMe = (sumFriend - sumMe) / 2                  │
+│                                                              │
+│  3. Výsledok:                                               │
+│     • Ak > 0 → Kamarát mi dlhuje                            │
+│     • Ak < 0 → Ja dlhujem kamarátovi                        │
+│     • Ak = 0 → Vyrovnané                                    │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  PRÍKLAD VÝPOČTU                                            │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Mesačné platby:                                            │
+│  • 2x PD Drive Club po €50 = €100 (Kamarát inkasoval)      │
+│  • 1x Poukaz - partner €30 (Ja som inkasoval)              │
+│  • 1x Poukaz - Racegarage €20 (Ja som inkasoval)           │
+│                                                              │
+│  Výpočet:                                                   │
+│  sumFriend = €100                                           │
+│  sumMe = €50                                                │
+│  friendOwesMe = (100 - 50) / 2 = €25                        │
+│                                                              │
+│  Výsledok:                                                  │
+│  🟢 Kamarát mi dlhuje €25.00                                │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  KDE JE TO NAKONFIGUROVANÉ                                  │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1️⃣  API Route (src/app/api/rides/route.ts:177-182)         │
+│     if (PD_DRIVE_CLUB || VOUCHER_PD_DRIVE_CLUB)            │
+│       receiver = "FRIEND"                                   │
+│     else                                                    │
+│       receiver = "ME"                                       │
+│                                                              │
+│  2️⃣  Settlement API (src/app/api/payments/settlement)       │
+│     sumFriend = filter(receiver === "FRIEND")              │
+│     sumMe = filter(receiver === "ME")                      │
+│     friendOwesMe = (sumFriend - sumMe) / 2                 │
+│                                                              │
+│  3️⃣  UI Display (src/app/payments/page.tsx)                 │
+│     Celkom pre kamaráta → sumFriend                        │
+│     Celkom pre mňa → sumMe                                 │
+│     Vyúčtovanie → friendOwesMe                             │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  AKO OVERIŤ ŽE TO FUNGUJE (RÝCHLY TEST)                    │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. Vytvorte platbu "PD Drive Club" €50                     │
+│     → Overte: Karta "Celkom pre kamaráta" = €50            │
+│                                                              │
+│  2. Vytvorte platbu "Poukaz - partner" €30                  │
+│     → Overte: Karta "Celkom pre mňa" = €30                 │
+│                                                              │
+│  3. Overte vyúčtovanie:                                     │
+│     → Malo by ukazovať: "Kamarát mi dlhuje €10.00"         │
+│     → Výpočet: (50 - 30) / 2 = 10                          │
+│                                                              │
+│  ✅ Ak toto funguje → Systém je OK!                         │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  AK MÁTE PROBLÉMY                                           │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  📖 Prečítajte si: DIAGNOSTIKA_PRIJEMCOV_PLATIEB.md         │
+│                                                              │
+│  Dokument obsahuje:                                         │
+│  • 8 detailných testovacích scenárov                       │
+│  • 5 troubleshooting riešení                               │
+│  • 8 SQL queries pre verifikáciu a opravu                  │
+│  • 5 FAQ otázok s odpoveďami                               │
+│  • Kompletný návod na diagnostiku                          │
+│                                                              │
+│  Najčastejšie riešenie:                                     │
+│  → Staré záznamy v DB s nesprávnym receiverom              │
+│  → SQL UPDATE queries sú v dokumente                        │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  DOKUMENTÁCIA                                               │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. DIAGNOSTIKA_PRIJEMCOV_PLATIEB.md (550+ riadkov)         │
+│     Kompletná diagnostická príručka                         │
+│     • 8 testov, 5 troubleshooting, SQL queries             │
+│                                                              │
+│  2. PRIJEMCA_PLATIEB_OVERENIE.md (300+ riadkov)             │
+│     Technický prehľad konfigurácie                          │
+│     • Code examples, verifikácia                            │
+│                                                              │
+│  3. PRIJEMCA_PLATIEB_OK.txt (190 riadkov)                   │
+│     ASCII art prehľad                                       │
+│     • Quick reference                                       │
+│                                                              │
+│  4. FINAL_SUMMARY_PRIJEMCOVIA.txt (tento súbor)             │
+│     Finálne zhrnutie                                        │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────┐
+│  STATUS VERIFIKÁCIE                                         │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  Kód:                                                       │
+│  ✅ API Route - receiver správne nastavený                  │
+│  ✅ Settlement API - 50/50 správne počítané                 │
+│  ✅ UI Display - správne zobrazovanie                       │
+│                                                              │
+│  Logika:                                                    │
+│  ✅ PD Drive Club → FRIEND                                  │
+│  ✅ Poukaz - partner → ME                                   │
+│  ✅ Poukaz - Racegarage → ME                                │
+│  ✅ Poukaz - PD Drive club → FRIEND                         │
+│                                                              │
+│  Výpočty:                                                   │
+│  ✅ sumFriend = správne                                     │
+│  ✅ sumMe = správne                                         │
+│  ✅ friendOwesMe = (sumFriend - sumMe) / 2 ✅               │
+│                                                              │
+│  UI:                                                        │
+│  ✅ Celkom pre kamaráta = sumFriend                         │
+│  ✅ Celkom pre mňa = sumMe                                  │
+│  ✅ Vyúčtovanie = friendOwesMe                              │
+│  ✅ Farebné odznaky správne                                 │
+│                                                              │
+│  CELKOVÝ STATUS: 🚀 PRODUCTION READY                        │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════╗
+║                                                              ║
+║  ZÁVER: Systém je správne nakonfigurovaný!                  ║
+║                                                              ║
+║  Ak sa platby nezobrazujú správne, problém je pravdepodobne ║
+║  v starých záznamoch v databáze vytvorených pred opravu.    ║
+║                                                              ║
+║  Riešenie: SQL UPDATE queries v DIAGNOSTIKA dokumentácii    ║
+║                                                              ║
+╚══════════════════════════════════════════════════════════════╝
+

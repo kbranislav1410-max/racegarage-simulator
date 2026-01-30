@@ -1,0 +1,287 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model for staff members
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // Should be hashed
+  name      String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  STAFF
+}
+
+// Customer model
+model Customer {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  firstName      String
+  lastName       String
+  street         String?
+  city           String?
+  phone          String?
+  newsletter     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  rideSessions      RideSession[]
+  challengeAttempts ChallengeAttempt[]
+  reservations      Reservation[]
+  paymentRecords    PaymentRecord[]
+  redeemedVouchers  Voucher[]
+
+  @@map("customers")
+}
+
+// RideSession model
+model RideSession {
+  id          String            @id @default(cuid())
+  customerId  String
+  customer    Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  startAt     DateTime
+  endAt       DateTime?
+  minutes     Int
+  source      RideSessionSource
+  partner     VoucherPartner?
+  voucherCode String?
+  notes       String?
+  createdAt   DateTime          @default(now())
+
+  // Relations
+  challengeAttempts ChallengeAttempt[]
+  paymentRecords    PaymentRecord[]
+  partnerVoucher    PartnerVoucher?
+
+  @@map("ride_sessions")
+}
+
+enum RideSessionSource {
+  RESERVATION
+  CAFE_CUSTOMER
+  VOUCHER_PARTNER
+  VOUCHER
+}
+
+enum VoucherPartner {
+  ZLAVOMAT
+  ADROP
+  NAJZAZITKY
+}
+
+// ChallengeMonth model
+model ChallengeMonth {
+  id              String   @id @default(cuid())
+  year            Int
+  month           Int
+  trackName       String
+  carName         String
+  durationMinutes Int?
+  createdAt       DateTime @default(now())
+
+  // Relations
+  challengeAttempts ChallengeAttempt[]
+
+  @@unique([year, month])
+  @@map("challenge_months")
+}
+
+// ChallengeAttempt model
+model ChallengeAttempt {
+  id               String        @id @default(cuid())
+  customerId       String
+  customer         Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  challengeMonthId String
+  challengeMonth   ChallengeMonth @relation(fields: [challengeMonthId], references: [id], onDelete: Cascade)
+  lapTimeMs        Int
+  recordedAt       DateTime      @default(now())
+  sessionId        String?
+  session          RideSession?  @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([challengeMonthId, lapTimeMs])
+  @@index([customerId, challengeMonthId])
+  @@map("challenge_attempts")
+}
+
+// Reservation model
+model Reservation {
+  id               String            @id @default(cuid())
+  customerId       String?
+  customer         Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  // Guest fields when customer is not registered
+  guestEmail       String?
+  guestName        String?
+  guestStreet      String?
+  guestCity        String?
+  scheduledAt      DateTime
+  durationMinutes  Int
+  status           ReservationStatus
+  notes            String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Relations
+  paymentRecords PaymentRecord[]
+
+  @@map("reservations")
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+// PaymentRecord model
+model PaymentRecord {
+  id            String        @id @default(cuid())
+  customerId    String?
+  customer      Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  sessionId     String?
+  session       RideSession?  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  reservationId String?
+  reservation   Reservation?  @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+  amountCents   Int
+  currency      String        @default("EUR")
+  method        PaymentMethod
+  receiver      PaymentReceiver
+  createdAt     DateTime      @default(now())
+
+  @@map("payment_records")
+}
+
+enum PaymentMethod {
+  PD_DRIVE_CLUB
+  VOUCHER_PARTNER
+  VOUCHER_RACEGARAGE
+  VOUCHER_PD_DRIVE_CLUB
+}
+
+enum PaymentReceiver {
+  FRIEND
+  ME
+}
+
+// Voucher model
+model Voucher {
+  id                  String        @id @default(cuid())
+  code                String        @unique
+  minutes             Int // Using minutes as specified
+  status              VoucherStatus
+  soldToEmail         String
+  soldToName          String
+  createdAt           DateTime      @default(now())
+  expiresAt           DateTime? // Expiration date (6 months from creation)
+  redeemedAt          DateTime?
+  redeemedByCustomerId String?
+  redeemedByCustomer  Customer?     @relation(fields: [redeemedByCustomerId], references: [id], onDelete: SetNull)
+
+  @@map("vouchers")
+}
+
+enum VoucherStatus {
+  NEW
+  SENT
+  REDEEMED
+  EXPIRED
+  CANCELLED
+}
+
+// PartnerVoucher model - tracks voucher codes from discount portals
+model PartnerVoucher {
+  id            String               @id @default(cuid())
+  code          String
+  partner       VoucherPartner
+  status        PartnerVoucherStatus @default(UNCLAIMED)
+  sessionId     String               @unique
+  session       RideSession          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  customerId    String
+  customerName  String // Cached for display
+  customerEmail String // Cached for display
+  rideDate      DateTime // When customer used it
+  claimedAt     DateTime? // When marked as claimed by admin
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  @@map("partner_vouchers")
+}
+
+enum PartnerVoucherStatus {
+  UNCLAIMED
+  CLAIMED
+}
+
+// AuditLog model
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String
+  entity    String
+  entityId  String?
+  payload   Json?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// Settings model (key-value storage)
+model Settings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@map("settings")
+}
+
+// MonthlySettlement model - tracks monthly invoicing and settlements
+model MonthlySettlement {
+  id                 String            @id @default(cuid())
+  year               Int
+  month              Int // 1-12
+  status             SettlementStatus  @default(NOT_INVOICED)
+  totalAmountCents   Int // Total payments for the month
+  friendAmountCents  Int // Amount collected for PD Drive Club (FRIEND)
+  meAmountCents      Int // Amount collected for Racegarage (ME)
+  settlementCents    Int // Net amount: who owes whom (positive = friend owes me)
+  invoiceNumber      String?          @unique
+  invoiceDate        DateTime?
+  paidDate           DateTime?
+  notes              String?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  @@unique([year, month])
+  @@map("monthly_settlements")
+}
+
+enum SettlementStatus {
+  NOT_INVOICED    // Nevyfakturované
+  INVOICE_SENT    // Poslaná faktúra
+  PAID            // Zaplatená faktúra
+}
+
