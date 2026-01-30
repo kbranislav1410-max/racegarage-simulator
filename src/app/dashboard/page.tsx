@@ -348,8 +348,8 @@ export default function DashboardPage() {
   };
 
   const handleSelectCustomer = (customer: Customer) => {
-    setSelectedCustomer(customer);
-    setRecordStep("record-ride");
+    // Navigate to customer detail page
+    router.push(`/customers?id=${customer.id}`);
   };
 
   const handleCreateCustomer = async (e: React.FormEvent) => {
@@ -1142,7 +1142,8 @@ export default function DashboardPage() {
                         <button
                           key={customer.id}
                           onClick={() => handleSelectCustomer(customer)}
-                          className="w-full text-left p-4 border border-slate-200 rounded-md hover:bg-slate-700 hover:border-blue-300"
+                          className="w-full text-left p-4 rounded-lg hover:brightness-90 transition-colors"
+                          style={{ backgroundColor: "#3a3a3a" }}
                         >
                           <div className="font-medium text-white">
                             {customer.firstName} {customer.lastName}
