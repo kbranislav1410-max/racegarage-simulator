@@ -4,6 +4,7 @@ import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { useEffect, useState } from "react";
 import { Plus, Search, X, Calendar, UserPlus, Ticket, Trophy, ChevronRight, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { formatAddress, formatDate, formatDateTime } from "@/lib/format";
 
 interface DashboardStats {
   totalCustomers: number;
@@ -89,6 +90,27 @@ interface Customer {
   phone: string | null;
 }
 
+interface CustomerDetail extends Customer {
+  rideSessions: RideSession[];
+  newsletter: boolean;
+  createdAt: string;
+}
+
+interface RideSession {
+  id: string;
+  startAt: string;
+  endAt: string | null;
+  minutes: number;
+  source: string;
+  notes: string | null;
+}
+
+interface CustomerSummary {
+  totalRides: number;
+  totalMinutes: number;
+  lastRide: string | null;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
@@ -151,6 +173,11 @@ export default function DashboardPage() {
   });
   const [customerFormErrors, setCustomerFormErrors] = useState<Record<string, string>>({});
   const [customerFormSubmitting, setCustomerFormSubmitting] = useState(false);
+
+  // Customer Detail Modal State
+  const [showCustomerDetailModal, setShowCustomerDetailModal] = useState(false);
+  const [selectedCustomerDetail, setSelectedCustomerDetail] = useState<CustomerDetail | null>(null);
+  const [customerDetailSummary, setCustomerDetailSummary] = useState<CustomerSummary | null>(null);
 
   // Ride Form
   const [rideFormData, setRideFormData] = useState({
@@ -347,9 +374,24 @@ export default function DashboardPage() {
     router.push("/vouchers");
   };
 
+  const handleViewCustomer = async (customerId: string) => {
+    try {
+      const response = await fetch(`/api/customers/${customerId}`);
+      if (!response.ok) throw new Error("Failed to fetch customer");
+
+      const data = await response.json();
+      setSelectedCustomerDetail(data.customer);
+      setCustomerDetailSummary(data.summary);
+      setShowCustomerDetailModal(true);
+      setShowRecordModal(false); // Close the search modal
+    } catch (err) {
+      console.error("Failed to load customer details", err);
+    }
+  };
+
   const handleSelectCustomer = (customer: Customer) => {
-    // Navigate to customer detail page
-    router.push(`/customers?id=${customer.id}`);
+    // Show customer detail modal
+    handleViewCustomer(customer.id);
   };
 
   const handleCreateCustomer = async (e: React.FormEvent) => {
@@ -1475,6 +1517,120 @@ export default function DashboardPage() {
                   </div>
                 </form>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Customer Detail Modal */}
+      {showCustomerDetailModal && selectedCustomerDetail && customerDetailSummary && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">
+                  Detaily zákazníka
+                </h2>
+                <button
+                  onClick={() => setShowCustomerDetailModal(false)}
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Basic Info */}
+              <div className="rounded-lg p-4 mb-6" style={{ backgroundColor: "#1f1f1f" }}>
+                <h3 className="font-semibold text-white mb-3">Základné informácie</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-slate-400">Meno</p>
+                    <p className="font-medium text-white">
+                      {selectedCustomerDetail.firstName} {selectedCustomerDetail.lastName}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Email</p>
+                    <p className="font-medium text-white">{selectedCustomerDetail.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Adresa</p>
+                    <p className="font-medium text-white">
+                      {formatAddress(selectedCustomerDetail.street, selectedCustomerDetail.city)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-slate-400">Telefón</p>
+                    <p className="font-medium text-white">{selectedCustomerDetail.phone || "-"}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Summary */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="rounded-lg p-4" style={{ backgroundColor: "#1a3a52" }}>
+                  <p className="text-sm text-blue-300 mb-1">Celkový počet jázd</p>
+                  <p className="text-2xl font-bold text-blue-100">
+                    {customerDetailSummary.totalRides}
+                  </p>
+                </div>
+                <div className="rounded-lg p-4" style={{ backgroundColor: "#1a4d2e" }}>
+                  <p className="text-sm text-green-300 mb-1">Celkový počet minút</p>
+                  <p className="text-2xl font-bold text-green-100">
+                    {customerDetailSummary.totalMinutes}
+                  </p>
+                </div>
+                <div className="rounded-lg p-4" style={{ backgroundColor: "#4a1a4d" }}>
+                  <p className="text-sm text-purple-300 mb-1">Posledná jazda</p>
+                  <p className="text-sm font-medium text-purple-100">
+                    {formatDate(customerDetailSummary.lastRide)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Ride History */}
+              <div className="rounded-lg p-4" style={{ backgroundColor: "#1f1f1f" }}>
+                <h3 className="font-semibold text-white mb-3">Nedávne jazdy</h3>
+                {selectedCustomerDetail.rideSessions.length === 0 ? (
+                  <p className="text-slate-300 text-center py-4">Zatiaľ žiadne jazdy</p>
+                ) : (
+                  <div className="space-y-3">
+                    {selectedCustomerDetail.rideSessions.map((ride) => (
+                      <div
+                        key={ride.id}
+                        className="rounded-lg p-3"
+                        style={{ backgroundColor: "#292929" }}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium text-white">
+                              {formatDateTime(ride.startAt)}
+                            </p>
+                            <p className="text-sm text-slate-300">
+                              Trvanie: {ride.minutes} minút • Zdroj: {ride.source}
+                            </p>
+                            {ride.notes && (
+                              <p className="text-sm text-slate-400 mt-1">
+                                {ride.notes}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setShowCustomerDetailModal(false)}
+                  className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
+                  style={{ backgroundColor: "#c20003" }}
+                >
+                  Zavrieť
+                </button>
+              </div>
             </div>
           </div>
         </div>
