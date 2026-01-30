@@ -1076,7 +1076,6 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-            <div className="p-6">
               {/* Step 1: Choice */}
               {recordStep === "choice" && (
                 <div className="space-y-4">
