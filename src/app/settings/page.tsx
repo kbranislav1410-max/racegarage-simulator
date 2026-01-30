@@ -482,7 +482,7 @@ export default function SettingsPage() {
                     </thead>
                     <tbody className="divide-y divide-slate-700" style={{ backgroundColor: "#292929" }}>
                       {newsletterSubscribers.map((subscriber: any) => (
-                        <tr key={subscriber.id} className="hover:brightness-90">
+                        <tr key={subscriber.id} className="hover:bg-slate-700">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm font-medium text-white">
                               {subscriber.firstName} {subscriber.lastName}

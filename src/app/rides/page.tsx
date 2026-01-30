@@ -410,7 +410,7 @@ export default function RidesPage() {
                   </tr>
                 ) : (
                   rides.map((ride) => (
-                    <tr key={ride.id} className="hover:brightness-90">
+                    <tr key={ride.id} className="hover:bg-slate-700">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-white">
                           {new Date(ride.startAt).toLocaleDateString()}

@@ -440,7 +440,7 @@ export default function BookPage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:brightness-90 transition-colors"
+                className="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
               >
                 Back
               </button>

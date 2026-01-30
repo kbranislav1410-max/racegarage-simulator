@@ -449,7 +449,7 @@ export default function PaymentsPage() {
                             <td className="px-6 py-4 whitespace-nowrap text-right">
                               <button
                                 onClick={() => handleDeletePayment(payment.id)}
-                                className="text-red-400 hover:text-red-300 hover:brightness-90 transition-colors"
+                                className="text-red-400 hover:text-red-300 transition-colors"
                                 title="Odstrániť platbu"
                               >
                                 <Trash2 className="w-5 h-5" />
