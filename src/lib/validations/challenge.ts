@@ -31,8 +31,9 @@ export function parseLapTime(input: string): number | null {
     return directMs;
   }
 
-  // Try to parse as mm:ss.mmm format (e.g., "01:05.432")
-  const timeRegex = /^(\d{1,2}):(\d{2})\.(\d{3})$/;
+  // Try to parse as mm:ss:mmm or mm:ss.mmm format (e.g., "01:05:432" or "01:05.432")
+  // Accept both : and . as separator for milliseconds for backward compatibility
+  const timeRegex = /^(\d{1,2}):(\d{2})[:.](\d{3})$/;
   const match = trimmed.match(timeRegex);
   
   if (match) {
@@ -50,12 +51,12 @@ export function parseLapTime(input: string): number | null {
   return null; // Invalid format
 }
 
-// Helper function to format milliseconds as mm:ss.mmm
+// Helper function to format milliseconds as mm:ss:mmm
 export function formatLapTime(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   const milliseconds = ms % 1000;
   
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
 }

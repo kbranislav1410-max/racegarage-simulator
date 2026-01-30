@@ -205,7 +205,7 @@ export default function ChallengePage() {
       
       if (!lapTimeMs) {
         setAttemptFormErrors({ 
-          lapTime: "Invalid lap time format. Use mm:ss.mmm or milliseconds" 
+          lapTime: "Invalid lap time format. Use mm:ss:mmm or milliseconds" 
         });
         setAttemptFormSubmitting(false);
         return;
@@ -740,14 +740,14 @@ export default function ChallengePage() {
                         }
                         className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
                         style={{ backgroundColor: "#1f1f1f", border: "none" }}
-                        placeholder="mm:ss.mmm (napr. 01:23.456) alebo ms (napr. 83456)"
+                        placeholder="mm:ss:mmm (napr. 01:23:456) alebo ms (napr. 83456)"
                         required
                       />
                       {attemptFormErrors.lapTime && (
                         <p className="text-red-600 text-sm mt-1">{attemptFormErrors.lapTime}</p>
                       )}
                       <p className="text-xs text-slate-400 mt-1">
-                        Zadajte čas ako mm:ss.mmm (napr. 01:23.456) alebo milisekundy (napr. 83456)
+                        Zadajte čas ako mm:ss:mmm (napr. 01:23:456) alebo milisekundy (napr. 83456)
                       </p>
                     </div>
 
