@@ -1062,18 +1062,19 @@ export default function DashboardPage() {
       {/* Record Ride Modal */}
       {showRecordModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-slate-200 flex justify-between items-center sticky top-0 bg-white">
-              <h2 className="text-xl font-bold text-white">
-                Zaznamenať jazdu
-              </h2>
-              <button
-                onClick={handleCloseRecordModal}
-                className="text-slate-400 hover:text-slate-300"
-              >
-                <X size={24} />
-              </button>
-            </div>
+          <div className="rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">
+                  Zaznamenať jazdu
+                </h2>
+                <button
+                  onClick={handleCloseRecordModal}
+                  className="text-slate-400 hover:text-slate-300"
+                >
+                  <X size={24} />
+                </button>
+              </div>
 
             <div className="p-6">
               {/* Step 1: Choice */}
@@ -1175,117 +1176,124 @@ export default function DashboardPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-white mb-1">
+                      <label className="block text-sm font-medium text-white mb-2">
                         Meno *
                       </label>
                       <input
                         type="text"
                         value={customerFormData.firstName}
                         onChange={(e) => setCustomerFormData({ ...customerFormData, firstName: e.target.value })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                       {customerFormErrors.firstName && (
-                        <p className="text-red-600 text-sm mt-1">{customerFormErrors.firstName}</p>
+                        <p className="text-red-400 text-sm mt-1">{customerFormErrors.firstName}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-white mb-1">
+                      <label className="block text-sm font-medium text-white mb-2">
                         Priezvisko *
                       </label>
                       <input
                         type="text"
                         value={customerFormData.lastName}
                         onChange={(e) => setCustomerFormData({ ...customerFormData, lastName: e.target.value })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                       {customerFormErrors.lastName && (
-                        <p className="text-red-600 text-sm mt-1">{customerFormErrors.lastName}</p>
+                        <p className="text-red-400 text-sm mt-1">{customerFormErrors.lastName}</p>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Email *
                     </label>
                     <input
                       type="email"
                       value={customerFormData.email}
                       onChange={(e) => setCustomerFormData({ ...customerFormData, email: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                       required
                     />
                     {customerFormErrors.email && (
-                      <p className="text-red-600 text-sm mt-1">{customerFormErrors.email}</p>
+                      <p className="text-red-400 text-sm mt-1">{customerFormErrors.email}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Telefón
-                    </label>
-                    <input
-                      type="tel"
-                      value={customerFormData.phone}
-                      onChange={(e) => setCustomerFormData({ ...customerFormData, phone: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    />
-                    {customerFormErrors.phone && (
-                      <p className="text-red-600 text-sm mt-1">{customerFormErrors.phone}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Ulica
                     </label>
                     <input
                       type="text"
                       value={customerFormData.street}
                       onChange={(e) => setCustomerFormData({ ...customerFormData, street: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                     {customerFormErrors.street && (
-                      <p className="text-red-600 text-sm mt-1">{customerFormErrors.street}</p>
+                      <p className="text-red-400 text-sm mt-1">{customerFormErrors.street}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">
+                    <label className="block text-sm font-medium text-white mb-2">
                       Mesto
                     </label>
                     <input
                       type="text"
                       value={customerFormData.city}
                       onChange={(e) => setCustomerFormData({ ...customerFormData, city: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                     {customerFormErrors.city && (
-                      <p className="text-red-600 text-sm mt-1">{customerFormErrors.city}</p>
+                      <p className="text-red-400 text-sm mt-1">{customerFormErrors.city}</p>
                     )}
                   </div>
 
-                  <div className="flex items-center">
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Telefón
+                    </label>
+                    <input
+                      type="tel"
+                      value={customerFormData.phone}
+                      onChange={(e) => setCustomerFormData({ ...customerFormData, phone: e.target.value })}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                    />
+                    {customerFormErrors.phone && (
+                      <p className="text-red-400 text-sm mt-1">{customerFormErrors.phone}</p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                     <input
                       type="checkbox"
                       id="newsletter"
                       checked={customerFormData.newsletter}
                       onChange={(e) => setCustomerFormData({ ...customerFormData, newsletter: e.target.checked })}
-                      className="mr-2"
+                      className="w-4 h-4 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
+                      style={{ accentColor: "#c20003" }}
                     />
-                    <label htmlFor="newsletter" className="text-sm text-white">
+                    <label htmlFor="newsletter" className="text-sm text-white cursor-pointer">
                       Zákazník má záujem o newsletter (propagačné materiály a novinky)
                     </label>
                   </div>
 
-                  <div className="flex gap-2 pt-4">
+                  <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={customerFormSubmitting}
-                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:brightness-90"
+                      className="flex-1 px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ backgroundColor: "#c20003" }}
                     >
                       {customerFormSubmitting ? "Vytváram..." : "Vytvoriť a pokračovať"}
