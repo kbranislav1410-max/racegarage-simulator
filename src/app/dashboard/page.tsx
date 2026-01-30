@@ -452,7 +452,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <button
             onClick={handleOpenRecordModal}
-            style={{ backgroundColor: "#4ca626" }}
+            style={{ backgroundColor: "#1a4d2e" }}
             className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Plus size={24} />
@@ -461,7 +461,7 @@ export default function DashboardPage() {
           
           <button
             onClick={handleNewCustomer}
-            style={{ backgroundColor: "#0097b2" }}
+            style={{ backgroundColor: "#1a3a52" }}
             className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <UserPlus size={24} />
@@ -470,7 +470,7 @@ export default function DashboardPage() {
           
           <button
             onClick={handleNewVoucher}
-            style={{ backgroundColor: "#ffd21f" }}
+            style={{ backgroundColor: "#4a1a4d" }}
             className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Ticket size={24} />
