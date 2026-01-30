@@ -50,6 +50,7 @@ export default function SettlementsPage() {
   const [selectedSettlement, setSelectedSettlement] = useState<Settlement | null>(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [newStatus, setNewStatus] = useState<string>("");
+  const [customInvoiceNumber, setCustomInvoiceNumber] = useState<string>("");
 
   useEffect(() => {
     fetchSettlements();
@@ -101,15 +102,23 @@ export default function SettlementsPage() {
     if (!selectedSettlement) return;
 
     try {
+      const body: any = { status: newStatus };
+      
+      // Include invoice number if status is INVOICE_SENT and user provided one
+      if (newStatus === "INVOICE_SENT" && customInvoiceNumber.trim()) {
+        body.invoiceNumber = customInvoiceNumber.trim();
+      }
+      
       const response = await fetch(`/api/settlements/${selectedSettlement.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify(body),
       });
 
       if (response.ok) {
         setShowStatusModal(false);
         setSelectedSettlement(null);
+        setCustomInvoiceNumber("");
         fetchSettlements();
       } else {
         alert("Chyba pri aktualizácii stavu");
@@ -142,6 +151,7 @@ export default function SettlementsPage() {
   const openStatusModal = (settlement: Settlement) => {
     setSelectedSettlement(settlement);
     setNewStatus(settlement.status);
+    setCustomInvoiceNumber(settlement.invoiceNumber || "");
     setShowStatusModal(true);
   };
 
@@ -404,6 +414,27 @@ export default function SettlementsPage() {
                   <option value="PAID">Zaplatená faktúra</option>
                 </select>
               </div>
+              
+              {/* Show invoice number input when status is INVOICE_SENT */}
+              {newStatus === "INVOICE_SENT" && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-white mb-1">
+                    Číslo faktúry <span className="text-slate-400 font-normal">(voliteľné)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={customInvoiceNumber}
+                    onChange={(e) => setCustomInvoiceNumber(e.target.value)}
+                    placeholder="napr. 202501001"
+                    className="w-full px-3 py-2 border border-slate-600 rounded-lg text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
+                  />
+                  <p className="text-xs text-slate-400 mt-1">
+                    Ak nevyplníte, číslo sa vygeneruje automaticky
+                  </p>
+                </div>
+              )}
+              
               <div className="flex gap-3">
                 <button
                   onClick={handleUpdateStatus}
@@ -415,6 +446,7 @@ export default function SettlementsPage() {
                   onClick={() => {
                     setShowStatusModal(false);
                     setSelectedSettlement(null);
+                    setCustomInvoiceNumber("");
                   }}
                   className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
                 >
