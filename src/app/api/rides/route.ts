@@ -124,28 +124,59 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // If voucher code was used, mark it as redeemed
+    // If voucher code was used, validate and mark it as redeemed
     if (data.voucherCode) {
       const voucher = await prisma.voucher.findUnique({
         where: { code: data.voucherCode.toUpperCase() },
       });
 
-      if (voucher && voucher.status !== "REDEEMED") {
-        await prisma.voucher.update({
-          where: { code: data.voucherCode.toUpperCase() },
-          data: {
-            status: "REDEEMED",
-            redeemedAt: new Date(),
-            redeemedByCustomerId: data.customerId,
-          },
-        });
-
-        // Log voucher redemption
-        await createAuditLog("UPDATE", "VOUCHER", voucher.id, {
-          status: "REDEEMED",
-          redeemedBy: `${customer.firstName} ${customer.lastName}`,
-        });
+      // Validate voucher exists
+      if (!voucher) {
+        return NextResponse.json(
+          { error: "Voucher code not found" },
+          { status: 404 }
+        );
       }
+
+      // Validate voucher is not already redeemed
+      if (voucher.status === "REDEEMED") {
+        return NextResponse.json(
+          { error: "This voucher has already been redeemed" },
+          { status: 400 }
+        );
+      }
+
+      // Validate voucher is active (NEW or SENT only)
+      if (voucher.status !== "NEW" && voucher.status !== "SENT") {
+        return NextResponse.json(
+          { error: `This voucher is ${voucher.status.toLowerCase()} and cannot be used` },
+          { status: 400 }
+        );
+      }
+
+      // Validate voucher is not expired
+      if (voucher.expiresAt && new Date() > new Date(voucher.expiresAt)) {
+        return NextResponse.json(
+          { error: "This voucher has expired" },
+          { status: 400 }
+        );
+      }
+
+      // All validations passed - mark voucher as redeemed
+      await prisma.voucher.update({
+        where: { code: data.voucherCode.toUpperCase() },
+        data: {
+          status: "REDEEMED",
+          redeemedAt: new Date(),
+          redeemedByCustomerId: data.customerId,
+        },
+      });
+
+      // Log voucher redemption
+      await createAuditLog("UPDATE", "VOUCHER", voucher.id, {
+        status: "REDEEMED",
+        redeemedBy: `${customer.firstName} ${customer.lastName}`,
+      });
     }
 
     // Create partner voucher record if ride source is VOUCHER_PARTNER
