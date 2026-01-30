@@ -376,6 +376,9 @@ export default function RidesPage() {
               <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    Dátum
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                     Čas
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
@@ -395,19 +398,24 @@ export default function RidesPage() {
               <tbody className="divide-y divide-slate-700">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
                       Načítavam...
                     </td>
                   </tr>
                 ) : rides.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-slate-400">
+                    <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
                       Žiadne jazdy pre obdobie {dateFrom} - {dateTo}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
                     </td>
                   </tr>
                 ) : (
                   rides.map((ride) => (
                     <tr key={ride.id} className="hover:bg-slate-700">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-white">
+                          {new Date(ride.startAt).toLocaleDateString()}
+                        </div>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-white">
                           {new Date(ride.startAt).toLocaleTimeString()}
