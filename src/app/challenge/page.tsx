@@ -53,7 +53,6 @@ export default function ChallengePage() {
   const [challengeFormData, setChallengeFormData] = useState({
     trackName: "",
     carName: "",
-    durationMinutes: "",
     prizeDescription: "",
   });
   const [challengeFormErrors, setChallengeFormErrors] = useState<Record<string, string>>({});
@@ -72,7 +71,6 @@ export default function ChallengePage() {
   // Attempt Form
   const [attemptFormData, setAttemptFormData] = useState({
     lapTime: "",
-    sessionId: "",
   });
   const [attemptFormErrors, setAttemptFormErrors] = useState<Record<string, string>>({});
   const [attemptFormSubmitting, setAttemptFormSubmitting] = useState(false);
@@ -163,7 +161,6 @@ export default function ChallengePage() {
           month: selectedMonth,
           trackName: challengeFormData.trackName,
           carName: challengeFormData.carName,
-          durationMinutes: challengeFormData.durationMinutes ? parseInt(challengeFormData.durationMinutes) : undefined,
           prizeDescription: challengeFormData.prizeDescription || undefined,
         }),
       });
@@ -176,7 +173,7 @@ export default function ChallengePage() {
 
       // Success - refresh data and close modal
       setShowCreateChallengeModal(false);
-      setChallengeFormData({ trackName: "", carName: "", durationMinutes: "", prizeDescription: "" });
+      setChallengeFormData({ trackName: "", carName: "", prizeDescription: "" });
       fetchChallengeData();
     } catch (err) {
       setChallengeFormErrors({ general: "An error occurred" });
@@ -221,7 +218,6 @@ export default function ChallengePage() {
           customerId: selectedCustomer.id,
           challengeMonthId: challengeMonth.id,
           lapTimeMs,
-          sessionId: attemptFormData.sessionId || undefined,
         }),
       });
 
@@ -235,7 +231,7 @@ export default function ChallengePage() {
       setShowRecordAttemptModal(false);
       setAttemptStep("search");
       setSelectedCustomer(null);
-      setAttemptFormData({ lapTime: "", sessionId: "" });
+      setAttemptFormData({ lapTime: "" });
       fetchChallengeData();
     } catch (err) {
       setAttemptFormErrors({ general: "An error occurred" });
@@ -252,7 +248,7 @@ export default function ChallengePage() {
     setSelectedCustomer(null);
     setSearchQuery("");
     setSearchResults([]);
-    setAttemptFormData({ lapTime: "", sessionId: "" });
+    setAttemptFormData({ lapTime: "" });
   };
 
   // Delete attempt
