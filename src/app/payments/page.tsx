@@ -232,7 +232,7 @@ export default function PaymentsPage() {
           <button
             onClick={handleExportCSV}
             disabled={!settlement || settlement.payments.length === 0}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Download className="w-4 h-4" />
             Exportovať CSV
@@ -449,7 +449,7 @@ export default function PaymentsPage() {
                             <td className="px-6 py-4 whitespace-nowrap text-right">
                               <button
                                 onClick={() => handleDeletePayment(payment.id)}
-                                className="text-red-400 hover:text-red-300 transition-colors"
+                                className="text-red-400 hover:text-red-300 hover:brightness-90 transition-colors"
                                 title="Odstrániť platbu"
                               >
                                 <Trash2 className="w-5 h-5" />

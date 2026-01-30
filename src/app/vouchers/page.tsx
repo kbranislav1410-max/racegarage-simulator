@@ -228,7 +228,7 @@ export default function VouchersPage() {
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+            className="px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
             style={{ backgroundColor: "#c20003" }}
           >
             Vytvoriť Voucher
@@ -277,7 +277,7 @@ export default function VouchersPage() {
               <button
                 type="submit"
                 disabled={checkLoading}
-                className="px-6 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:bg-slate-400 flex items-center gap-2"
+                className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:bg-slate-400 flex items-center gap-2"
                 style={{ backgroundColor: "#c20003" }}
               >
                 <Search className="h-4 w-4" />
@@ -650,13 +650,13 @@ export default function VouchersPage() {
                       setError("");
                       setSuccess("");
                     }}
-                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
+                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:brightness-90 transition-colors"
                   >
                     Zrušiť
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+                    className="flex-1 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
                     style={{ backgroundColor: "#c20003" }}
                   >
                     Vytvoriť
@@ -719,14 +719,14 @@ export default function VouchersPage() {
                       setNewExpiresAt("");
                       setError("");
                     }}
-                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
+                    className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:brightness-90 transition-colors"
                   >
                     Zrušiť
                   </button>
                   <button
                     type="submit"
                     disabled={extendLoading}
-                    className="flex-1 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:bg-blue-400" style={{ backgroundColor: "#c20003" }}
+                    className="flex-1 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:bg-blue-400" style={{ backgroundColor: "#c20003" }}
                   >
                     {extendLoading ? "Predlžujem..." : "Predĺžiť"}
                   </button>
@@ -770,7 +770,7 @@ export default function VouchersPage() {
                     setDeletingVoucher(null);
                     setError("");
                   }}
-                  className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:bg-slate-700 transition-colors"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-slate-300 rounded-lg hover:brightness-90 transition-colors"
                 >
                   Zrušiť
                 </button>

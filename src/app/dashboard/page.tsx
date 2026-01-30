@@ -453,7 +453,7 @@ export default function DashboardPage() {
           <button
             onClick={handleOpenRecordModal}
             style={{ backgroundColor: "#4ca626" }}
-            className="hover:bg-opacity-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Plus size={24} />
             <span>Nová jazda</span>
@@ -462,7 +462,7 @@ export default function DashboardPage() {
           <button
             onClick={handleNewCustomer}
             style={{ backgroundColor: "#0097b2" }}
-            className="hover:bg-opacity-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <UserPlus size={24} />
             <span>Nový zákazník</span>
@@ -471,7 +471,7 @@ export default function DashboardPage() {
           <button
             onClick={handleNewVoucher}
             style={{ backgroundColor: "#ffd21f" }}
-            className="hover:bg-opacity-90 text-black px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-black px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Ticket size={24} />
             <span>Nový poukaz</span>
@@ -479,7 +479,7 @@ export default function DashboardPage() {
           
           <button
             onClick={handleSearchCustomer}
-            className="bg-slate-600 hover:bg-slate-700 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="bg-slate-600 hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
           >
             <Search size={24} />
             <span>Vyhľadať zákazníka</span>
@@ -906,7 +906,7 @@ export default function DashboardPage() {
             </h2>
             <button
               onClick={() => router.push("/challenge")}
-              className="flex items-center gap-2 px-4 py-2  text-white rounded-lg text-sm font-medium transition-colors hover:bg-opacity-90"
+              className="flex items-center gap-2 px-4 py-2  text-white rounded-lg text-sm font-medium transition-colors hover:brightness-90"
               style={{ backgroundColor: "#c20003" }}
             >
               Zobraziť celý rebríček
@@ -1013,7 +1013,7 @@ export default function DashboardPage() {
               {stats.frequentRiders.map((rider, index) => (
                 <div
                   key={rider.customerId}
-                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-700 hover:border-slate-600 hover:bg-slate-700 transition-colors"
+                  className="flex items-center gap-3 p-4 rounded-lg border border-slate-700 hover:border-slate-600 hover:brightness-90 transition-colors"
                 >
                   {/* Rank Number */}
                   <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white flex-shrink-0">
@@ -1133,7 +1133,7 @@ export default function DashboardPage() {
                         <button
                           key={customer.id}
                           onClick={() => handleSelectCustomer(customer)}
-                          className="w-full text-left p-4 border border-slate-200 rounded-md hover:bg-slate-50 hover:border-blue-300"
+                          className="w-full text-left p-4 border border-slate-200 rounded-md hover:brightness-90 hover:border-blue-300"
                         >
                           <div className="font-medium text-white">
                             {customer.firstName} {customer.lastName}
@@ -1276,7 +1276,7 @@ export default function DashboardPage() {
                     <button
                       type="submit"
                       disabled={customerFormSubmitting}
-                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:bg-opacity-90"
+                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:brightness-90"
                       style={{ backgroundColor: "#c20003" }}
                     >
                       {customerFormSubmitting ? "Vytváram..." : "Vytvoriť a pokračovať"}
@@ -1443,14 +1443,14 @@ export default function DashboardPage() {
                         setSelectedCustomer(null);
                         setRecordStep("choice");
                       }}
-                      className="px-4 py-2 border border-slate-300 text-white rounded-md hover:bg-slate-50"
+                      className="px-4 py-2 border border-slate-300 text-white rounded-md hover:brightness-90"
                     >
                       Zrušiť
                     </button>
                     <button
                       type="submit"
                       disabled={rideFormSubmitting}
-                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:bg-opacity-90"
+                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:brightness-90"
                       style={{ backgroundColor: "#c20003" }}
                     >
                       {rideFormSubmitting ? "Zaznamenávam..." : "Zaznamenať jazdu"}

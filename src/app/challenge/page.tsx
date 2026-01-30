@@ -463,7 +463,7 @@ export default function ChallengePage() {
                       filteredAttempts.map((entry) => (
                         <tr
                           key={entry.id}
-                          className={`hover:bg-slate-700 ${
+                          className={`hover:brightness-90 ${
                             entry.rank <= 3 ? "bg-yellow-900/20" : ""
                           }`}
                         >
@@ -615,7 +615,7 @@ export default function ChallengePage() {
                     <button
                       type="button"
                       onClick={() => setShowCreateChallengeModal(false)}
-                      className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                      className="px-6 py-2 border border-slate-600 rounded-lg hover:brightness-90 transition-colors text-white"
                     >
                       Zrušiť
                     </button>
@@ -672,7 +672,7 @@ export default function ChallengePage() {
                           <button
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
-                            className="w-full px-4 py-3 text-left hover:bg-slate-800 transition-colors"
+                            className="w-full px-4 py-3 text-left hover:brightness-90 transition-colors"
                           >
                             <div className="font-medium text-white">
                               {customer.firstName} {customer.lastName}
@@ -764,7 +764,7 @@ export default function ChallengePage() {
                       <button
                         type="button"
                         onClick={resetAttemptModal}
-                        className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                        className="px-6 py-2 border border-slate-600 rounded-lg hover:brightness-90 transition-colors text-white"
                       >
                         Zrušiť
                       </button>

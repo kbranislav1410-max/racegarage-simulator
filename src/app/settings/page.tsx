@@ -269,7 +269,7 @@ export default function SettingsPage() {
                 {[15, 30, 45, 60, 90, 120].map((duration) => (
                   <label
                     key={duration}
-                    className="flex items-center gap-2 px-3 py-2 border border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700"
+                    className="flex items-center gap-2 px-3 py-2 border border-slate-600 rounded-lg cursor-pointer hover:brightness-90"
                   >
                     <input
                       type="checkbox"
@@ -326,7 +326,7 @@ export default function SettingsPage() {
               Choose who receives card payments by default
             </p>
             <div className="flex gap-4">
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
+              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:brightness-90">
                 <input
                   type="radio"
                   name="cardReceiver"
@@ -336,7 +336,7 @@ export default function SettingsPage() {
                 />
                 <span className="font-medium text-white">Friend</span>
               </label>
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
+              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:brightness-90">
                 <input
                   type="radio"
                   name="cardReceiver"
@@ -395,7 +395,7 @@ export default function SettingsPage() {
             </div>
             <button
               onClick={handleShowNewsletterModal}
-              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
               style={{ backgroundColor: "#c20003" }}
             >
               <Users className="w-4 h-4" />
@@ -411,7 +411,7 @@ export default function SettingsPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: "#c20003" }}
           >
             {saving ? "Saving..." : "Save Changes"}
@@ -443,7 +443,7 @@ export default function SettingsPage() {
                 <button
                   onClick={handleExportSubscribers}
                   disabled={newsletterSubscribers.length === 0}
-                  className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ backgroundColor: "#c20003" }}
+                  className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ backgroundColor: "#c20003" }}
                 >
                   <Download className="w-4 h-4" />
                   Exportovať CSV
@@ -482,7 +482,7 @@ export default function SettingsPage() {
                     </thead>
                     <tbody className="divide-y divide-slate-700" style={{ backgroundColor: "#292929" }}>
                       {newsletterSubscribers.map((subscriber: any) => (
-                        <tr key={subscriber.id} className="hover:bg-slate-700">
+                        <tr key={subscriber.id} className="hover:brightness-90">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="text-sm font-medium text-white">
                               {subscriber.firstName} {subscriber.lastName}
@@ -516,7 +516,7 @@ export default function SettingsPage() {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowNewsletterModal(false)}
-                  className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                  className="px-6 py-2 border border-slate-600 rounded-lg hover:brightness-90 transition-colors text-white"
                 >
                   Zavrieť
                 </button>

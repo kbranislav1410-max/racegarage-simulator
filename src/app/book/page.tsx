@@ -178,7 +178,7 @@ export default function BookPage() {
                 city: "",
               });
             }}
-            className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors"
+            className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:brightness-90 transition-colors"
           >
             Make Another Reservation
           </button>
@@ -269,7 +269,7 @@ export default function BookPage() {
             <button
               onClick={handleEmailCheck}
               disabled={checkingEmail || !email}
-              className="w-full px-4 py-3 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 bg-slate-800 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {checkingEmail ? "Checking..." : "Continue"}
             </button>
@@ -440,14 +440,14 @@ export default function BookPage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                className="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:brightness-90 transition-colors"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-6 py-3 bg-slate-800 text-white rounded-lg hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 bg-slate-800 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Submitting..." : "Submit Reservation"}
               </button>

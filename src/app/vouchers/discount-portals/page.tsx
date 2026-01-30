@@ -259,7 +259,7 @@ export default function DiscountPortalsPage() {
                   </tr>
                 ) : (
                   filteredVouchers.map((voucher) => (
-                    <tr key={voucher.id} className="hover:bg-slate-700">
+                    <tr key={voucher.id} className="hover:brightness-90">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="font-mono text-sm font-semibold text-white">
                           {voucher.code}

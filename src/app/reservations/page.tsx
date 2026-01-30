@@ -271,7 +271,7 @@ export default function ReservationsPage() {
                       return (
                         <tr
                           key={reservation.id}
-                          className="border-b border-slate-700 hover:bg-slate-700"
+                          className="border-b border-slate-700 hover:brightness-90"
                         >
                           <td className="py-3 px-4">
                             <div>
@@ -307,7 +307,7 @@ export default function ReservationsPage() {
                                 setSelectedReservation(reservation);
                                 setShowDetailModal(true);
                               }}
-                              className="px-3 py-1 text-sm text-white hover:bg-slate-700 rounded"
+                              className="px-3 py-1 text-sm text-white hover:brightness-90 rounded"
                             >
                               View Details
                             </button>
@@ -448,7 +448,7 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "CONFIRMED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
+                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
                       >
                         <CheckCircle className="w-4 h-4" />
                         Confirm
@@ -487,7 +487,7 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "COMPLETED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
+                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
                       >
                         <Check className="w-4 h-4" />
                         Complete

@@ -219,7 +219,7 @@ export default function SettlementsPage() {
         <div className="flex flex-wrap gap-4">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="px-4 py-2  text-white rounded-lg hover:bg-opacity-90 transition-colors" style={{ backgroundColor: "#c20003" }}
+            className="px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors" style={{ backgroundColor: "#c20003" }}
           >
             + Vytvoriť vyúčtovanie
           </button>
@@ -285,7 +285,7 @@ export default function SettlementsPage() {
                 </tr>
               ) : (
                 settlements.map((settlement) => (
-                  <tr key={settlement.id} className="hover:bg-slate-700">
+                  <tr key={settlement.id} className="hover:brightness-90">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-white">
                         {monthNames[settlement.month - 1]} {settlement.year}
@@ -380,13 +380,13 @@ export default function SettlementsPage() {
               <div className="flex gap-3 mt-6">
                 <button
                   onClick={handleCreateSettlement}
-                  className="flex-1 px-4 py-2  text-white rounded-lg hover:bg-opacity-90" style={{ backgroundColor: "#c20003" }}
+                  className="flex-1 px-4 py-2  text-white rounded-lg hover:brightness-90" style={{ backgroundColor: "#c20003" }}
                 >
                   Vytvoriť
                 </button>
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90"
                 >
                   Zrušiť
                 </button>
@@ -444,7 +444,7 @@ export default function SettlementsPage() {
               <div className="flex gap-3">
                 <button
                   onClick={handleUpdateStatus}
-                  className="flex-1 px-4 py-2  text-white rounded-lg hover:bg-opacity-90" style={{ backgroundColor: "#c20003" }}
+                  className="flex-1 px-4 py-2  text-white rounded-lg hover:brightness-90" style={{ backgroundColor: "#c20003" }}
                 >
                   Uložiť
                 </button>
@@ -454,7 +454,7 @@ export default function SettlementsPage() {
                     setSelectedSettlement(null);
                     setCustomInvoiceNumber("");
                   }}
-                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700"
+                  className="flex-1 px-4 py-2 border border-slate-600 text-white rounded-lg hover:brightness-90"
                 >
                   Zrušiť
                 </button>
