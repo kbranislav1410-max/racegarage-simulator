@@ -306,7 +306,7 @@ export default function ChallengePage() {
           {challengeMonth && (
             <button
               onClick={() => setShowRecordAttemptModal(true)}
-              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg transition-colors hover:brightness-90"
               style={{ backgroundColor: "#c20003" }}
             >
               <Plus className="w-4 h-4" />
