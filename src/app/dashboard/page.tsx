@@ -1047,7 +1047,7 @@ export default function DashboardPage() {
         <div className="p-6 rounded-lg shadow h-full" style={{ backgroundColor: "#292929" }}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-white flex items-center gap-2">
-              <Users className="text-red-600" size={24} />
+              <Users className="text-white" size={24} />
               Najčastejší jazdci
             </h2>
           </div>
