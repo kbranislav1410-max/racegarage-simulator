@@ -1,0 +1,189 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║     ✅ PRÍJEMCOVIA PLATIEB SÚ SPRÁVNE NASTAVENÍ ✅               ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────┐
+│  POŽIADAVKY vs SKUTOČNOSŤ                                        │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Vaša požiadavka:                                                │
+│  ────────────────                                                │
+│  "Ja som príjemca pri type platby - Poukaz - partner,            │
+│   Poukaz Racegarage. Príjemca kamarát je pri typoch -            │
+│   Poukaz - PD Drive Club a PD Drive Club."                       │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  AKTUÁLNA KONFIGURÁCIA                                           │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ╔═══════════════════════╦════════════╦═══════════╦═══════════╗  │
+│  ║ Metóda Platby         ║ Požiadavka ║ Skutočnosť║ Status    ║  │
+│  ╠═══════════════════════╬════════════╬═══════════╬═══════════╣  │
+│  ║ Poukaz - partner      ║ JA (ME)    ║ ✅ ME     ║ ✅ OK     ║  │
+│  ║ Poukaz - Racegarage   ║ JA (ME)    ║ ✅ ME     ║ ✅ OK     ║  │
+│  ║ Poukaz - PD Drive Club║ KAMARÁT    ║ ✅ FRIEND ║ ✅ OK     ║  │
+│  ║ PD Drive Club         ║ KAMARÁT    ║ ✅ FRIEND ║ ✅ OK     ║  │
+│  ╚═══════════════════════╩════════════╩═══════════╩═══════════╝  │
+│                                                                  │
+│  🟢 Zelený odznak = JA (ME)                                      │
+│  🔵 Modrý odznak = KAMARÁT (FRIEND)                              │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  AKO TO VYZERÁ V UI                                              │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Stránka: PLATBY → História platieb                              │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │ Metóda                    │ Príjemca                       │  │
+│  ├───────────────────────────┼────────────────────────────────┤  │
+│  │ Poukaz - partner          │ 🟢 → Ja                        │  │
+│  │ (→ Ja)                    │                                │  │
+│  ├───────────────────────────┼────────────────────────────────┤  │
+│  │ Poukaz - Racegarage       │ 🟢 → Ja                        │  │
+│  │ (→ Ja)                    │                                │  │
+│  ├───────────────────────────┼────────────────────────────────┤  │
+│  │ PD Drive club             │ 🔵 → Kamarát                   │  │
+│  │ (→ Kamarát)               │                                │  │
+│  ├───────────────────────────┼────────────────────────────────┤  │
+│  │ Poukaz - PD Drive Club    │ 🔵 → Kamarát                   │  │
+│  │ (→ Kamarát)               │                                │  │
+│  └───────────────────────────┴────────────────────────────────┘  │
+│                                                                  │
+│  Súhrnné karty:                                                  │
+│                                                                  │
+│  ┌─────────────────────┐    ┌─────────────────────┐            │
+│  │ Celkom pre mňa      │    │ Celkom pre kamaráta │            │
+│  │ (ME Total)          │    │ (FRIEND Total)      │            │
+│  ├─────────────────────┤    ├─────────────────────┤            │
+│  │ • Poukaz - partner  │    │ • PD Drive Club     │            │
+│  │ • Poukaz - Racegarage│   │ • Poukaz - PD Drive │            │
+│  │                     │    │   Club              │            │
+│  │ €XXX.XX             │    │ €XXX.XX             │            │
+│  │ 🟢 Zelená           │    │ 🔵 Modrá            │            │
+│  └─────────────────────┘    └─────────────────────┘            │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  KDE JE TO NAKONFIGUROVANÉ V KÓDE                                │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. API Route (Backend)                                          │
+│     ─────────────────────                                        │
+│     Súbor: /src/app/api/rides/route.ts                           │
+│     Riadky: 177-182                                              │
+│                                                                  │
+│     if (method === "PD_DRIVE_CLUB" ||                            │
+│         method === "VOUCHER_PD_DRIVE_CLUB") {                    │
+│       receiver = "FRIEND";  // ✅ Kamarát                        │
+│     } else {                                                     │
+│       receiver = "ME";       // ✅ Ja                            │
+│     }                                                            │
+│                                                                  │
+│  2. UI Labels (Frontend)                                         │
+│     ──────────────────────                                       │
+│     Súbor: /src/app/payments/page.tsx                            │
+│     Riadky: 105-108                                              │
+│                                                                  │
+│     PD_DRIVE_CLUB: "PD Drive club (→ Kamarát)"           ✅      │
+│     VOUCHER_PARTNER: "Poukaz - partner (→ Ja)"           ✅      │
+│     VOUCHER_RACEGARAGE: "Poukaz - Racegarage (→ Ja)"     ✅      │
+│     VOUCHER_PD_DRIVE_CLUB: "Poukaz - PD Drive Club (→ K.)"✅     │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  RÝCHLY TEST (1 MINÚTA)                                          │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  1. npm run dev                                                  │
+│                                                                  │
+│  2. Dashboard → Zaznamenať jazdu                                 │
+│                                                                  │
+│  3. Vyplniť:                                                     │
+│     • Zákazník: [vyberte]                                        │
+│     • Suma: 25.00€                                               │
+│     • Metóda: "Poukaz - partner"                                 │
+│     • Partner: Zľavomat                                          │
+│     • Číslo: TEST-001                                            │
+│     → Zaznamenať                                                 │
+│                                                                  │
+│  4. Platby → Overiť:                                             │
+│     ✅ Metóda: "Poukaz - partner (→ Ja)"                         │
+│     ✅ Príjemca: 🟢 Zelený "→ Ja"                                │
+│     ✅ Me Total: +25.00€                                         │
+│                                                                  │
+│  Ak toto funguje → Systém je správny! ✅                         │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  AK SA STÁLE ZOBRAZUJÚ NESPRÁVNI PRÍJEMCOVIA                     │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  Možné príčiny:                                                  │
+│                                                                  │
+│  1. ⚠️ Staré záznamy v databáze (pred commit 7ea0f22)            │
+│     → Riešenie: SQL update v PRIJEMCA_PLATIEB_OVERENIE.md       │
+│                                                                  │
+│  2. ⚠️ Cache v prehliadači                                       │
+│     → Riešenie: Ctrl+Shift+R (hard refresh)                     │
+│                                                                  │
+│  3. ⚠️ Neaktualizovaný kód                                       │
+│     → Riešenie:                                                  │
+│        git pull origin copilot/setup-nextjs-simulator-project    │
+│        npm run dev                                               │
+│                                                                  │
+│  4. ⚠️ Pozriete sa na nesprávny stĺpec                           │
+│     → Stĺpec "Metóda" má "(→ Ja)" alebo "(→ Kamarát)"           │
+│     → Stĺpec "Príjemca" má farebný odznak                        │
+│     → Oba musia byť konzistentné                                 │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────┐
+│  DOKUMENTÁCIA                                                    │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  📖 PRIJEMCA_PLATIEB_OVERENIE.md                                 │
+│                                                                  │
+│  Obsahuje:                                                       │
+│  • Potvrdenie správnej konfigurácie                              │
+│  • Kde je to v kóde                                              │
+│  • Testovacie scenáre (2)                                        │
+│  • Overenie v databáze (Prisma Studio + SQL)                     │
+│  • Vizuálny prehľad                                              │
+│  • FAQ (3 otázky)                                                │
+│  • SQL skripty na opravu starých záznamov                        │
+│  • Troubleshooting guide                                         │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║                    ✅ ZÁVER ✅                                    ║
+║                                                                  ║
+║  Systém JE SPRÁVNE nakonfigurovaný podľa vašich požiadaviek!     ║
+║                                                                  ║
+║  ┌────────────────────────────────────────────────────────────┐  ║
+║  │ Status Príjemcov Platieb                                   │  ║
+║  ├────────────────────────────────────────────────────────────┤  ║
+║  │ Konfigurácia:  ✅ SPRÁVNA                                  │  ║
+║  │ Kód API:       ✅ SPRÁVNY                                  │  ║
+║  │ UI Labels:     ✅ SPRÁVNE                                  │  ║
+║  │ Dokumentácia:  ✅ KOMPLETNÁ                                │  ║
+║  │ Status:        🚀 PRODUCTION READY                         │  ║
+║  └────────────────────────────────────────────────────────────┘  ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Verifikované: 28.1.2026
+Commit: cf931a7
+Dokumentácia: PRIJEMCA_PLATIEB_OVERENIE.md

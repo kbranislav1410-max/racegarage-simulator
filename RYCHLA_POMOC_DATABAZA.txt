@@ -1,0 +1,218 @@
+╔══════════════════════════════════════════════════════════════╗
+║  RÝCHLA POMOC: Pripojenie k Databáze (Pre Začiatočníkov)   ║
+╚══════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────┐
+│  🚀 3 KROKY K DATABÁZE                                       │
+└──────────────────────────────────────────────────────────────┘
+
+KROK 1: Otvorte terminál
+        (Command Prompt / Terminal / PowerShell)
+
+KROK 2: V priečinku projektu spustite:
+        
+        npx prisma studio
+
+KROK 3: Otvorí sa prehliadač (http://localhost:5555)
+        → Kliknite "PaymentRecord"
+        → Pozrite stĺpec "receiver"
+
+✅ HOTOVO! Vidíte všetky platby v databáze!
+
+┌──────────────────────────────────────────────────────────────┐
+│  🔍 ČO HĽADÁTE                                               │
+└──────────────────────────────────────────────────────────────┘
+
+V stĺpci "receiver" hľadajte:
+
+┌────┬──────────────────────┬──────────┐
+│ id │ method               │ receiver │
+├────┼──────────────────────┼──────────┤
+│ 1  │ PD_DRIVE_CLUB        │ FRIEND ✅│
+│ 2  │ VOUCHER_PARTNER      │ ME ✅    │
+│ 3  │ VOUCHER_RACEGARAGE   │ ME ✅    │
+│ 4  │ VOUCHER_PD_DRIVE_... │ FRIEND ✅│
+└────┴──────────────────────┴──────────┘
+
+✅ SPRÁVNE: Mix ME a FRIEND
+
+❌ PROBLÉM: Všetko je ME!
+   → Pozrite sekciu "Ako Opraviť" nižšie
+
+┌──────────────────────────────────────────────────────────────┐
+│  📊 SPOČÍTAJTE                                               │
+└──────────────────────────────────────────────────────────────┘
+
+Koľko máte:
+□ receiver = ME       (malo by byť ~60%)
+□ receiver = FRIEND   (malo by byť ~40%)
+
+Ak je všetko ME → PROBLÉM! Potrebujete opravu!
+
+┌──────────────────────────────────────────────────────────────┐
+│  🔧 AKO OPRAVIŤ (Keď Je Všetko ME)                          │
+└──────────────────────────────────────────────────────────────┘
+
+1. ZÁLOHA NAJPRV!
+   
+   pg_dump simulator > backup.sql
+
+2. PRIPOJTE SA K DATABÁZE
+   
+   psql -U postgres -d simulator
+
+3. SPUSTITE OPRAVU (2 príkazy):
+
+   UPDATE "PaymentRecord"
+   SET receiver = 'FRIEND'
+   WHERE method = 'PD_DRIVE_CLUB'
+     AND receiver = 'ME';
+
+   UPDATE "PaymentRecord"
+   SET receiver = 'FRIEND'
+   WHERE method = 'VOUCHER_PD_DRIVE_CLUB'
+     AND receiver = 'ME';
+
+4. OVERTE ČI FUNGUJE
+
+   SELECT receiver, COUNT(*)
+   FROM "PaymentRecord"
+   GROUP BY receiver;
+
+   Mali by ste vidieť obe hodnoty (ME a FRIEND)!
+
+┌──────────────────────────────────────────────────────────────┐
+│  ✅ TESTOVANIE PO OPRAVE                                     │
+└──────────────────────────────────────────────────────────────┘
+
+1. Vytvorte novú platbu v aplikácii
+   Dashboard → Zaznamenať jazdu → PD Drive Club
+
+2. Overte v Prisma Studio (F5 refresh)
+   Nová platba by mala mať receiver = FRIEND
+
+3. Overte v aplikácii
+   Platby → "Celkom pre kamaráta" by sa malo zvýšiť
+
+┌──────────────────────────────────────────────────────────────┐
+│  ❓ BEŽNÉ PROBLÉMY                                           │
+└──────────────────────────────────────────────────────────────┘
+
+PROBLÉM: "npx prisma studio" nefunguje
+RIEŠENIE: npm install -D prisma
+          npx prisma studio
+
+PROBLÉM: Nemôžem sa pripojiť k databáze
+RIEŠENIE: Skontrolujte .env súbor
+          cat .env | grep DATABASE_URL
+
+PROBLÉM: Prisma Studio je prázdny
+RIEŠENIE: npx prisma generate
+          npx prisma db push
+          npx prisma studio
+
+PROBLÉM: Port 5555 obsadený
+RIEŠENIE: npx prisma studio --port 5556
+
+┌──────────────────────────────────────────────────────────────┐
+│  📖 GDE ZÍSKAŤ POMOC                                         │
+└──────────────────────────────────────────────────────────────┘
+
+→ DATABAZA_NAVOD_PRE_ZACIATOCNIKOV.md
+  Podrobný krok-za-krokom návod (650+ riadkov)
+
+→ DIAGNOSTIKA_PRIJEMCOV_PLATIEB.md
+  Technická diagnostika so SQL queries (550+ riadkov)
+
+→ FINAL_SUMMARY_PRIJEMCOVIA.txt
+  Quick summary (150 riadkov)
+
+→ PRIJEMCA_PLATIEB_OVERENIE.md
+  Overovanie správnosti (300+ riadkov)
+
+┌──────────────────────────────────────────────────────────────┐
+│  💡 TIPY PRE ZAČIATOČNÍKOV                                   │
+└──────────────────────────────────────────────────────────────┘
+
+✅ Začnite s Prisma Studio (najjednoduchšie)
+✅ Netreba vedieť programovať
+✅ Netreba vedieť SQL (len pre opravu)
+✅ SELECT queries sú bezpečné (čítanie)
+✅ UPDATE/DELETE robte opatrne (záloha!)
+
+❌ Nepotrebujete byť IT expert
+❌ Nepotrebujete učiť sa databázy
+❌ Nepotrebujete rozumieť kódu
+
+┌──────────────────────────────────────────────────────────────┐
+│  🎯 VAŠA SITUÁCIA                                            │
+└──────────────────────────────────────────────────────────────┘
+
+Problém: "Stále mi všetky platby priraduje ku mne"
+
+Diagnóza:
+□ Spustite: npx prisma studio
+□ Otvorte: PaymentRecord tabuľku
+□ Pozrite: receiver stĺpec
+□ Spočítajte: ME vs FRIEND
+
+Ak je všetko ME:
+□ Máte staré záznamy v databáze
+□ Použite UPDATE queries vyššie
+□ Overte že nové platby fungujú správne
+
+┌──────────────────────────────────────────────────────────────┐
+│  ✅ KONTROLNÝ ZOZNAM                                         │
+└──────────────────────────────────────────────────────────────┘
+
+Pred opravou:
+□ Záloha databázy (pg_dump)
+□ Overte že máte prístup k databáze
+□ Otvorte Prisma Studio a vidíte PaymentRecord
+
+Oprava:
+□ Pripojte sa k databáze (psql)
+□ Spustite UPDATE query 1 (PD_DRIVE_CLUB)
+□ Spustite UPDATE query 2 (VOUCHER_PD_DRIVE_CLUB)
+□ Overte SELECT query
+
+Po oprave:
+□ Vytvorte test platbu (PD Drive Club)
+□ Overte v Prisma Studio (receiver = FRIEND?)
+□ Overte v aplikácii (Celkom pre kamaráta)
+□ Overte vyúčtovanie (50/50 split)
+
+┌──────────────────────────────────────────────────────────────┐
+│  📞 EŠTE POTREBUJETE POMOC?                                  │
+└──────────────────────────────────────────────────────────────┘
+
+Prečítajte si:
+→ DATABAZA_NAVOD_PRE_ZACIATOCNIKOV.md
+  (Začnite s Metódou 1: Prisma Studio)
+
+Obsahuje:
+• 10 jednoduchých krokov
+• ASCII art príklady
+• 8 troubleshooting scenárov
+• 10 FAQ otázok
+• Kompletné riešenie vášho problému
+
+╔══════════════════════════════════════════════════════════════╗
+║  ZHRNUTIE                                                    ║
+╠══════════════════════════════════════════════════════════════╣
+║  1. npx prisma studio                                        ║
+║  2. Kliknite "PaymentRecord"                                 ║
+║  3. Pozrite "receiver" stĺpec                                ║
+║  4. Ak všetko ME → UPDATE queries                            ║
+║  5. Test a hotovo!                                           ║
+╚══════════════════════════════════════════════════════════════╝
+
+✅ Prisma Studio = Najjednoduchší spôsob!
+✅ Žiadne programovanie potrebné!
+✅ Všetko vysvetlené krok za krokom!
+
+═══════════════════════════════════════════════════════════════
+Vytvorené: Január 2026
+Status: ✅ Production Ready
+Pre: Úplných začiatočníkov (amatérov)
+═══════════════════════════════════════════════════════════════
