@@ -1153,13 +1153,6 @@ export default function DashboardPage() {
               {/* Step 2: Search Customer */}
               {recordStep === "search" && (
                 <div className="space-y-4">
-                  <button
-                    onClick={() => setRecordStep("choice")}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                  >
-                    ← Späť na výber
-                  </button>
-                  
                   <div>
                     <label className="block text-sm font-medium text-white mb-2">
                       Vyhľadať zákazníka
@@ -1211,14 +1204,6 @@ export default function DashboardPage() {
               {/* Step 3: Create Customer */}
               {recordStep === "create-customer" && (
                 <form onSubmit={handleCreateCustomer} className="space-y-4">
-                  <button
-                    type="button"
-                    onClick={() => setRecordStep("choice")}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                  >
-                    ← Späť na výber
-                  </button>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-white mb-2">
