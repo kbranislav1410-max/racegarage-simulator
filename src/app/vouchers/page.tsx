@@ -268,7 +268,7 @@ export default function VouchersPage() {
                   type="text"
                   value={checkCode}
                   onChange={(e) => setCheckCode(e.target.value.toUpperCase())}
-                  className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent font-mono text-white"
+                  className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent font-mono text-white"
                   style={{ backgroundColor: "#1f1f1f" }}
                   placeholder="Zadajte kód voucheru (napr. XXXX-XXXX-XXXX)"
                   required
