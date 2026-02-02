@@ -292,7 +292,7 @@ export default function VouchersPage() {
             )}
 
             {checkedVoucher && (
-              <div className="p-6 border border-slate-700 rounded-lg space-y-4" style={{ backgroundColor: "#1f1f1f" }}>
+              <div className="p-6 rounded-lg space-y-4" style={{ backgroundColor: "#1f1f1f" }}>
                 <div className="flex justify-between items-start">
                   <h3 className="text-lg font-bold text-white">
                     Informácie o vouchere
