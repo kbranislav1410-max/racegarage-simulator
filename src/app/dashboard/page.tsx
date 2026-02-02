@@ -154,6 +154,7 @@ export default function DashboardPage() {
   // Record Ride Modal State
   const [showRecordModal, setShowRecordModal] = useState(false);
   const [recordStep, setRecordStep] = useState<"choice" | "search" | "create-customer" | "record-ride">("choice");
+  const [isRecordingRide, setIsRecordingRide] = useState(false); // Track if we're in ride recording flow
   
   // Customer Search/Selection
   const [searchQuery, setSearchQuery] = useState("");
@@ -315,6 +316,7 @@ export default function DashboardPage() {
   const handleOpenRecordModal = () => {
     setShowRecordModal(true);
     setRecordStep("choice");
+    setIsRecordingRide(true); // We're in ride recording flow
     setSelectedCustomer(null);
     setSearchQuery("");
     setSearchResults([]);
@@ -344,6 +346,7 @@ export default function DashboardPage() {
   const handleCloseRecordModal = () => {
     setShowRecordModal(false);
     setRecordStep("choice");
+    setIsRecordingRide(false); // Reset the flag
     setSelectedCustomer(null);
   };
 
@@ -351,6 +354,7 @@ export default function DashboardPage() {
   const handleNewCustomer = () => {
     setShowRecordModal(true);
     setRecordStep("create-customer");
+    setIsRecordingRide(false); // We're NOT in ride recording flow, just creating a customer
     setCustomerFormData({
       email: "",
       firstName: "",
@@ -418,8 +422,18 @@ export default function DashboardPage() {
       }
 
       const createdCustomer = await response.json();
-      setSelectedCustomer(createdCustomer);
-      setRecordStep("record-ride");
+      
+      // Check if we're in ride recording flow or standalone customer creation
+      if (isRecordingRide) {
+        // Continue to ride recording
+        setSelectedCustomer(createdCustomer);
+        setRecordStep("record-ride");
+      } else {
+        // Close modal and return to dashboard
+        handleCloseRecordModal();
+        // Optionally show success message
+        // You could add a toast notification here if you have one
+      }
     } catch (error) {
       console.error("Failed to create customer:", error);
       alert("Nepodarilo sa vytvoriť zákazníka");
