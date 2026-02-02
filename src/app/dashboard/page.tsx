@@ -390,8 +390,9 @@ export default function DashboardPage() {
   };
 
   const handleSelectCustomer = (customer: Customer) => {
-    // Show customer detail modal
-    handleViewCustomer(customer.id);
+    // Set selected customer and move to record ride step
+    setSelectedCustomer(customer);
+    setRecordStep("record-ride");
   };
 
   const handleCreateCustomer = async (e: React.FormEvent) => {
@@ -1349,172 +1350,203 @@ export default function DashboardPage() {
               {/* Step 4: Record Ride */}
               {recordStep === "record-ride" && selectedCustomer && (
                 <form onSubmit={handleRecordRide} className="space-y-4">
-                  <div className="bg-blue-50 p-4 rounded-md mb-4">
-                    <p className="text-sm text-slate-300">Zákazník:</p>
+                  {/* Selected Customer */}
+                  <div className="rounded-lg p-4 mb-4" style={{ backgroundColor: "#1f1f1f" }}>
+                    <p className="text-sm text-slate-300 mb-1">Zákazník</p>
                     <p className="font-medium text-white">
                       {selectedCustomer.firstName} {selectedCustomer.lastName}
                     </p>
                     <p className="text-sm text-slate-300">{selectedCustomer.email}</p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-1">
-                        Dátum *
-                      </label>
-                      <input
-                        type="date"
-                        value={rideFormData.date}
-                        onChange={(e) => setRideFormData({ ...rideFormData, date: e.target.value })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-1">
-                        Čas jazdy *
-                      </label>
-                      <input
-                        type="time"
-                        value={rideFormData.time}
-                        onChange={(e) => setRideFormData({ ...rideFormData, time: e.target.value })}
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Suma zaplatená (€)
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={rideFormData.amount}
-                      onChange={(e) => setRideFormData({ ...rideFormData, amount: e.target.value })}
-                      placeholder="0.00"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Metóda platby
-                    </label>
-                    <select
-                      value={rideFormData.paymentMethod}
-                      onChange={(e) => setRideFormData({ 
-                        ...rideFormData, 
-                        paymentMethod: e.target.value as any,
-                        partner: "", // Reset partner when payment method changes
-                        voucherCode: "", // Reset voucher code when payment method changes
-                      })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    >
-                      <option value="PD_DRIVE_CLUB">PD Drive Club</option>
-                      <option value="VOUCHER_PARTNER">Poukaz - Partner</option>
-                      <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage</option>
-                      <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive club</option>
-                    </select>
-                  </div>
-
-                  {rideFormData.paymentMethod === "VOUCHER_PARTNER" && (
-                    <>
-                      <div>
-                        <label className="block text-sm font-medium text-white mb-1">
-                          Partner *
-                        </label>
-                        <select
-                          value={rideFormData.partner}
-                          onChange={(e) => setRideFormData({ ...rideFormData, partner: e.target.value as any })}
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                          required
-                        >
-                          <option value="">Vyberte partnera</option>
-                          <option value="ZLAVOMAT">Zľavomat</option>
-                          <option value="ADROP">Adrop</option>
-                          <option value="NAJZAZITKY">Najzážitky</option>
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-white mb-1">
-                          Číslo poukazu *
-                        </label>
-                        <input
-                          type="text"
-                          value={rideFormData.voucherCode}
-                          onChange={(e) => setRideFormData({ ...rideFormData, voucherCode: e.target.value })}
-                          placeholder="Zadajte číslo poukazu"
-                          className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                          required
-                        />
-                      </div>
-                    </>
-                  )}
-
-                  {(rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && (
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-1">
-                        Číslo poukazu
-                      </label>
-                      <input
-                        type="text"
-                        value={rideFormData.voucherCode}
-                        onChange={(e) => setRideFormData({ ...rideFormData, voucherCode: e.target.value })}
-                        placeholder="Zadajte číslo poukazu"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Minúty *
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={rideFormData.minutes}
-                      onChange={(e) => setRideFormData({ ...rideFormData, minutes: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Poznámka
-                    </label>
-                    <textarea
-                      value={rideFormData.notes}
-                      onChange={(e) => setRideFormData({ ...rideFormData, notes: e.target.value })}
-                      rows={3}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-md"
-                    />
-                  </div>
-
-                  <div className="flex gap-2 pt-4">
                     <button
                       type="button"
                       onClick={() => {
                         setSelectedCustomer(null);
                         setRecordStep("choice");
                       }}
-                      className="px-4 py-2 border border-slate-300 text-white rounded-md hover:bg-slate-50"
+                      className="text-sm text-slate-300 hover:text-white mt-2"
                     >
-                      Zrušiť
+                      Zmeniť zákazníka
                     </button>
+                  </div>
+
+                  {rideFormErrors.general && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                      {rideFormErrors.general}
+                    </div>
+                  )}
+
+                  {/* Date and Time in separate fields */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Dátum *
+                      </label>
+                      <input
+                        type="date"
+                        value={rideFormData.date}
+                        onChange={(e) => setRideFormData({ ...rideFormData, date: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-white mb-2">
+                        Čas jazdy *
+                      </label>
+                      <input
+                        type="time"
+                        value={rideFormData.time}
+                        onChange={(e) => setRideFormData({ ...rideFormData, time: e.target.value })}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Payment Section */}
+                  <div className="border-t border-slate-700 pt-4 mt-4">
+                    <h3 className="text-sm font-medium text-white mb-4">Platba</h3>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-white mb-2">
+                          Suma (€)
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={rideFormData.amount}
+                          onChange={(e) => setRideFormData({ ...rideFormData, amount: e.target.value })}
+                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                          placeholder="0.00"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-white mb-2">
+                          Metóda platby
+                        </label>
+                        <select
+                          value={rideFormData.paymentMethod}
+                          onChange={(e) => setRideFormData({ 
+                            ...rideFormData, 
+                            paymentMethod: e.target.value as any,
+                            partner: "", // Reset partner when payment method changes
+                            voucherCode: "", // Reset voucher code when payment method changes
+                          })}
+                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        >
+                          <option value="PD_DRIVE_CLUB">PD Drive Club</option>
+                          <option value="VOUCHER_PARTNER">Poukaz - Partner</option>
+                          <option value="VOUCHER_RACEGARAGE">Poukaz - Racegarage</option>
+                          <option value="VOUCHER_PD_DRIVE_CLUB">Poukaz - PD Drive club</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Partner selection - shown only for VOUCHER_PARTNER */}
+                    {rideFormData.paymentMethod === "VOUCHER_PARTNER" && (
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-white mb-2">
+                          Partner *
+                        </label>
+                        <select
+                          value={rideFormData.partner}
+                          onChange={(e) => setRideFormData({ ...rideFormData, partner: e.target.value as any })}
+                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                          required
+                        >
+                          <option value="">Vyberte partnera...</option>
+                          <option value="ZLAVOMAT">Zľavomat</option>
+                          <option value="ADROP">Adrop</option>
+                          <option value="NAJZAZITKY">Najzážitky</option>
+                        </select>
+                      </div>
+                    )}
+
+                    {/* Voucher Code - shown for voucher payment methods */}
+                    {(rideFormData.paymentMethod === "VOUCHER_PARTNER" || 
+                      rideFormData.paymentMethod === "VOUCHER_RACEGARAGE" || 
+                      rideFormData.paymentMethod === "VOUCHER_PD_DRIVE_CLUB") && (
+                      <div className="mt-4">
+                        <label className="block text-sm font-medium text-white mb-2">
+                          Číslo poukazu {rideFormData.paymentMethod === "VOUCHER_PARTNER" ? "*" : ""}
+                        </label>
+                        <input
+                          type="text"
+                          value={rideFormData.voucherCode}
+                          onChange={(e) => setRideFormData({ ...rideFormData, voucherCode: e.target.value })}
+                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                          placeholder="Zadajte číslo poukazu"
+                          required={rideFormData.paymentMethod === "VOUCHER_PARTNER"}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Minutes */}
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Minúty *
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={rideFormData.minutes}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value);
+                        if (!isNaN(value) && value > 0) {
+                          setRideFormData({ ...rideFormData, minutes: value });
+                        }
+                      }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      required
+                    />
+                  </div>
+
+                  {/* Notes */}
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">
+                      Poznámka
+                    </label>
+                    <textarea
+                      value={rideFormData.notes}
+                      onChange={(e) => setRideFormData({ ...rideFormData, notes: e.target.value })}
+                      rows={3}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      placeholder="Voliteľná poznámka k jazde..."
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={rideFormSubmitting}
-                      className="flex-1  text-white px-4 py-2 rounded-md font-medium disabled:opacity-50 hover:brightness-90"
+                      className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ backgroundColor: "#c20003" }}
                     >
                       {rideFormSubmitting ? "Zaznamenávam..." : "Zaznamenať jazdu"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedCustomer(null);
+                        setRecordStep("choice");
+                      }}
+                      className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                    >
+                      Zrušiť
                     </button>
                   </div>
                 </form>
