@@ -22,6 +22,25 @@ interface Voucher {
   } | null;
 }
 
+// Helper function to compute actual voucher status considering expiration
+function getActualVoucherStatus(voucher: Voucher): string {
+  // If voucher is already redeemed or cancelled, return that status
+  if (voucher.status === "REDEEMED" || voucher.status === "CANCELLED") {
+    return voucher.status;
+  }
+  
+  // Check if voucher is expired based on expiration date
+  const now = new Date();
+  const expires = new Date(voucher.expiresAt);
+  
+  if (expires < now) {
+    return "EXPIRED";
+  }
+  
+  // Otherwise, it's active
+  return voucher.status;
+}
+
 export default function VouchersPage() {
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [loading, setLoading] = useState(true);
@@ -291,7 +310,9 @@ export default function VouchersPage() {
               </div>
             )}
 
-            {checkedVoucher && (
+            {checkedVoucher && (() => {
+              const actualStatus = getActualVoucherStatus(checkedVoucher);
+              return (
               <div className="p-6 rounded-lg space-y-4" style={{ backgroundColor: "#1f1f1f" }}>
                 <div className="flex justify-between items-start">
                   <h3 className="text-lg font-bold text-white">
@@ -299,20 +320,20 @@ export default function VouchersPage() {
                   </h3>
                   <span
                     className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      checkedVoucher.status === "REDEEMED"
+                      actualStatus === "REDEEMED"
                         ? "bg-gray-200 text-gray-800"
-                        : checkedVoucher.status === "EXPIRED"
+                        : actualStatus === "EXPIRED"
                         ? "bg-red-200 text-red-800"
-                        : checkedVoucher.status === "CANCELLED"
+                        : actualStatus === "CANCELLED"
                         ? "bg-yellow-200 text-yellow-800"
                         : "bg-green-200 text-green-800"
                     }`}
                   >
-                    {checkedVoucher.status === "REDEEMED"
+                    {actualStatus === "REDEEMED"
                       ? "POUŽITÝ"
-                      : checkedVoucher.status === "EXPIRED"
+                      : actualStatus === "EXPIRED"
                       ? "EXPIROVANÝ"
-                      : checkedVoucher.status === "CANCELLED"
+                      : actualStatus === "CANCELLED"
                       ? "ZRUŠENÝ"
                       : "AKTÍVNY"}
                   </span>
@@ -371,7 +392,7 @@ export default function VouchersPage() {
                         }
                       )}
                     </p>
-                    {checkedVoucher.status !== "REDEEMED" && checkedVoucher.status !== "CANCELLED" && (
+                    {actualStatus !== "REDEEMED" && actualStatus !== "CANCELLED" && (
                       <p className="text-sm text-slate-300 mt-1">
                         {(() => {
                           const now = new Date();
@@ -396,7 +417,7 @@ export default function VouchersPage() {
                     )}
                   </div>
 
-                  {checkedVoucher.status === "REDEEMED" && checkedVoucher.redeemedAt && (
+                  {actualStatus === "REDEEMED" && checkedVoucher.redeemedAt && (
                     <>
                       <div>
                         <p className="text-sm text-slate-300 mb-1">
@@ -436,18 +457,19 @@ export default function VouchersPage() {
                   <div className="md:col-span-2">
                     <p className="text-sm text-slate-300 mb-1">Stav</p>
                     <p className="font-semibold text-white">
-                      {checkedVoucher.status === "REDEEMED"
+                      {actualStatus === "REDEEMED"
                         ? "✓ Voucher bol už použitý"
-                        : checkedVoucher.status === "EXPIRED"
+                        : actualStatus === "EXPIRED"
                         ? "✗ Voucher expiroval"
-                        : checkedVoucher.status === "CANCELLED"
+                        : actualStatus === "CANCELLED"
                         ? "✗ Voucher bol zrušený"
                         : "✓ Voucher je platný a môže byť použitý"}
                     </p>
                   </div>
                 </div>
               </div>
-            )}
+              );
+            })()}
           </form>
         </div>
 
