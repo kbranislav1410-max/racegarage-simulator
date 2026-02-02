@@ -1125,7 +1125,8 @@ export default function DashboardPage() {
                   <div className="grid grid-cols-1 gap-4">
                     <button
                       onClick={() => setRecordStep("search")}
-                      className="border-2 border-blue-600 hover:bg-blue-50 text-blue-600 px-6 py-4 rounded-md font-medium text-left flex items-center gap-3"
+                      style={{ backgroundColor: "#1a3a52" }}
+                      className="hover:brightness-90 text-white px-6 py-4 rounded-md font-medium text-left flex items-center gap-3"
                     >
                       <Search size={24} />
                       <div>
@@ -1135,7 +1136,8 @@ export default function DashboardPage() {
                     </button>
                     <button
                       onClick={() => setRecordStep("create-customer")}
-                      className="border-2 border-green-600 hover:bg-green-50 text-green-600 px-6 py-4 rounded-md font-medium text-left flex items-center gap-3"
+                      style={{ backgroundColor: "#1a4d2e" }}
+                      className="hover:brightness-90 text-white px-6 py-4 rounded-md font-medium text-left flex items-center gap-3"
                     >
                       <Plus size={24} />
                       <div>
