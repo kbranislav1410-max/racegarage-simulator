@@ -577,7 +577,7 @@ export default function VouchersPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, creator: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                    className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                     style={{ backgroundColor: "#1f1f1f" }}
                   >
                     <option value="RACEGARAGE">Racegarage</option>
@@ -595,7 +595,7 @@ export default function VouchersPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, minutes: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                    className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                     style={{ backgroundColor: "#1f1f1f" }}
                   >
                     <option value="">Vyberte minúty</option>
@@ -619,7 +619,7 @@ export default function VouchersPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, soldToEmail: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                    className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                     style={{ backgroundColor: "#1f1f1f" }}
                     placeholder="email@priklad.sk"
                   />
@@ -636,7 +636,7 @@ export default function VouchersPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, soldToName: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+                    className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
                     style={{ backgroundColor: "#1f1f1f" }}
                     placeholder="Meno Priezvisko"
                   />
