@@ -86,7 +86,7 @@ export default function SettingsPage() {
       }
     } catch (error) {
       console.error("Failed to load settings:", error);
-      setMessage({ type: "error", text: "Failed to load settings" });
+      setMessage({ type: "error", text: "Nepodarilo sa načítať nastavenia" });
     } finally {
       setLoading(false);
     }
@@ -112,16 +112,16 @@ export default function SettingsPage() {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Failed to save settings");
+        throw new Error(error.error || "Nepodarilo sa uložiť nastavenia");
       }
 
-      setMessage({ type: "success", text: "Settings saved successfully" });
+      setMessage({ type: "success", text: "Nastavenia boli úspešne uložené" });
       setTimeout(() => setMessage(null), 3000);
     } catch (error) {
       console.error("Failed to save settings:", error);
       setMessage({
         type: "error",
-        text: error instanceof Error ? error.message : "Failed to save settings",
+        text: error instanceof Error ? error.message : "Nepodarilo sa uložiť nastavenia",
       });
     } finally {
       setSaving(false);
@@ -137,7 +137,7 @@ export default function SettingsPage() {
       setNewsletterSubscribers(data.subscribers);
     } catch (error) {
       console.error("Failed to load newsletter subscribers:", error);
-      setMessage({ type: "error", text: "Failed to load newsletter subscribers" });
+      setMessage({ type: "error", text: "Nepodarilo sa načítať odberateľov newslettera" });
     } finally {
       setLoadingSubscribers(false);
     }
@@ -156,7 +156,7 @@ export default function SettingsPage() {
     return (
       <ProtectedLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-slate-300">Loading settings...</div>
+          <div className="text-slate-300">Načítavam nastavenia...</div>
         </div>
       </ProtectedLayout>
     );
@@ -166,9 +166,9 @@ export default function SettingsPage() {
     <ProtectedLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-white">Settings</h1>
+          <h1 className="text-3xl font-bold text-white">Nastavenia</h1>
           <p className="text-slate-300 mt-2">
-            Configure business settings and preferences
+            Konfigurácia obchodných nastavení a preferencií
           </p>
         </div>
 
@@ -188,7 +188,7 @@ export default function SettingsPage() {
         <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 mb-4">
             <Calendar className="w-5 h-5 text-white" />
-            <h2 className="text-xl font-bold text-white">Working Hours</h2>
+            <h2 className="text-xl font-bold text-white">Pracovné hodiny</h2>
           </div>
           <div className="space-y-3">
             {DAYS.map((day) => (
@@ -258,12 +258,12 @@ export default function SettingsPage() {
             <div className="flex items-center gap-2 mb-4">
               <Clock className="w-5 h-5 text-white" />
               <h2 className="text-xl font-bold text-white">
-                Slot Duration Options
+                Možnosti trvania slotov
               </h2>
             </div>
             <div className="space-y-3">
               <p className="text-sm text-slate-300">
-                Available duration options (minutes)
+                Dostupné možnosti trvania (minúty)
               </p>
               <div className="flex flex-wrap gap-2">
                 {[15, 30, 45, 60, 90, 120].map((duration) => (
@@ -295,7 +295,7 @@ export default function SettingsPage() {
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-5 h-5 text-white" />
               <h2 className="text-xl font-bold text-white">
-                Default Currency
+                Predvolená mena
               </h2>
             </div>
             <div>
@@ -316,14 +316,14 @@ export default function SettingsPage() {
         {/* Payment Rules */}
         <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <h2 className="text-xl font-bold text-white mb-4">
-            Payment Rules
+            Pravidlá platieb
           </h2>
           <div>
             <label className="block text-sm font-medium text-white mb-2">
-              Card Payment Receiver
+              Príjemca platby kartou
             </label>
             <p className="text-sm text-slate-300 mb-3">
-              Choose who receives card payments by default
+              Vyberte, kto má predvolene prijímať platby kartou
             </p>
             <div className="flex gap-4">
               <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
@@ -334,7 +334,7 @@ export default function SettingsPage() {
                   onChange={() => setCardPaymentReceiver("FRIEND")}
                   className="text-slate-800"
                 />
-                <span className="font-medium text-white">Friend</span>
+                <span className="font-medium text-white">Priateľ</span>
               </label>
               <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
                 <input
@@ -344,7 +344,7 @@ export default function SettingsPage() {
                   onChange={() => setCardPaymentReceiver("ME")}
                   className="text-slate-800"
                 />
-                <span className="font-medium text-white">Me</span>
+                <span className="font-medium text-white">Ja</span>
               </label>
             </div>
           </div>
@@ -354,12 +354,12 @@ export default function SettingsPage() {
         <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 mb-4">
             <Mail className="w-5 h-5 text-white" />
-            <h2 className="text-xl font-bold text-white">Email Settings</h2>
+            <h2 className="text-xl font-bold text-white">Nastavenia emailu</h2>
           </div>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-white mb-2">
-                Sender Name
+                Meno odosielateľa
               </label>
               <input
                 type="text"
@@ -372,7 +372,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-white mb-2">
-                From Email Address
+                Emailová adresa odosielateľa
               </label>
               <input
                 type="email"
@@ -414,7 +414,7 @@ export default function SettingsPage() {
             className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: "#c20003" }}
           >
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? "Ukladám..." : "Uložiť zmeny"}
           </button>
         </div>
       </div>
