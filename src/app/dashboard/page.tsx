@@ -370,6 +370,7 @@ export default function DashboardPage() {
   const handleSearchCustomer = () => {
     setShowRecordModal(true);
     setRecordStep("search");
+    setIsRecordingRide(false); // We're NOT in ride recording flow, just searching for customer
     setSearchQuery("");
     setSearchResults([]);
   };
@@ -394,9 +395,15 @@ export default function DashboardPage() {
   };
 
   const handleSelectCustomer = (customer: Customer) => {
-    // Set selected customer and move to record ride step
-    setSelectedCustomer(customer);
-    setRecordStep("record-ride");
+    // Check if we're in ride recording flow or standalone customer search
+    if (isRecordingRide) {
+      // In ride recording flow: set selected customer and move to record ride step
+      setSelectedCustomer(customer);
+      setRecordStep("record-ride");
+    } else {
+      // In standalone search flow: show customer detail
+      handleViewCustomer(customer.id);
+    }
   };
 
   const handleCreateCustomer = async (e: React.FormEvent) => {
