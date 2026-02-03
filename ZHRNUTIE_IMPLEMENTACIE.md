@@ -273,3 +273,29 @@ Systém používateľských rolí je plne implementovaný a funkčný. Všetky p
 - ✅ Používateľ nemôže mazať a nevidí finančné ukazovatele
 - ✅ Všetky súbory a priečinky sú ako v referenčnej vetve
 - ✅ Návod na spustenie v slovenčine
+
+## Riešenie Problémov s Prihlásením
+
+Ak prihlásenie nefunguje alebo je tabuľka users prázdna:
+
+### Rýchle Riešenie
+1. Overte existenciu `.env` súboru
+2. Spustite: `npm run check-setup` - tento skript diagnostikuje problémy
+3. Ak je users tabuľka prázdna: `npm run db:seed`
+4. Reštartujte aplikáciu
+
+### Dokumentácia k Problémom
+- **[RYCHLE_RIESENIE.md](./RYCHLE_RIESENIE.md)** - Rýchle 5-krokové riešenie
+- **[RIESENIE_PRIHLASENIA.md](./RIESENIE_PRIHLASENIA.md)** - Podrobný troubleshooting návod
+- **[INSTALACIA.md](./INSTALACIA.md)** - Kompletný inštalačný návod
+
+### Diagnostický Nástroj
+```bash
+npm run check-setup
+```
+Tento príkaz skontroluje:
+- Existenciu .env súboru
+- Pripojenie k databáze
+- Existenciu tabuliek
+- Počet a správnosť používateľov
+- Správne hashovanie hesiel
