@@ -41,7 +41,7 @@ export default function LoginPage() {
           <img 
             src="/logo.png" 
             alt="Racegarage Logo" 
-            className="max-w-[200px] h-auto mx-auto mb-2"
+            className="max-w-[280px] h-auto mx-auto mb-2"
           />
           <p className="text-slate-300 mt-2">Simulator Management System</p>
         </div>

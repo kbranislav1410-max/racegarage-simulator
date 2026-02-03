@@ -42,7 +42,7 @@ export function Sidebar() {
         <img 
           src="/logo.png" 
           alt="Racegarage Logo" 
-          className="max-w-[150px] h-auto mb-1"
+          className="max-w-[200px] h-auto mb-1"
         />
         <p className="text-sm text-slate-400">Simulator</p>
       </div>
