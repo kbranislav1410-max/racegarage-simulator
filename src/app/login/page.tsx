@@ -25,22 +25,35 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div 
+      className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"
+      style={{ 
+        backgroundColor: '#1a1a1a',
+        backgroundImage: 'url(/login-bg.jpg)',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
+      <div 
+        className="p-8 rounded-2xl shadow-2xl w-full max-w-md"
+        style={{ backgroundColor: '#292929' }}
+      >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-800">Racegarage</h1>
-          <p className="text-slate-600 mt-2">Simulator Management System</p>
+          <h1 className="text-3xl font-bold text-white">Racegarage</h1>
+          <p className="text-slate-300 mt-2">Simulator Management System</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            <div 
+              className="px-4 py-3 rounded-lg text-sm text-white"
+              style={{ backgroundColor: '#1a1a1a' }}
+            >
               {error}
             </div>
           )}
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-slate-700 mb-2"
+              className="block text-sm font-medium text-white mb-2"
             >
               Email
             </label>
@@ -49,8 +62,9 @@ export default function LoginPage() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-              placeholder="Enter your email"
+              className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-white"
+              style={{ backgroundColor: '#1a1a1a', border: 'none' }}
+              placeholder="Zadajte email"
               required
               disabled={isLoading}
             />
@@ -58,17 +72,18 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-slate-700 mb-2"
+              className="block text-sm font-medium text-white mb-2"
             >
-              Password
+              Heslo
             </label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent"
-              placeholder="Enter your password"
+              className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-white"
+              style={{ backgroundColor: '#1a1a1a', border: 'none' }}
+              placeholder="Zadajte heslo"
               required
               disabled={isLoading}
             />
@@ -76,13 +91,14 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-slate-800 text-white py-2 px-4 rounded-lg hover:brightness-90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full text-white py-3 px-4 rounded-lg hover:brightness-110 transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#c20003' }}
           >
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? "Prihlasovanie..." : "Prihlásiť sa"}
           </button>
         </form>
-        <p className="text-center text-sm text-slate-500 mt-6">
-          For staff members only
+        <p className="text-center text-sm text-slate-400 mt-6">
+          Len pre zamestnancov
         </p>
       </div>
     </div>
