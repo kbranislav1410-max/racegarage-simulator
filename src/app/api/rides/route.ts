@@ -107,8 +107,9 @@ export async function POST(request: NextRequest) {
     }
 
     // If voucher code was provided, validate it BEFORE creating the ride
+    // NOTE: Skip validation for VOUCHER_PARTNER as those are external vouchers
     let voucherToRedeem: { id: string; code: string } | null = null;
-    if (data.voucherCode) {
+    if (data.voucherCode && data.paymentMethod !== "VOUCHER_PARTNER") {
       const voucher = await prisma.voucher.findUnique({
         where: { code: data.voucherCode.toUpperCase() },
       });
