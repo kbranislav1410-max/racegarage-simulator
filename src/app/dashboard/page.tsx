@@ -1217,7 +1217,16 @@ export default function DashboardPage() {
                   )}
 
                   {!searchLoading && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
-                    <p className="text-slate-300 text-center py-4">Žiadni zákazníci nenájdení</p>
+                    <div className="text-center py-8">
+                      <p className="text-slate-300 mb-4">Žiadni zákazníci nenájdení</p>
+                      <button
+                        onClick={() => setRecordStep("create-customer")}
+                        className="px-4 py-2 text-white rounded-lg transition-colors"
+                        style={{ backgroundColor: "#c20003" }}
+                      >
+                        Vytvoriť nového zákazníka
+                      </button>
+                    </div>
                   )}
                 </div>
               )}
