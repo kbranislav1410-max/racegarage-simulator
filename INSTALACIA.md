@@ -195,6 +195,61 @@ Regenerujte Prisma Client:
 npm run db:generate
 ```
 
+### Prihlásenie nefunguje / Tabuľka users je prázdna
+
+Toto je najčastejší problém! Riešenie:
+
+1. **Najprv skontrolujte, či máte `.env` súbor:**
+   ```bash
+   ls -la .env
+   ```
+   Ak neexistuje, vytvorte ho:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Overte, že `.env` obsahuje DATABASE_URL:**
+   ```bash
+   cat .env
+   ```
+   Mal by obsahovať niečo ako:
+   ```
+   DATABASE_URL="postgresql://postgres:heslo@localhost:5432/racegarage_simulator"
+   ```
+
+3. **Spustite diagnostický skript:**
+   ```bash
+   npm run check-setup
+   ```
+   Tento skript skontroluje všetko a povie vám presne, čo treba opraviť.
+
+4. **Ak tabuľka users je prázdna, spustite seed:**
+   ```bash
+   npm run db:seed
+   ```
+   Mali by ste vidieť:
+   ```
+   ✅ Created SUPER_ADMIN user: superadmin@local.test
+   ✅ Created ADMIN user: admin@local.test
+   ✅ Created USER: user@local.test
+   ```
+
+5. **Reštartujte aplikáciu:**
+   ```bash
+   # Zastavte aplikáciu (Ctrl+C)
+   npm run dev
+   ```
+
+6. **Vyčistite cache prehliadača:**
+   - Otvorte DevTools (F12)
+   - Prejdite na Application → Local Storage
+   - Vymažte všetky položky pre localhost:3000
+   - Obnovte stránku (F5)
+
+**Dôležité:** Ak ste pridali používateľa manuálne cez Prisma Studio, nebude fungovať! Heslá musia byť hashované pomocou bcrypt. Vymažte manuálne vytvorených používateľov a spustite `npm run db:seed`.
+
+Viac informácií: [RIESENIE_PRIHLASENIA.md](./RIESENIE_PRIHLASENIA.md)
+
 ## Podpora
 
 Pre otázky a problémy vytvorte issue v GitHub repozitári.

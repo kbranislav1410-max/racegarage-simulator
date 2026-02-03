@@ -262,6 +262,19 @@ You typically **don't need** to run `npm install` or `db:push` again unless you'
   npx prisma db push --force-reset
   ```
 
+**Problem: Login not working / Users table is empty**
+- **Solution**: This is the most common issue! Follow these steps:
+  1. Check if `.env` file exists: `ls -la .env`
+  2. If missing, create it: `cp .env.example .env`
+  3. Verify DATABASE_URL is set in `.env`
+  4. Run diagnostic script: `npm run check-setup`
+  5. Create users: `npm run db:seed`
+  6. Restart the app and clear browser cache
+  
+  **Important**: Manually added users won't work - passwords must be bcrypt hashed! Always use `npm run db:seed`.
+  
+  See [RIESENIE_PRIHLASENIA.md](./RIESENIE_PRIHLASENIA.md) for detailed troubleshooting.
+
 **Problem: Customer creation shows "An error occurred"**
 - **Solution**: This was a bug in audit logging. Pull the latest code:
   ```bash
