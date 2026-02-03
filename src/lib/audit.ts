@@ -18,9 +18,18 @@ async function getSystemUserId(): Promise<string | null> {
   }
 
   try {
+    // Find any user to use for system audit logs - preferably SUPER_ADMIN, then ADMIN
     const systemUser = await prisma.user.findFirst({
-      where: { role: "ADMIN" },
+      where: {
+        role: {
+          in: ["SUPER_ADMIN", "ADMIN"]
+        }
+      },
       select: { id: true },
+      orderBy: {
+        // Prefer SUPER_ADMIN for audit logging
+        role: "asc"
+      }
     });
 
     userCheckAttempted = true;

@@ -9,8 +9,22 @@ A Next.js 14+ racing simulator management system with PostgreSQL and Prisma.
 - 🏆 Monthly challenges and leaderboards
 - 💰 Payment tracking with 50/50 financial split
 - 🎟️ Voucher creation and redemption
-- 👥 Staff authentication (ADMIN/STAFF roles) - **Currently disabled for easy testing**
+- 👥 **User roles system**: SUPER_ADMIN, ADMIN, and USER with role-based permissions
 - 📊 Audit logging
+
+## User Roles
+
+The application supports three distinct user roles with different permissions:
+
+- **SUPER_ADMIN** - Full access to all features including delete operations
+- **ADMIN** - Access to all features but cannot delete entities
+- **USER** - Basic access, cannot delete entities, cannot view financial indicators
+
+> **Security Note**: The current authentication implementation uses client-side storage and is suitable for development/local use. For production deployment, implement:
+> - JWT-based authentication with secure tokens
+> - Server-side session validation
+> - HttpOnly cookies for session management
+> - Rate limiting and CSRF protection
 
 ## Tech Stack
 
@@ -99,7 +113,7 @@ Before you begin, make sure you have the following installed:
    ```bash
    git clone https://github.com/kbranislav1410-max/racegarage-simulator.git
    cd racegarage-simulator
-   git checkout copilot/setup-nextjs-simulator-project
+   git checkout copilot/add-user-roles-superadmin-admin-user
    ```
 
 #### 4. Install Project Dependencies
@@ -171,13 +185,15 @@ You should see:
 
 1. Open your web browser (Chrome, Firefox, Edge, Safari)
 2. Go to [http://localhost:3000](http://localhost:3000)
-3. **The dashboard will load immediately** - no login required!
-4. You now have full access to all features:
-   - Create customers
-   - Record rides
-   - Generate vouchers
-   - View statistics
-   - And more!
+3. **You will be redirected to the login page**
+4. Use one of the test accounts:
+   - Super Admin: `superadmin@local.test` / `superadmin123!`
+   - Admin: `admin@local.test` / `admin123!`
+   - User: `user@local.test` / `user123!`
+5. After logging in, you'll have access to features based on your role:
+   - **Super Admin**: Full access to all features including delete operations
+   - **Admin**: Access to all features but cannot delete entities
+   - **User**: Basic access, cannot delete, cannot view financial indicators
 
 ### What to Do Next Time You Start the Application
 
@@ -296,7 +312,7 @@ For developers familiar with the stack:
 # 2. Clone and setup
 git clone https://github.com/kbranislav1410-max/racegarage-simulator.git
 cd racegarage-simulator
-git checkout copilot/setup-nextjs-simulator-project
+git checkout copilot/add-user-roles-superadmin-admin-user
 npm install
 
 # 3. Configure database
@@ -317,9 +333,11 @@ npm run dev
 
 ### Important Notes
 
-- ✅ **Authentication is disabled** - Direct access to all features, no login required
-- ✅ **Works without seed data** - Create customers, rides, etc. directly through the UI
-- ✅ **Slovak language interface** - Main UI elements translated (Dashboard, Customers, Vouchers)
+- ✅ **User authentication enabled** - Login with one of the test accounts
+- ✅ **Three user roles**: SUPER_ADMIN, ADMIN, and USER with different permissions
+- ✅ **Role-based access control** - Features and UI elements restricted based on role
+- ✅ **Works without seed data** - Create users manually if needed
+- ✅ **Slovak language interface** - Main UI elements translated
 - ✅ **Real-time statistics** - Dashboard displays actual data from your database
 - ✅ **All features functional** - Customer management, voucher system, and more
 
@@ -380,6 +398,7 @@ npm run dev
 ## Documentation
 
 - [Database Setup](./DATABASE.md) - Detailed database configuration guide
+- [Installation Guide (Slovak)](./INSTALACIA.md) - Complete setup instructions in Slovak
 
 ## License
 
