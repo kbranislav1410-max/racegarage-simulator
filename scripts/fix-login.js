@@ -10,11 +10,25 @@
  */
 
 const { PrismaClient } = require('@prisma/client');
+const { PrismaPg } = require('@prisma/adapter-pg');
+const pg = require('pg');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const prisma = new PrismaClient();
+// Load environment variables
+require('dotenv').config();
+
+// Create PostgreSQL connection pool
+const pool = new pg.Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+// Create Prisma adapter
+const adapter = new PrismaPg(pool);
+
+// Initialize Prisma Client with adapter (required for Prisma 7.x)
+const prisma = new PrismaClient({ adapter });
 
 // ANSI color codes
 const colors = {
