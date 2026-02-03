@@ -4,21 +4,22 @@
 
 ### Čo Bolo Zlé?
 
-Keď ste spúšťali `npm run check-setup`, dostávali ste túto chybu:
+Keď ste spúšťali `npm run check-setup` alebo `npm run db:seed`, dostávali ste túto chybu:
 
 ```
 PrismaClientInitializationError: `PrismaClient` needs to be constructed 
 with a non-empty, valid `PrismaClientOptions`
 ```
 
-**Príčina:** Aplikácia používa Prisma 7.x, ktorá vyžaduje špeciálny PostgreSQL adapter. Diagnostické skripty (check-setup.js a fix-login.js) používali starý spôsob inicializácie, ktorý nefungoval s Prisma 7.x.
+**Príčina:** Aplikácia používa Prisma 7.x, ktorá vyžaduje špeciálny PostgreSQL adapter. Diagnostické skripty a seed script používali starý spôsob inicializácie, ktorý nefungoval s Prisma 7.x.
 
 ### Čo Bolo Opravené?
 
-Upravil som oba skripty, aby správne inicializovali Prisma Client s PostgreSQL adapterom:
+Upravil som všetky skripty, aby správne inicializovali Prisma Client s PostgreSQL adapterom:
 
 - ✅ `scripts/check-setup.js` - teraz používa adapter
 - ✅ `scripts/fix-login.js` - teraz používa adapter
+- ✅ `prisma/seed.ts` - teraz používa adapter
 
 ---
 
@@ -30,9 +31,24 @@ Upravil som oba skripty, aby správne inicializovali Prisma Client s PostgreSQL 
 git pull origin copilot/add-user-roles-superadmin-admin-user
 ```
 
-### Krok 2: Spustite Diagnostiku
+### Krok 2: Vytvorte Používateľov
 
 Teraz by malo fungovať bez chyby:
+
+```bash
+npm run db:seed
+```
+
+**Očakávaný výstup:**
+```
+🌱 Starting database seed...
+✅ Created SUPER_ADMIN user: superadmin@local.test
+✅ Created ADMIN user: admin@local.test
+✅ Created USER: user@local.test
+🎉 Database seeding completed!
+```
+
+### Krok 3: Spustite Diagnostiku
 
 ```bash
 npm run check-setup
@@ -40,7 +56,7 @@ npm run check-setup
 
 **Očakávaný výstup:** Mali by ste vidieť farebnú diagnostiku (zelené ✅ alebo červené ❌)
 
-### Krok 3: Ak Diagnostika Našla Problémy
+### Krok 4: Ak Diagnostika Našla Problémy
 
 Ak check-setup ukáže problémy, spustite automatickú opravu:
 
@@ -48,14 +64,14 @@ Ak check-setup ukáže problémy, spustite automatickú opravu:
 npm run fix-login
 ```
 
-### Krok 4: Reštartujte Aplikáciu
+### Krok 5: Reštartujte Aplikáciu
 
 ```bash
 # Zastavte npm run dev (Ctrl+C)
 npm run dev
 ```
 
-### Krok 5: Vyčistite Cache a Prihláste Sa
+### Krok 6: Vyčistite Cache a Prihláste Sa
 
 1. Otvorte `http://localhost:3000`
 2. Stlačte **F12** (DevTools)
