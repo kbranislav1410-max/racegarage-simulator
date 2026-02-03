@@ -4,6 +4,9 @@
 
 Máte problém s prihlásením? Začnite podľa typu problému:
 
+### Vidíte chybu "PrismaClientInitializationError"?
+👉 **[OPRAVA_PRISMA_CHYBA.md](./OPRAVA_PRISMA_CHYBA.md)** ← NOVÁ OPRAVA!
+
 ### Vidíte chybu "POST /api/auth/login 401"?
 👉 **[FIX_401_CHYBA.md](./FIX_401_CHYBA.md)** ← ČÍTAJTE TOTO PRVÉ!
 
@@ -23,7 +26,18 @@ Máte problém s prihlásením? Začnite podľa typu problému:
 
 ## 🎯 Odporúčané Poradie Čítania
 
-### 1️⃣ Ak máte 401 chybu (LOGIN NEFUNGUJE)
+### 1️⃣ Ak máte PrismaClientInitializationError
+```
+OPRAVA_PRISMA_CHYBA.md
+    ↓
+Stiahnite opravu: git pull
+    ↓
+Spustite: npm run check-setup
+    ↓
+Ak treba: npm run fix-login
+```
+
+### 2️⃣ Ak máte 401 chybu (LOGIN NEFUNGUJE)
 ```
 FIX_401_CHYBA.md
     ↓
@@ -34,7 +48,7 @@ Reštartujte aplikáciu
 Prihláste sa
 ```
 
-### 2️⃣ Ak ste v plnej panike
+### 3️⃣ Ak ste v plnej panike
 ```
 OPRAVA_PRIHLASENIA.md (jeden príkaz)
     ↓
@@ -93,6 +107,7 @@ npm run dev
 ## 📚 Všetky Dokumenty
 
 ### Riešenie Prihlásenia
+- **[OPRAVA_PRISMA_CHYBA.md](./OPRAVA_PRISMA_CHYBA.md)** - Riešenie PrismaClientInitializationError (NOVÉ!)
 - **[FIX_401_CHYBA.md](./FIX_401_CHYBA.md)** - Riešenie 401 chyby (začnite tu!)
 - **[OPRAVA_PRIHLASENIA.md](./OPRAVA_PRIHLASENIA.md)** - Jeden príkaz na opravu
 - **[RYCHLE_RIESENIE.md](./RYCHLE_RIESENIE.md)** - Rýchle 5-krokové riešenie
@@ -111,6 +126,9 @@ npm run dev
 ---
 
 ## 🎓 Najčastejšie Otázky
+
+### Q: Dostanem chybu "PrismaClientInitializationError" pri check-setup?
+**A:** Skripty boli opravené pre Prisma 7.x. Stiahnite najnovší kód: `git pull` a skúste znova. → [OPRAVA_PRISMA_CHYBA.md](./OPRAVA_PRISMA_CHYBA.md)
 
 ### Q: Prečo mi prihlásenie nefunguje?
 **A:** Tri hlavné príčiny:
