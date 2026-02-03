@@ -26,8 +26,9 @@ model User {
 }
 
 enum UserRole {
+  SUPER_ADMIN
   ADMIN
-  STAFF
+  USER
 }
 
 // Customer model

@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
-type UserRole = "ADMIN" | "STAFF";
+type UserRole = "SUPER_ADMIN" | "ADMIN" | "USER";
 
 interface User {
   id: string;
@@ -23,7 +23,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Define which routes each role can access
-const STAFF_ROUTES = [
+const USER_ROUTES = [
   "/dashboard",
   "/customers",
   "/rides",
@@ -34,49 +34,100 @@ const STAFF_ROUTES = [
 
 const ADMIN_ONLY_ROUTES = [
   "/payments",
+  "/payments/settlements",
   "/settings",
 ];
 
 const roleAccess: Record<UserRole, string[]> = {
-  STAFF: STAFF_ROUTES,
-  ADMIN: [...STAFF_ROUTES, ...ADMIN_ONLY_ROUTES],
+  USER: USER_ROUTES,
+  ADMIN: [...USER_ROUTES, ...ADMIN_ONLY_ROUTES],
+  SUPER_ADMIN: [...USER_ROUTES, ...ADMIN_ONLY_ROUTES], // Super admin has access to all routes
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Default mock user with ADMIN role - authentication disabled
-  const [user] = useState<User>({
-    id: "mock-user-id",
-    email: "user@racegarage.com",
-    name: "Guest User",
-    role: "ADMIN",
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
-  const isAuthenticated = true; // Always authenticated
-
-  const hasAccess = useCallback((route: string): boolean => {
-    // All routes accessible without authentication
-    return true;
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error("Failed to parse stored user:", error);
+        localStorage.removeItem("user");
+      }
+    }
+    setIsLoading(false);
   }, []);
 
+  const isAuthenticated = !!user;
+
+  const hasAccess = useCallback((route: string): boolean => {
+    if (!user) return false;
+    const allowedRoutes = roleAccess[user.role] || [];
+    return allowedRoutes.some((allowedRoute) => 
+      route === allowedRoute || route.startsWith(allowedRoute + "/")
+    );
+  }, [user]);
+
   useEffect(() => {
-    // Redirect from login page to dashboard if someone tries to access it
-    if (pathname === "/login") {
+    // Skip check while loading
+    if (isLoading) return;
+
+    // Allow access to public routes
+    const publicRoutes = ["/login", "/book"];
+    const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + "/"));
+    
+    if (!user && !isPublicRoute) {
+      router.push("/login");
+    } else if (user && pathname === "/login") {
+      router.push("/dashboard");
+    } else if (user && !isPublicRoute && !hasAccess(pathname)) {
+      // Redirect to dashboard if user doesn't have access
       router.push("/dashboard");
     }
-  }, [pathname, router]);
+  }, [pathname, user, router, isLoading, hasAccess]);
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
-    // Authentication disabled - always return success
-    router.push("/dashboard");
-    return { success: true };
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        return { success: false, error: data.error || "Login failed" };
+      }
+
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      router.push("/dashboard");
+      return { success: true };
+    } catch (error) {
+      console.error("Login error:", error);
+      return { success: false, error: "Network error" };
+    }
   };
 
   const logout = () => {
-    // Authentication disabled - just redirect to dashboard
-    router.push("/dashboard");
+    setUser(null);
+    localStorage.removeItem("user");
+    router.push("/login");
   };
+
+  // Show loading state
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, logout, hasAccess }}>
