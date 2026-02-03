@@ -1,30 +1,44 @@
-# 📖 Index Dokumentácie - Problémy s Prihlásením
+# 📖 Index Dokumentácie
 
 ## 🚨 ZAČNITE TU!
 
-Máte problém s prihlásením? Začnite podľa typu problému:
+### 🎨 Chcete Zmeniť Dizajn Prihlásenia?
+👉 **[PRIHLASENIE_HOTOVO.md](./PRIHLASENIE_HOTOVO.md)** ← NOVÝ DIZAJN HOTOVÝ!
 
-### Vidíte chybu "PrismaClientInitializationError"?
+### Máte Problém s Prihlásením?
+
+#### Vidíte chybu "PrismaClientInitializationError"?
 👉 **[OPRAVA_PRISMA_CHYBA.md](./OPRAVA_PRISMA_CHYBA.md)** ← NOVÁ OPRAVA!
 
-### Vidíte chybu "POST /api/auth/login 401"?
+#### Vidíte chybu "POST /api/auth/login 401"?
 👉 **[FIX_401_CHYBA.md](./FIX_401_CHYBA.md)** ← ČÍTAJTE TOTO PRVÉ!
 
-### Chcete jednoduché riešenie bez čítania?
+#### Chcete jednoduché riešenie bez čítania?
 👉 **[OPRAVA_PRIHLASENIA.md](./OPRAVA_PRIHLASENIA.md)** - Jeden príkaz na opravu
 
-### Chcete rýchle 5-krokové riešenie?
+#### Chcete rýchle 5-krokové riešenie?
 👉 **[RYCHLE_RIESENIE.md](./RYCHLE_RIESENIE.md)** - Stručný návod
 
-### Chcete pochopiť, čo bolo zlé?
+#### Chcete pochopiť, čo bolo zlé?
 👉 **[VASHE_RIESENIE.md](./VASHE_RIESENIE.md)** - Vysvetlenie vášho problému
 
-### Potrebujete kompletný troubleshooting?
+#### Potrebujete kompletný troubleshooting?
 👉 **[RIESENIE_PRIHLASENIA.md](./RIESENIE_PRIHLASENIA.md)** - Všetky možné problémy
 
 ---
 
 ## 🎯 Odporúčané Poradie Čítania
+
+### 🎨 Dizajn Prihlasovacej Stránky
+```
+PRIHLASENIE_HOTOVO.md (kompletný návod)
+    ↓
+Stiahnite obrázok z Google Drive
+    ↓
+PRIHLASENIE_POZADIE.md (ako pridať obrázok)
+    ↓
+DIZAJN_PRIHLASENIA.md (technické detaily)
+```
 
 ### 1️⃣ Ak máte PrismaClientInitializationError
 ```
@@ -106,8 +120,13 @@ npm run dev
 
 ## 📚 Všetky Dokumenty
 
+### Dizajn Prihlasovacej Stránky (NOVÉ!)
+- **[PRIHLASENIE_HOTOVO.md](./PRIHLASENIE_HOTOVO.md)** - Kompletný návod na nový dizajn
+- **[DIZAJN_PRIHLASENIA.md](./DIZAJN_PRIHLASENIA.md)** - Vizuálna dokumentácia dizajnu
+- **[PRIHLASENIE_POZADIE.md](./PRIHLASENIE_POZADIE.md)** - Ako pridať obrázok pozadia
+
 ### Riešenie Prihlásenia
-- **[OPRAVA_PRISMA_CHYBA.md](./OPRAVA_PRISMA_CHYBA.md)** - Riešenie PrismaClientInitializationError (NOVÉ!)
+- **[OPRAVA_PRISMA_CHYBA.md](./OPRAVA_PRISMA_CHYBA.md)** - Riešenie PrismaClientInitializationError
 - **[FIX_401_CHYBA.md](./FIX_401_CHYBA.md)** - Riešenie 401 chyby (začnite tu!)
 - **[OPRAVA_PRIHLASENIA.md](./OPRAVA_PRIHLASENIA.md)** - Jeden príkaz na opravu
 - **[RYCHLE_RIESENIE.md](./RYCHLE_RIESENIE.md)** - Rýchle 5-krokové riešenie
