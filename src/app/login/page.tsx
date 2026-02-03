@@ -38,7 +38,11 @@ export default function LoginPage() {
         style={{ backgroundColor: '#292929' }}
       >
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">Racegarage</h1>
+          <img 
+            src="/logo.png" 
+            alt="Racegarage Logo" 
+            className="max-w-[200px] h-auto mx-auto mb-2"
+          />
           <p className="text-slate-300 mt-2">Simulator Management System</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-6">

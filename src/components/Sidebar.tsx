@@ -39,7 +39,11 @@ export function Sidebar() {
   return (
     <aside className="w-64 text-white p-6 rounded-2xl" style={{ backgroundColor: '#292929' }}>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold">Racegarage</h1>
+        <img 
+          src="/logo.png" 
+          alt="Racegarage Logo" 
+          className="max-w-[150px] h-auto mb-1"
+        />
         <p className="text-sm text-slate-400">Simulator</p>
       </div>
       <nav className="space-y-2">
