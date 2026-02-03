@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { customerUpdateSchema } from "@/lib/validations/customer";
 import { createAuditLog } from "@/lib/audit";
+import { getAuthUser, checkDeletePermission } from "@/lib/auth-helpers";
 
 // GET /api/customers/[id] - Get customer with ride history and summary
 export async function GET(
@@ -148,6 +149,16 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check delete permission
+    const user = getAuthUser(request);
+    const permissionError = checkDeletePermission(user);
+    if (permissionError) {
+      return NextResponse.json(
+        { error: permissionError.error },
+        { status: permissionError.status }
+      );
+    }
 
     // Check if customer exists
     const customer = await prisma.customer.findUnique({

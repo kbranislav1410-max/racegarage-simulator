@@ -4,6 +4,7 @@ import { updateReservationStatusSchema } from "@/lib/validations/reservation";
 import { createAuditLog } from "@/lib/audit";
 import { sendReservationEmail } from "@/lib/email/service";
 import { ZodError } from "zod";
+import { getAuthUser, checkDeletePermission } from "@/lib/auth-helpers";
 
 export async function GET(
   request: NextRequest,
@@ -152,6 +153,17 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check delete permission
+    const user = getAuthUser(request);
+    const permissionError = checkDeletePermission(user);
+    if (permissionError) {
+      return NextResponse.json(
+        { error: permissionError.error },
+        { status: permissionError.status }
+      );
+    }
+
     const reservation = await prisma.reservation.findUnique({
       where: { id },
       include: {

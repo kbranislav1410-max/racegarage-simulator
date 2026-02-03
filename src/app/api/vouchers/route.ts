@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma/client";
 import { createAuditLog } from "@/lib/audit";
+import { getAuthUser, checkDeletePermission } from "@/lib/auth-helpers";
 
 // Validation schema
 const createVoucherSchema = z.object({
@@ -186,6 +187,16 @@ export async function PATCH(request: NextRequest) {
 // DELETE - Delete unused voucher
 export async function DELETE(request: NextRequest) {
   try {
+    // Check delete permission
+    const user = getAuthUser(request);
+    const permissionError = checkDeletePermission(user);
+    if (permissionError) {
+      return NextResponse.json(
+        { error: permissionError.error },
+        { status: permissionError.status }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 

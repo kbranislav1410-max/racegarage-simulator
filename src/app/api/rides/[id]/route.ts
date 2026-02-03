@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { createAuditLog } from "@/lib/audit";
+import { getAuthUser, checkDeletePermission } from "@/lib/auth-helpers";
 
 // DELETE /api/rides/[id] - Delete ride session
 export async function DELETE(
@@ -9,6 +10,16 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check delete permission
+    const user = getAuthUser(request);
+    const permissionError = checkDeletePermission(user);
+    if (permissionError) {
+      return NextResponse.json(
+        { error: permissionError.error },
+        { status: permissionError.status }
+      );
+    }
 
     // Check if ride session exists
     const rideSession = await prisma.rideSession.findUnique({

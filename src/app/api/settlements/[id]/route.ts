@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma/client";
+import { getAuthUser, checkDeletePermission } from "@/lib/auth-helpers";
 
 // GET /api/settlements/[id] - Get settlement details
 export async function GET(
@@ -111,6 +112,17 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+
+    // Check delete permission
+    const user = getAuthUser(request);
+    const permissionError = checkDeletePermission(user);
+    if (permissionError) {
+      return NextResponse.json(
+        { error: permissionError.error },
+        { status: permissionError.status }
+      );
+    }
+
     await prisma.monthlySettlement.delete({
       where: { id },
     });

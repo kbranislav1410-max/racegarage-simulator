@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma/client";
 import { challengeAttemptSchema } from "@/lib/validations/challenge";
 import { createAuditLog } from "@/lib/audit";
+import { getAuthUser, checkDeletePermission } from "@/lib/auth-helpers";
 
 // GET /api/challenges/attempts - Get ALL attempts for a challenge month (not grouped)
 export async function GET(request: NextRequest) {
@@ -166,6 +167,16 @@ export async function POST(request: NextRequest) {
 // DELETE /api/challenges/attempts - Delete a challenge attempt
 export async function DELETE(request: NextRequest) {
   try {
+    // Check delete permission
+    const user = getAuthUser(request);
+    const permissionError = checkDeletePermission(user);
+    if (permissionError) {
+      return NextResponse.json(
+        { error: permissionError.error },
+        { status: permissionError.status }
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const attemptId = searchParams.get("id");
 
