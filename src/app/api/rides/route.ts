@@ -196,8 +196,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Create partner voucher record if ride source is VOUCHER_PARTNER
-    if (data.source === "VOUCHER_PARTNER" && data.partner && data.voucherCode) {
+    // Create partner voucher record if payment method is VOUCHER_PARTNER
+    if (data.paymentMethod === "VOUCHER_PARTNER" && data.partner && data.voucherCode) {
       await prisma.partnerVoucher.create({
         data: {
           code: data.voucherCode,
