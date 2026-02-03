@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race Garage Simulator</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="page">
+        <div class="login-container">
+            <h1>🏁 Race Garage Simulator</h1>
+            <h2>Prihlásenie</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Používateľské meno:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Heslo:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Prihlásiť sa</button>
+                <div id="loginError" class="error-message"></div>
+            </form>
+            <div class="demo-credentials">
+                <h3>Demo prihlasovacie údaje:</h3>
+                <p><strong>Super Admin:</strong> superadmin / superadmin123</p>
+                <p><strong>Admin:</strong> admin / admin123</p>
+                <p><strong>User:</strong> user / user123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page hidden">
+        <nav class="navbar">
+            <h1>🏁 Race Garage Simulator</h1>
+            <div class="user-info">
+                <span id="userName"></span>
+                <span id="userRole" class="badge"></span>
+                <button id="logoutBtn" class="btn btn-secondary">Odhlásiť sa</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="rides">Jazdy</button>
+                <button class="tab-btn" data-tab="customers">Zákazníci</button>
+                <button class="tab-btn" data-tab="finances" id="financesTab">Financie</button>
+            </div>
+
+            <!-- Rides Tab -->
+            <div id="ridesTab" class="tab-content active">
+                <div class="section-header">
+                    <h2>Správa jázd</h2>
+                    <button id="addRideBtn" class="btn btn-primary">+ Pridať jazdu</button>
+                </div>
+                <div id="ridesList" class="items-list"></div>
+            </div>
+
+            <!-- Customers Tab -->
+            <div id="customersTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Správa zákazníkov</h2>
+                    <button id="addCustomerBtn" class="btn btn-primary">+ Pridať zákazníka</button>
+                </div>
+                <div id="customersList" class="items-list"></div>
+            </div>
+
+            <!-- Finances Tab -->
+            <div id="financesTab" class="tab-content">
+                <div class="section-header">
+                    <h2>Financie</h2>
+                    <button id="addFinanceBtn" class="btn btn-primary">+ Pridať záznam</button>
+                </div>
+                <div id="financeSummary" class="finance-summary"></div>
+                <div id="financesList" class="items-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Ride Modal -->
+    <div id="rideModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="rideModalTitle">Pridať jazdu</h2>
+            <form id="rideForm">
+                <input type="hidden" id="rideId">
+                <div class="form-group">
+                    <label for="rideCustomerName">Meno zákazníka:</label>
+                    <input type="text" id="rideCustomerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="rideVehicleName">Vozidlo:</label>
+                    <input type="text" id="rideVehicleName" required>
+                </div>
+                <div class="form-group">
+                    <label for="rideDate">Dátum:</label>
+                    <input type="date" id="rideDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="rideDescription">Popis:</label>
+                    <textarea id="rideDescription" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Uložiť</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeRideModal()">Zrušiť</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div id="customerModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="customerModalTitle">Pridať zákazníka</h2>
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+                <div class="form-group">
+                    <label for="customerName">Meno:</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Email:</label>
+                    <input type="email" id="customerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Telefón:</label>
+                    <input type="tel" id="customerPhone">
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Adresa:</label>
+                    <textarea id="customerAddress" rows="2"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Uložiť</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">Zrušiť</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Finance Modal -->
+    <div id="financeModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="financeModalTitle">Pridať finančný záznam</h2>
+            <form id="financeForm">
+                <input type="hidden" id="financeId">
+                <div class="form-group">
+                    <label for="financeType">Typ:</label>
+                    <select id="financeType" required>
+                        <option value="">Vyberte typ</option>
+                        <option value="income">Príjem</option>
+                        <option value="expense">Výdavok</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="financeAmount">Suma (€):</label>
+                    <input type="number" id="financeAmount" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="financeDate">Dátum:</label>
+                    <input type="date" id="financeDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="financeDescription">Popis:</label>
+                    <textarea id="financeDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="financeRelatedTo">Súvisiace s:</label>
+                    <input type="text" id="financeRelatedTo" placeholder="napr. ID jazdy alebo zákazníka">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">Uložiť</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeFinanceModal()">Zrušiť</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
