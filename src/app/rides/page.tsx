@@ -59,6 +59,7 @@ export default function RidesPage() {
     street: "",
     city: "",
     phone: "",
+    newsletter: false,
   });
   const [customerFormErrors, setCustomerFormErrors] = useState<Record<string, string>>({});
   const [customerFormSubmitting, setCustomerFormSubmitting] = useState(false);
@@ -786,14 +787,12 @@ export default function RidesPage() {
                         onChange={(e) =>
                           setCustomerFormData({ ...customerFormData, firstName: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white ${
-                          customerFormErrors.firstName ? "border-red-300" : "border-slate-600"
-                        }`}
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                       {customerFormErrors.firstName && (
-                        <p className="text-red-600 text-sm mt-1">{customerFormErrors.firstName}</p>
+                        <p className="text-red-400 text-sm mt-1">{customerFormErrors.firstName}</p>
                       )}
                     </div>
 
@@ -807,14 +806,12 @@ export default function RidesPage() {
                         onChange={(e) =>
                           setCustomerFormData({ ...customerFormData, lastName: e.target.value })
                         }
-                        className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white ${
-                          customerFormErrors.lastName ? "border-red-300" : "border-slate-600"
-                        }`}
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         required
                       />
                       {customerFormErrors.lastName && (
-                        <p className="text-red-600 text-sm mt-1">{customerFormErrors.lastName}</p>
+                        <p className="text-red-400 text-sm mt-1">{customerFormErrors.lastName}</p>
                       )}
                     </div>
                   </div>
@@ -829,14 +826,12 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, email: e.target.value })
                       }
-                      className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white ${
-                        customerFormErrors.email ? "border-red-300" : "border-slate-600"
-                      }`}
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                       required
                     />
                     {customerFormErrors.email && (
-                      <p className="text-red-600 text-sm mt-1">{customerFormErrors.email}</p>
+                      <p className="text-red-400 text-sm mt-1">{customerFormErrors.email}</p>
                     )}
                   </div>
 
@@ -850,8 +845,8 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, street: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                   </div>
 
@@ -865,8 +860,8 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, city: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
                   </div>
 
@@ -880,9 +875,25 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
                     />
+                  </div>
+
+                  <div className="flex items-center gap-3 p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
+                    <input
+                      type="checkbox"
+                      id="newsletter-rides"
+                      checked={customerFormData.newsletter}
+                      onChange={(e) =>
+                        setCustomerFormData({ ...customerFormData, newsletter: e.target.checked })
+                      }
+                      className="w-4 h-4 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
+                      style={{ accentColor: "#c20003" }}
+                    />
+                    <label htmlFor="newsletter-rides" className="text-sm text-white cursor-pointer">
+                      Zákazník má záujem o newsletter (propagačné materiály a novinky)
+                    </label>
                   </div>
 
                   <div className="flex gap-3 pt-4">
