@@ -13,7 +13,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio",
-    "check-setup": "node scripts/check-setup.js"
+    "check-setup": "node scripts/check-setup.js",
+    "fix-login": "node scripts/fix-login.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
