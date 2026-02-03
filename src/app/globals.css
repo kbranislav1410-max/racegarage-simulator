@@ -96,3 +96,29 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;
 }
+
+/* Override browser autofill styles to maintain dark theme */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px #3a3a3a !important;
+}
+
+/* Firefox autofill override */
+input:-moz-autofill,
+input:-moz-autofill-preview {
+  filter: none !important;
+  background-color: #3a3a3a !important;
+  color: white !important;
+}
+
+/* Additional autofill state overrides for all browsers */
+input:autofill {
+  background-color: #3a3a3a !important;
+  color: white !important;
+  border: none !important;
+}
