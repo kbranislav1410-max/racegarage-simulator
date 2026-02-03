@@ -63,7 +63,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-white"
-              style={{ backgroundColor: '#1a1a1a', border: 'none' }}
+              style={{ backgroundColor: '#3a3a3a', border: 'none' }}
               placeholder="Zadajte email"
               required
               disabled={isLoading}
@@ -82,7 +82,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none text-white"
-              style={{ backgroundColor: '#1a1a1a', border: 'none' }}
+              style={{ backgroundColor: '#3a3a3a', border: 'none' }}
               placeholder="Zadajte heslo"
               required
               disabled={isLoading}
