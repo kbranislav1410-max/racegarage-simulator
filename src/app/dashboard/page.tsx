@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Plus, Search, X, Calendar, UserPlus, Ticket, Trophy, ChevronRight, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { formatAddress, formatDate, formatDateTime } from "@/lib/format";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface DashboardStats {
   totalCustomers: number;
@@ -112,6 +113,7 @@ interface CustomerSummary {
 }
 
 export default function DashboardPage() {
+  const { canViewFinancials } = usePermissions();
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
     totalCustomers: 0,
@@ -552,6 +554,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Customer Statistics and Financial Indicators Side by Side */}
+        {canViewFinancials && (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Customer Statistics Section */}
           <div className="h-full">
@@ -894,8 +897,10 @@ export default function DashboardPage() {
           </div>
         </div>
         </div>
+        )}
 
         {/* Yearly Overview */}
+        {canViewFinancials && (
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">Ročný prehľad</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -959,6 +964,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Challenge Leaderboard and Frequent Riders - Side by Side */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

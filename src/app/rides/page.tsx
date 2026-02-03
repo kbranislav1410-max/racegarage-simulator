@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { Search, Plus, X, Download, Calendar, Trash2 } from "lucide-react";
 import { formatAddress } from "@/lib/format";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface Customer {
   id: string;
@@ -30,6 +31,7 @@ interface Ride {
 }
 
 export default function RidesPage() {
+  const { canDelete } = usePermissions();
   const [rides, setRides] = useState<Ride[]>([]);
   const [dateFrom, setDateFrom] = useState<string>(
     new Date().toISOString().split("T")[0]
@@ -435,13 +437,15 @@ export default function RidesPage() {
                         <div className="text-sm text-slate-300">{ride.notes || "-"}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <button
-                          onClick={() => handleDeleteRide(ride.id)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
-                          title="Odstrániť jazdu"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </button>
+                        {canDelete && (
+                          <button
+                            onClick={() => handleDeleteRide(ride.id)}
+                            className="text-red-600 hover:text-red-800 transition-colors"
+                            title="Odstrániť jazdu"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))

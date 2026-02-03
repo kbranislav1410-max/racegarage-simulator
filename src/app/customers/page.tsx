@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { Search, Plus, Eye, Trash2, X } from "lucide-react";
 import { formatAddress, formatDate, formatDateTime } from "@/lib/format";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface Customer {
   id: string;
@@ -44,6 +45,7 @@ interface Pagination {
 }
 
 export default function CustomersPage() {
+  const { canDelete } = usePermissions();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
@@ -325,13 +327,15 @@ export default function CustomersPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </button>
-                          <button
-                            onClick={() => handleDeleteCustomer(customer.id)}
-                            className="text-red-400 hover:text-red-300 p-1"
-                            title="Odstrániť"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {canDelete && (
+                            <button
+                              onClick={() => handleDeleteCustomer(customer.id)}
+                              className="text-red-400 hover:text-red-300 p-1"
+                              title="Odstrániť"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

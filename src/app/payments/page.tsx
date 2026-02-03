@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { Download, Calendar, Euro, Trash2 } from "lucide-react";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface PaymentRecord {
   id: string;
@@ -41,6 +42,7 @@ interface Settlement {
 }
 
 export default function PaymentsPage() {
+  const { canDelete } = usePermissions();
   const currentDate = new Date();
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1);
@@ -447,13 +449,15 @@ export default function PaymentsPage() {
                               )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right">
-                              <button
-                                onClick={() => handleDeletePayment(payment.id)}
-                                className="text-red-400 hover:text-red-300 transition-colors"
-                                title="Odstrániť platbu"
-                              >
-                                <Trash2 className="w-5 h-5" />
-                              </button>
+                              {canDelete && (
+                                <button
+                                  onClick={() => handleDeletePayment(payment.id)}
+                                  className="text-red-400 hover:text-red-300 transition-colors"
+                                  title="Odstrániť platbu"
+                                >
+                                  <Trash2 className="w-5 h-5" />
+                                </button>
+                              )}
                             </td>
                           </tr>
                         );

@@ -5,6 +5,7 @@ import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { Search, Plus, X, Trophy, Calendar, Trash2 } from "lucide-react";
 import { formatAddress } from "@/lib/format";
 import { parseLapTime, formatLapTime } from "@/lib/validations/challenge";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface ChallengeMonth {
   id: string;
@@ -38,6 +39,7 @@ interface AttemptEntry {
 }
 
 export default function ChallengePage() {
+  const { canDelete } = usePermissions();
   const currentDate = new Date();
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth() + 1);
@@ -504,13 +506,15 @@ export default function ChallengePage() {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <button
-                              onClick={() => handleDeleteAttempt(entry.id, entry.customerName)}
-                              className="text-red-600 hover:text-red-900"
-                              title="Odstrániť pokus"
-                            >
-                              <Trash2 className="w-5 h-5" />
-                            </button>
+                            {canDelete && (
+                              <button
+                                onClick={() => handleDeleteAttempt(entry.id, entry.customerName)}
+                                className="text-red-600 hover:text-red-900"
+                                title="Odstrániť pokus"
+                              >
+                                <Trash2 className="w-5 h-5" />
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))

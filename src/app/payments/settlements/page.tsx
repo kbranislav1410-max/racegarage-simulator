@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface Settlement {
   id: string;
@@ -39,6 +40,7 @@ const monthNames = [
 ];
 
 export default function SettlementsPage() {
+  const { canDelete } = usePermissions();
   const router = useRouter();
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [loading, setLoading] = useState(true);
@@ -325,12 +327,14 @@ export default function SettlementsPage() {
                       >
                         Zmeniť stav
                       </button>
-                      <button
-                        onClick={() => handleDeleteSettlement(settlement.id)}
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        Zmazať
-                      </button>
+                      {canDelete && (
+                        <button
+                          onClick={() => handleDeleteSettlement(settlement.id)}
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          Zmazať
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))

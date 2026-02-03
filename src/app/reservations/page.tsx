@@ -12,6 +12,7 @@ import {
   Filter,
 } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface Reservation {
   id: string;
@@ -47,6 +48,7 @@ const STATUS_OPTIONS = [
 ];
 
 export default function ReservationsPage() {
+  const { canDelete } = usePermissions();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -505,13 +507,15 @@ export default function ReservationsPage() {
                     </>
                   )}
 
-                  <button
-                    onClick={() => handleDelete(selectedReservation.id)}
-                    className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors ml-auto"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    Delete
-                  </button>
+                  {canDelete && (
+                    <button
+                      onClick={() => handleDelete(selectedReservation.id)}
+                      className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors ml-auto"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

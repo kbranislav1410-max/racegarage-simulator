@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { Search, Calendar, Trash2 } from "lucide-react";
+import { usePermissions } from "@/lib/use-permissions";
 
 interface Voucher {
   id: string;
@@ -42,6 +43,7 @@ function getActualVoucherStatus(voucher: Voucher): string {
 }
 
 export default function VouchersPage() {
+  const { canDelete } = usePermissions();
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -516,13 +518,15 @@ export default function VouchersPage() {
                         >
                           <Calendar className="h-4 w-4" />
                         </button>
-                        <button
-                          onClick={() => openDeleteConfirm(voucher)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Odstrániť"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {canDelete && (
+                          <button
+                            onClick={() => openDeleteConfirm(voucher)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Odstrániť"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
