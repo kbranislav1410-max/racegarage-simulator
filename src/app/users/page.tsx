@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { canManageUsers } from "@/lib/permissions";
 import { api } from "@/lib/api-client";
+import { ProtectedLayout } from "@/components/ProtectedLayout";
 import { UserCog, Plus, Pencil, Trash2, X } from "lucide-react";
 
 interface User {
@@ -167,50 +168,51 @@ export default function UsersPage() {
 
   if (!currentUser || !canManageUsers(currentUser.role)) {
     return (
-      <div className="p-8">
+      <ProtectedLayout>
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
           You do not have permission to access this page.
         </div>
-      </div>
+      </ProtectedLayout>
     );
   }
 
   if (loading) {
     return (
-      <div className="p-8">
+      <ProtectedLayout>
         <div className="text-center text-gray-500">Loading users...</div>
-      </div>
+      </ProtectedLayout>
     );
   }
 
   return (
-    <div className="p-8">
-      <div className="mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <UserCog className="w-8 h-8" />
-            Používatelia
-          </h1>
-          <p className="text-slate-400 mt-2">Správa používateľov aplikácie</p>
+    <ProtectedLayout>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <UserCog className="w-8 h-8" />
+              Používatelia
+            </h1>
+            <p className="text-slate-400 mt-2">Správa používateľov aplikácie</p>
+          </div>
+          <button
+            onClick={() => handleOpenModal()}
+            className="px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2 hover:brightness-110 transition-all"
+            style={{ backgroundColor: "#c20003" }}
+          >
+            <Plus className="w-5 h-5" />
+            Nový používateľ
+          </button>
         </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2 hover:brightness-110 transition-all"
-          style={{ backgroundColor: "#c20003" }}
-        >
-          <Plus className="w-5 h-5" />
-          Nový používateľ
-        </button>
-      </div>
 
       {successMessage && (
-        <div className="mb-4 bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-800">
           {successMessage}
         </div>
       )}
 
       {error && !showModal && (
-        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
           {error}
         </div>
       )}
@@ -400,6 +402,7 @@ export default function UsersPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </ProtectedLayout>
   );
 }
