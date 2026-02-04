@@ -1,0 +1,45 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "env": {
+    "DATABASE_URL": {
+      "description": "PostgreSQL database connection string",
+      "value": "postgresql://user:password@host:5432/database?schema=public"
+    },
+    "EMAIL_PROVIDER": {
+      "description": "Email provider: 'resend', 'nodemailer', or leave empty",
+      "value": ""
+    },
+    "EMAIL_FROM": {
+      "description": "Email sender address",
+      "value": "noreply@yourdomain.com"
+    },
+    "RESEND_API_KEY": {
+      "description": "Resend API key (only if using EMAIL_PROVIDER=resend)",
+      "value": ""
+    },
+    "SMTP_HOST": {
+      "description": "SMTP host (only if using EMAIL_PROVIDER=nodemailer)",
+      "value": ""
+    },
+    "SMTP_PORT": {
+      "description": "SMTP port (only if using EMAIL_PROVIDER=nodemailer)",
+      "value": "587"
+    },
+    "SMTP_SECURE": {
+      "description": "SMTP secure connection (only if using EMAIL_PROVIDER=nodemailer)",
+      "value": "false"
+    },
+    "SMTP_USER": {
+      "description": "SMTP username (only if using EMAIL_PROVIDER=nodemailer)",
+      "value": ""
+    },
+    "SMTP_PASS": {
+      "description": "SMTP password (only if using EMAIL_PROVIDER=nodemailer)",
+      "value": ""
+    }
+  }
+}
