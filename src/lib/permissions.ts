@@ -43,3 +43,13 @@ export function canAccessPayments(role: UserRole): boolean {
 export function canAccessSettings(role: UserRole): boolean {
   return role === "SUPER_ADMIN" || role === "ADMIN";
 }
+
+/**
+ * Check if user can manage application users
+ * - SUPER_ADMIN: can manage users
+ * - ADMIN: cannot manage users
+ * - USER: cannot manage users
+ */
+export function canManageUsers(role: UserRole): boolean {
+  return role === "SUPER_ADMIN";
+}

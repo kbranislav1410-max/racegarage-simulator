@@ -61,3 +61,8 @@ export function checkDeletePermission(user: AuthUser | null): { error: string; s
 
   return null;
 }
+
+/**
+ * Alias for getAuthUser for consistency
+ */
+export const getUserFromRequest = getAuthUser;

@@ -38,10 +38,14 @@ const ADMIN_ONLY_ROUTES = [
   "/settings",
 ];
 
+const SUPER_ADMIN_ONLY_ROUTES = [
+  "/users",
+];
+
 const roleAccess: Record<UserRole, string[]> = {
   USER: USER_ROUTES,
   ADMIN: [...USER_ROUTES, ...ADMIN_ONLY_ROUTES],
-  SUPER_ADMIN: [...USER_ROUTES, ...ADMIN_ONLY_ROUTES], // Super admin has access to all routes
+  SUPER_ADMIN: [...USER_ROUTES, ...ADMIN_ONLY_ROUTES, ...SUPER_ADMIN_ONLY_ROUTES], // Super admin has access to all routes
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {

@@ -14,6 +14,7 @@ import {
   FileText,
   Ticket,
   Settings,
+  UserCog,
 } from "lucide-react";
 
 const menuItems = [
@@ -25,6 +26,7 @@ const menuItems = [
   { href: "/payments", label: "Platby", icon: CreditCard, roles: ["ADMIN", "SUPER_ADMIN"] },
   { href: "/vouchers", label: "Vouchery", icon: Ticket, roles: ["USER", "ADMIN", "SUPER_ADMIN"] },
   { href: "/settings", label: "Nastavenia", icon: Settings, roles: ["ADMIN", "SUPER_ADMIN"] },
+  { href: "/users", label: "Používatelia", icon: UserCog, roles: ["SUPER_ADMIN"] },
 ];
 
 export function Sidebar() {
