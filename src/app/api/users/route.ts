@@ -7,7 +7,7 @@ import { canManageUsers } from "@/lib/permissions";
 // GET /api/users - List all users
 export async function GET(request: NextRequest) {
   try {
-    const currentUser = await getUserFromRequest(request);
+    const currentUser = getUserFromRequest(request);
     
     if (!currentUser || !canManageUsers(currentUser.role)) {
       return NextResponse.json(
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
 // POST /api/users - Create new user
 export async function POST(request: NextRequest) {
   try {
-    const currentUser = await getUserFromRequest(request);
+    const currentUser = getUserFromRequest(request);
     
     if (!currentUser || !canManageUsers(currentUser.role)) {
       return NextResponse.json(

@@ -10,7 +10,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const currentUser = await getUserFromRequest(request);
+    const currentUser = getUserFromRequest(request);
     
     if (!currentUser || !canManageUsers(currentUser.role)) {
       return NextResponse.json(
@@ -105,7 +105,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const currentUser = await getUserFromRequest(request);
+    const currentUser = getUserFromRequest(request);
     
     if (!currentUser || !canManageUsers(currentUser.role)) {
       return NextResponse.json(

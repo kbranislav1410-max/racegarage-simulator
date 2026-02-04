@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { canManageUsers } from "@/lib/permissions";
+import { api } from "@/lib/api-client";
 import { UserCog, Plus, Pencil, Trash2, X } from "lucide-react";
 
 interface User {
@@ -44,7 +45,7 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("/api/users");
+      const response = await api.get("/api/users");
       if (response.ok) {
         const data = await response.json();
         setUsers(data);
@@ -110,11 +111,7 @@ export default function UsersPage() {
           updateData.password = formData.password;
         }
 
-        const response = await fetch(`/api/users/${editingUser.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(updateData),
-        });
+        const response = await api.put(`/api/users/${editingUser.id}`, updateData);
 
         if (!response.ok) {
           const data = await response.json();
@@ -124,11 +121,7 @@ export default function UsersPage() {
         setSuccessMessage("User updated successfully");
       } else {
         // Create new user
-        const response = await fetch("/api/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
+        const response = await api.post("/api/users", formData);
 
         if (!response.ok) {
           const data = await response.json();
@@ -154,9 +147,7 @@ export default function UsersPage() {
     }
 
     try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: "DELETE",
-      });
+      const response = await api.delete(`/api/users/${userId}`);
 
       if (!response.ok) {
         const data = await response.json();
