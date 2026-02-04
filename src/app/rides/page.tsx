@@ -180,6 +180,7 @@ export default function RidesPage() {
         street: "",
         city: "",
         phone: "",
+        newsletter: false,
       });
     } catch (err) {
       setCustomerFormErrors({ general: "An error occurred" });
