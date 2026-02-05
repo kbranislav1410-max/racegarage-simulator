@@ -5,11 +5,11 @@ import { Calendar, Clock, User, Mail, MapPin } from "lucide-react";
 import Link from "next/link";
 
 const DURATION_OPTIONS = [
-  { value: 15, label: "15 minutes" },
-  { value: 30, label: "30 minutes" },
-  { value: 60, label: "1 hour" },
-  { value: 90, label: "1.5 hours" },
-  { value: 120, label: "2 hours" },
+  { value: 15, label: "15 minút" },
+  { value: 30, label: "30 minút" },
+  { value: 60, label: "1 hodina" },
+  { value: 90, label: "1,5 hodiny" },
+  { value: 120, label: "2 hodiny" },
 ];
 
 export default function BookPage() {
@@ -51,7 +51,7 @@ export default function BookPage() {
 
   const handleEmailCheck = async () => {
     if (!email) {
-      setError("Please enter your email address");
+      setError("Prosím zadajte svoju e-mailovú adresu");
       return;
     }
 
@@ -65,7 +65,7 @@ export default function BookPage() {
       
       // Check if response is ok before parsing
       if (!response.ok) {
-        console.warn("Customer search API returned error, proceeding as new customer");
+        console.warn("Vyhľadávanie zákazníka zlyhalo, pokračujeme ako nový zákazník");
         proceedAsNewCustomer();
         return;
       }
@@ -101,7 +101,7 @@ export default function BookPage() {
 
       setStep(2);
     } catch (error) {
-      console.warn("Error checking customer email, proceeding as new customer:", error);
+      console.warn("Chyba pri kontrole e-mailu zákazníka, pokračujeme ako nový zákazník:", error);
       proceedAsNewCustomer();
     } finally {
       setCheckingEmail(false);
@@ -141,12 +141,12 @@ export default function BookPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create reservation");
+        throw new Error(data.error || "Nepodarilo sa vytvoriť rezerváciu");
       }
 
       setSuccess(true);
     } catch (err: unknown) {
-      setError((err as Error).message || "Failed to create reservation");
+      setError((err as Error).message || "Nepodarilo sa vytvoriť rezerváciu");
     } finally {
       setLoading(false);
     }
@@ -154,11 +154,11 @@ export default function BookPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#1f1f1f' }}>
+        <div className="rounded-lg shadow-xl p-8 max-w-md w-full text-center" style={{ backgroundColor: '#292929' }}>
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c20003' }}>
             <svg
-              className="w-8 h-8 text-green-600"
+              className="w-8 h-8 text-white"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -171,13 +171,12 @@ export default function BookPage() {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">
-            Reservation Submitted!
+          <h2 className="text-2xl font-bold text-white mb-2">
+            Rezervácia odoslaná!
           </h2>
-          <p className="text-slate-600 mb-6">
-            Your reservation request has been received. We will send you a
-            confirmation email at <strong>{email}</strong> once it&apos;s been
-            reviewed.
+          <p className="text-slate-300 mb-6">
+            Vaša žiadosť o rezerváciu bola prijatá. Po jej schválení vám pošleme
+            potvrdzujúci e-mail na adresu <strong className="text-white">{email}</strong>.
           </p>
           <button
             onClick={() => {
@@ -195,9 +194,10 @@ export default function BookPage() {
                 city: "",
               });
             }}
-            className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:brightness-90 transition-colors"
+            className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
+            style={{ backgroundColor: '#c20003' }}
           >
-            Make Another Reservation
+            Vytvoriť ďalšiu rezerváciu
           </button>
         </div>
       </div>
@@ -205,14 +205,14 @@ export default function BookPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#1f1f1f' }}>
+      <div className="rounded-lg shadow-xl p-8 max-w-2xl w-full" style={{ backgroundColor: '#292929' }}>
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-800 mb-2">
-            Book a Racing Simulator Session
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Rezervácia simulátora
           </h1>
-          <p className="text-slate-600">
-            Reserve your time on our state-of-the-art racing simulator
+          <p className="text-slate-300">
+            Rezervujte si čas na našom závodnom simulátore
           </p>
         </div>
 
@@ -221,44 +221,49 @@ export default function BookPage() {
           <div
             className={`flex items-center justify-center w-8 h-8 rounded-full ${
               step >= 1
-                ? "bg-slate-800 text-white"
-                : "bg-slate-200 text-slate-600"
+                ? "text-white"
+                : "bg-slate-700 text-slate-400"
             }`}
+            style={step >= 1 ? { backgroundColor: '#c20003' } : {}}
           >
             1
           </div>
           <div
             className={`flex-1 h-1 mx-2 ${
-              step >= 2 ? "bg-slate-800" : "bg-slate-200"
+              step >= 2 ? "" : "bg-slate-700"
             }`}
+            style={step >= 2 ? { backgroundColor: '#c20003' } : {}}
           />
           <div
             className={`flex items-center justify-center w-8 h-8 rounded-full ${
               step >= 2
-                ? "bg-slate-800 text-white"
-                : "bg-slate-200 text-slate-600"
+                ? "text-white"
+                : "bg-slate-700 text-slate-400"
             }`}
+            style={step >= 2 ? { backgroundColor: '#c20003' } : {}}
           >
             2
           </div>
           <div
             className={`flex-1 h-1 mx-2 ${
-              step >= 3 ? "bg-slate-800" : "bg-slate-200"
+              step >= 3 ? "" : "bg-slate-700"
             }`}
+            style={step >= 3 ? { backgroundColor: '#c20003' } : {}}
           />
           <div
             className={`flex items-center justify-center w-8 h-8 rounded-full ${
               step >= 3
-                ? "bg-slate-800 text-white"
-                : "bg-slate-200 text-slate-600"
+                ? "text-white"
+                : "bg-slate-700 text-slate-400"
             }`}
+            style={step >= 3 ? { backgroundColor: '#c20003' } : {}}
           >
             3
           </div>
         </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-4 p-4 rounded-lg text-white" style={{ backgroundColor: '#8b0000' }}>
             {error}
           </div>
         )}
@@ -266,29 +271,31 @@ export default function BookPage() {
         {step === 1 && (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 <Mail className="inline w-4 h-4 mr-2" />
-                Email Address
+                E-mailová adresa
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent"
-                placeholder="your.email@example.com"
+                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                placeholder="vasa.adresa@priklad.sk"
                 required
               />
-              <p className="mt-2 text-sm text-slate-500">
-                We&apos;ll check if you&apos;re already in our system
+              <p className="mt-2 text-sm text-slate-400">
+                Skontrolujeme, či už máte u nás účet
               </p>
             </div>
 
             <button
               onClick={handleEmailCheck}
               disabled={checkingEmail || !email}
-              className="w-full px-4 py-3 bg-slate-800 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ backgroundColor: '#c20003' }}
             >
-              {checkingEmail ? "Checking..." : "Continue"}
+              {checkingEmail ? "Kontrolujem..." : "Pokračovať"}
             </button>
           </div>
         )}
@@ -296,30 +303,30 @@ export default function BookPage() {
         {step === 2 && (
           <form onSubmit={handleSubmit} className="space-y-6">
             {existingCustomer && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-green-800 font-medium">
-                  Welcome back, {existingCustomer.firstName}!
+              <div className="p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f', border: '1px solid #c20003' }}>
+                <p className="text-white font-medium">
+                  Vitajte späť, {existingCustomer.firstName}!
                 </p>
-                <p className="text-sm text-green-700">
-                  We found your account. Your information is pre-filled below.
+                <p className="text-sm text-slate-300">
+                  Našli sme váš účet. Vaše údaje sú predvyplnené.
                 </p>
               </div>
             )}
 
             {!existingCustomer && (
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-blue-800 font-medium">New Customer</p>
-                <p className="text-sm text-blue-700">
-                  Please fill in your information to complete the reservation.
+              <div className="p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f', border: '1px solid #c20003' }}>
+                <p className="text-white font-medium">Nový zákazník</p>
+                <p className="text-sm text-slate-300">
+                  Prosím vyplňte svoje údaje pre dokončenie rezervácie.
                 </p>
               </div>
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   <Calendar className="inline w-4 h-4 mr-2" />
-                  Date
+                  Dátum
                 </label>
                 <input
                   type="date"
@@ -328,15 +335,16 @@ export default function BookPage() {
                     setFormData({ ...formData, scheduledDate: e.target.value })
                   }
                   min={new Date().toISOString().split("T")[0]}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   <Clock className="inline w-4 h-4 mr-2" />
-                  Time
+                  Čas
                 </label>
                 <input
                   type="time"
@@ -344,15 +352,16 @@ export default function BookPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, scheduledTime: e.target.value })
                   }
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Duration
+              <label className="block text-sm font-medium text-white mb-2">
+                Trvanie
               </label>
               <select
                 value={formData.durationMinutes}
@@ -362,27 +371,28 @@ export default function BookPage() {
                     durationMinutes: Number(e.target.value),
                   })
                 }
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                 required
               >
                 {DURATION_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
+                  <option key={option.value} value={option.value} style={{ backgroundColor: '#1f1f1f' }}>
                     {option.label}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="border-t pt-4">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">
+            <div className="border-t border-slate-700 pt-4">
+              <h3 className="text-lg font-semibold text-white mb-4">
                 <User className="inline w-5 h-5 mr-2" />
-                Personal Information
+                Osobné údaje
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    First Name *
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Meno *
                   </label>
                   <input
                     type="text"
@@ -391,16 +401,17 @@ export default function BookPage() {
                       setFormData({ ...formData, firstName: e.target.value })
                     }
                     readOnly={!!existingCustomer}
-                    className={`w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent ${
-                      existingCustomer ? "bg-slate-50" : ""
+                    className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                      existingCustomer ? "opacity-60" : ""
                     }`}
+                    style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                     required={!existingCustomer}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    Last Name *
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Priezvisko *
                   </label>
                   <input
                     type="text"
@@ -409,18 +420,19 @@ export default function BookPage() {
                       setFormData({ ...formData, lastName: e.target.value })
                     }
                     readOnly={!!existingCustomer}
-                    className={`w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent ${
-                      existingCustomer ? "bg-slate-50" : ""
+                    className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                      existingCustomer ? "opacity-60" : ""
                     }`}
+                    style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                     required={!existingCustomer}
                   />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-white mb-2">
                   <MapPin className="inline w-4 h-4 mr-2" />
-                  Street Address
+                  Ulica
                 </label>
                 <input
                   type="text"
@@ -429,15 +441,16 @@ export default function BookPage() {
                     setFormData({ ...formData, street: e.target.value })
                   }
                   readOnly={!!existingCustomer}
-                  className={`w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent ${
-                    existingCustomer ? "bg-slate-50" : ""
+                  className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                    existingCustomer ? "opacity-60" : ""
                   }`}
+                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                 />
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  City
+                <label className="block text-sm font-medium text-white mb-2">
+                  Mesto
                 </label>
                 <input
                   type="text"
@@ -446,9 +459,10 @@ export default function BookPage() {
                     setFormData({ ...formData, city: e.target.value })
                   }
                   readOnly={!!existingCustomer}
-                  className={`w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent ${
-                    existingCustomer ? "bg-slate-50" : ""
+                  className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                    existingCustomer ? "opacity-60" : ""
                   }`}
+                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                 />
               </div>
             </div>
@@ -457,26 +471,28 @@ export default function BookPage() {
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-6 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                className="px-6 py-3 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
               >
-                Back
+                Späť
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-6 py-3 bg-slate-800 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ backgroundColor: '#c20003' }}
               >
-                {loading ? "Submitting..." : "Submit Reservation"}
+                {loading ? "Odosielam..." : "Odoslať rezerváciu"}
               </button>
             </div>
           </form>
         )}
 
-        <div className="mt-6 pt-6 border-t text-center">
-          <p className="text-sm text-slate-600">
-            Already have a confirmed reservation?{" "}
-            <Link href="/login" className="text-slate-800 hover:underline font-medium">
-              Staff Login
+        <div className="mt-6 pt-6 border-t border-slate-700 text-center">
+          <p className="text-sm text-slate-400">
+            Už máte potvrdenú rezerváciu?{" "}
+            <Link href="/login" className="text-white hover:underline font-medium" style={{ color: '#c20003' }}>
+              Prihlásenie pre zamestnancov
             </Link>
           </p>
         </div>
