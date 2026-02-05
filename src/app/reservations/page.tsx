@@ -38,13 +38,13 @@ interface Reservation {
 }
 
 const STATUS_OPTIONS = [
-  { value: "ALL", label: "All Statuses", color: "slate" },
-  { value: "PENDING", label: "Pending", color: "yellow" },
-  { value: "CONFIRMED", label: "Confirmed", color: "green" },
-  { value: "REJECTED", label: "Rejected", color: "red" },
-  { value: "CANCELLED", label: "Cancelled", color: "orange" },
-  { value: "COMPLETED", label: "Completed", color: "blue" },
-  { value: "NO_SHOW", label: "No Show", color: "gray" },
+  { value: "ALL", label: "Všetky stavy", color: "slate" },
+  { value: "PENDING", label: "Čakajúce", color: "yellow" },
+  { value: "CONFIRMED", label: "Potvrdené", color: "green" },
+  { value: "REJECTED", label: "Zamietnuté", color: "red" },
+  { value: "CANCELLED", label: "Zrušené", color: "orange" },
+  { value: "COMPLETED", label: "Dokončené", color: "blue" },
+  { value: "NO_SHOW", label: "Neprišiel", color: "gray" },
 ];
 
 export default function ReservationsPage() {
@@ -87,7 +87,7 @@ export default function ReservationsPage() {
     reservationId: string,
     newStatus: string
   ) => {
-    if (!confirm(`Are you sure you want to mark this reservation as ${newStatus}?`)) {
+    if (!confirm(`Ste si istí, že chcete označiť túto rezerváciu ako ${newStatus}?`)) {
       return;
     }
 
@@ -106,20 +106,20 @@ export default function ReservationsPage() {
         await fetchReservations();
         setShowDetailModal(false);
         setActionNotes("");
-        alert(`Reservation ${newStatus.toLowerCase()} successfully!`);
+        alert(`Rezervácia ${newStatus.toLowerCase()} úspešne!`);
       } else {
-        alert("Failed to update reservation status");
+        alert("Nepodarilo sa aktualizovať stav rezervácie");
       }
     } catch (error) {
       console.error("Error updating reservation:", error);
-      alert("Failed to update reservation");
+      alert("Nepodarilo sa aktualizovať rezerváciu");
     } finally {
       setActionInProgress(false);
     }
   };
 
   const handleDelete = async (reservationId: string) => {
-    if (!confirm("Are you sure you want to delete this reservation? This action cannot be undone.")) {
+    if (!confirm("Ste si istí, že chcete vymazať túto rezerváciu? Túto akciu nie je možné vrátiť späť.")) {
       return;
     }
 
@@ -131,13 +131,13 @@ export default function ReservationsPage() {
       if (response.ok) {
         await fetchReservations();
         setShowDetailModal(false);
-        alert("Reservation deleted successfully");
+        alert("Rezervácia bola úspešne vymazaná");
       } else {
-        alert("Failed to delete reservation");
+        alert("Nepodarilo sa vymazať rezerváciu");
       }
     } catch (error) {
       console.error("Error deleting reservation:", error);
-      alert("Failed to delete reservation");
+      alert("Nepodarilo sa vymazať rezerváciu");
     }
   };
 
@@ -169,8 +169,8 @@ export default function ReservationsPage() {
       };
     }
     return {
-      name: reservation.guestName || "Unknown",
-      email: reservation.guestEmail || "No email",
+      name: reservation.guestName || "Neznámy",
+      email: reservation.guestEmail || "Žiadny e-mail",
       isRegistered: false,
     };
   };
@@ -180,9 +180,9 @@ export default function ReservationsPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-white">Reservations</h1>
+            <h1 className="text-3xl font-bold text-white">Rezervácie</h1>
             <p className="text-slate-300 mt-2">
-              Manage booking and reservation schedules
+              Spravovať plány rezervácií a rezervačné harmonogramy
             </p>
           </div>
         </div>
@@ -192,7 +192,7 @@ export default function ReservationsPage() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Filter className="w-5 h-5 text-slate-300" />
-              <span className="text-sm font-medium text-white">Filters:</span>
+              <span className="text-sm font-medium text-white">Filtre:</span>
             </div>
             <div>
               <select
@@ -215,7 +215,7 @@ export default function ReservationsPage() {
                 onChange={(e) => setDateFilter(e.target.value)}
                 className="px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
                 style={{ backgroundColor: '#1f1f1f' }}
-                placeholder="Filter by date"
+                placeholder="Filtrovať podľa dátumu"
               />
             </div>
             {dateFilter && (
@@ -223,7 +223,7 @@ export default function ReservationsPage() {
                 onClick={() => setDateFilter("")}
                 className="px-3 py-2 text-sm text-slate-300 hover:text-white"
               >
-                Clear date
+                Vymazať dátum
               </button>
             )}
           </div>
@@ -233,17 +233,17 @@ export default function ReservationsPage() {
         <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
           <div className="p-6">
             <h2 className="text-lg font-semibold text-white mb-4">
-              {statusFilter === "ALL" ? "All Reservations" : `${statusFilter} Reservations`}
-              {dateFilter && ` on ${new Date(dateFilter).toLocaleDateString()}`}
+              {statusFilter === "ALL" ? "Všetky rezervácie" : `${statusFilter} Rezervácie`}
+              {dateFilter && ` dňa ${new Date(dateFilter).toLocaleDateString()}`}
             </h2>
 
             {loading ? (
               <div className="text-center py-8 text-slate-300">
-                Loading reservations...
+                Načítavam rezervácie...
               </div>
             ) : reservations.length === 0 ? (
               <div className="text-center py-8 text-slate-300">
-                No reservations found.
+                Nenašli sa žiadne rezervácie.
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -251,19 +251,19 @@ export default function ReservationsPage() {
                   <thead style={{ backgroundColor: "#1f1f1f" }}>
                     <tr className="border-b border-slate-700">
                       <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Customer
+                        Zákazník
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Scheduled
+                        Naplánované
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Duration
+                        Trvanie
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Status
+                        Stav
                       </th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Actions
+                        Akcie
                       </th>
                     </tr>
                   </thead>
@@ -280,7 +280,7 @@ export default function ReservationsPage() {
                               <div className="font-medium text-white">
                                 {customerInfo.name}
                                 {!customerInfo.isRegistered && (
-                                  <span className="ml-2 text-xs text-slate-400">(Guest)</span>
+                                  <span className="ml-2 text-xs text-slate-400">(Hosť)</span>
                                 )}
                               </div>
                               <div className="text-sm text-slate-300">
@@ -311,7 +311,7 @@ export default function ReservationsPage() {
                               }}
                               className="px-3 py-1 text-sm text-white hover:bg-slate-700 rounded"
                             >
-                              View Details
+                              Zobraziť detaily
                             </button>
                           </td>
                         </tr>
@@ -332,7 +332,7 @@ export default function ReservationsPage() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-white">
-                  Reservation Details
+                  Detaily rezervácie
                 </h2>
                 <button
                   onClick={() => {
@@ -349,25 +349,25 @@ export default function ReservationsPage() {
                 {/* Customer Info */}
                 <div>
                   <h3 className="text-sm font-medium text-white mb-2">
-                    Customer Information
+                    Informácie o zákazníkovi
                   </h3>
                   <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-300">Name</p>
+                        <p className="text-sm text-slate-300">Meno</p>
                         <p className="font-medium text-white">
                           {getCustomerInfo(selectedReservation).name}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-300">Email</p>
+                        <p className="text-sm text-slate-300">E-mail</p>
                         <p className="font-medium text-white">
                           {getCustomerInfo(selectedReservation).email}
                         </p>
                       </div>
                       {selectedReservation.customer?.phone && (
                         <div>
-                          <p className="text-sm text-slate-300">Phone</p>
+                          <p className="text-sm text-slate-300">Telefón</p>
                           <p className="font-medium text-white">
                             {selectedReservation.customer.phone}
                           </p>
@@ -380,24 +380,24 @@ export default function ReservationsPage() {
                 {/* Reservation Details */}
                 <div>
                   <h3 className="text-sm font-medium text-white mb-2">
-                    Reservation Details
+                    Detaily rezervácie
                   </h3>
                   <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-slate-300">Scheduled At</p>
+                        <p className="text-sm text-slate-300">Naplánované na</p>
                         <p className="font-medium text-white">
                           {formatDateTime(new Date(selectedReservation.scheduledAt))}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-300">Duration</p>
+                        <p className="text-sm text-slate-300">Trvanie</p>
                         <p className="font-medium text-white">
-                          {selectedReservation.durationMinutes} minutes
+                          {selectedReservation.durationMinutes} minút
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-300">Status</p>
+                        <p className="text-sm text-slate-300">Stav</p>
                         <p>
                           <span
                             className={`inline-block px-2 py-1 text-xs font-medium rounded ${getStatusBadgeClass(
@@ -409,7 +409,7 @@ export default function ReservationsPage() {
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-slate-300">Created</p>
+                        <p className="text-sm text-slate-300">Vytvorené</p>
                         <p className="font-medium text-white">
                           {formatDateTime(new Date(selectedReservation.createdAt))}
                         </p>
@@ -417,7 +417,7 @@ export default function ReservationsPage() {
                     </div>
                     {selectedReservation.notes && (
                       <div className="mt-4">
-                        <p className="text-sm text-slate-300">Notes</p>
+                        <p className="text-sm text-slate-300">Poznámky</p>
                         <p className="font-medium text-white">
                           {selectedReservation.notes}
                         </p>
@@ -429,7 +429,7 @@ export default function ReservationsPage() {
                 {/* Action Notes */}
                 <div>
                   <label className="block text-sm font-medium text-white mb-2">
-                    Action Notes (optional)
+                    Poznámky k akcii (voliteľné)
                   </label>
                   <textarea
                     value={actionNotes}
@@ -437,7 +437,7 @@ export default function ReservationsPage() {
                     className="w-full px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
                     style={{ backgroundColor: "#1f1f1f" }}
                     rows={3}
-                    placeholder="Add notes for rejection or cancellation..."
+                    placeholder="Pridať poznámky k zamietnutiu alebo zrušeniu..."
                   />
                 </div>
 
@@ -453,7 +453,7 @@ export default function ReservationsPage() {
                         className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
                       >
                         <CheckCircle className="w-4 h-4" />
-                        Confirm
+                        Potvrdiť
                       </button>
                       <button
                         onClick={() =>
@@ -463,7 +463,7 @@ export default function ReservationsPage() {
                         className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
                       >
                         <XCircle className="w-4 h-4" />
-                        Reject
+                        Zamietnuť
                       </button>
                     </>
                   )}
@@ -478,7 +478,7 @@ export default function ReservationsPage() {
                       className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50"
                     >
                       <Ban className="w-4 h-4" />
-                      Cancel
+                      Zrušiť
                     </button>
                   )}
 
@@ -492,7 +492,7 @@ export default function ReservationsPage() {
                         className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
                       >
                         <Check className="w-4 h-4" />
-                        Complete
+                        Dokončiť
                       </button>
                       <button
                         onClick={() =>
@@ -502,7 +502,7 @@ export default function ReservationsPage() {
                         className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
                       >
                         <UserX className="w-4 h-4" />
-                        No Show
+                        Neprišiel
                       </button>
                     </>
                   )}
@@ -513,7 +513,7 @@ export default function ReservationsPage() {
                       className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors ml-auto"
                     >
                       <Trash2 className="w-4 h-4" />
-                      Delete
+                      Vymazať
                     </button>
                   )}
                 </div>
