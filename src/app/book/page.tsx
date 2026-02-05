@@ -275,7 +275,13 @@ export default function BookPage() {
         )}
 
         {step === 1 && (
-          <div className="space-y-4">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleEmailCheck();
+            }}
+            className="space-y-4"
+          >
             <div>
               <label className="block text-sm font-medium text-white mb-2">
                 <Mail className="inline w-4 h-4 mr-2" />
@@ -285,6 +291,12 @@ export default function BookPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && email && !checkingEmail) {
+                    e.preventDefault();
+                    handleEmailCheck();
+                  }
+                }}
                 className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                 placeholder="vasa.adresa@priklad.sk"
@@ -293,14 +305,14 @@ export default function BookPage() {
             </div>
 
             <button
-              onClick={handleEmailCheck}
+              type="submit"
               disabled={checkingEmail || !email}
               className="w-full px-4 py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ backgroundColor: '#c20003' }}
             >
               {checkingEmail ? "Kontrolujem..." : "Pokračovať"}
             </button>
-          </div>
+          </form>
         )}
 
         {step === 2 && (
@@ -486,7 +498,6 @@ export default function BookPage() {
                     existingCustomer ? "opacity-60" : ""
                   }`}
                   style={{ backgroundColor: '#1f1f1f', border: 'none' }}
-                  placeholder="+421 XXX XXX XXX alebo 0XXX XXX XXX"
                   required={!existingCustomer}
                   pattern="^(\+421\s?\d{3}\s?\d{3}\s?\d{3}|0\d{3}\s?\d{3}\s?\d{3})$"
                   title="Telefónne číslo musí byť vo formáte +421 xxx xxx xxx alebo 0xxx xxx xxx"
