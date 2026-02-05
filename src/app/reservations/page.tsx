@@ -10,6 +10,9 @@ import {
   UserX,
   Trash2,
   Filter,
+  Eye,
+  Calendar,
+  Clock,
 } from "lucide-react";
 import { formatDateTime } from "@/lib/format";
 import { usePermissions } from "@/lib/use-permissions";
@@ -57,6 +60,18 @@ export default function ReservationsPage() {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [actionInProgress, setActionInProgress] = useState(false);
   const [actionNotes, setActionNotes] = useState("");
+  
+  // Reschedule modal state
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [rescheduleReservation, setRescheduleReservation] = useState<Reservation | null>(null);
+  const [rescheduleDate, setRescheduleDate] = useState("");
+  const [rescheduleSlot, setRescheduleSlot] = useState("");
+  const [availableSlots, setAvailableSlots] = useState<Array<{
+    time: string;
+    available: boolean;
+    isPast: boolean;
+  }>>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
 
   const fetchReservations = useCallback(async () => {
     setLoading(true);
@@ -139,6 +154,88 @@ export default function ReservationsPage() {
       console.error("Error deleting reservation:", error);
       alert("Nepodarilo sa vymazať rezerváciu");
     }
+  };
+
+  // Quick action handlers for table buttons
+  const handleViewDetails = (reservation: Reservation) => {
+    setSelectedReservation(reservation);
+    setShowDetailModal(true);
+  };
+
+  const handleQuickApprove = async (reservationId: string) => {
+    if (confirm("Schváliť túto rezerváciu?")) {
+      await handleStatusChange(reservationId, "CONFIRMED");
+    }
+  };
+
+  const handleQuickCancel = async (reservationId: string) => {
+    if (confirm("Zrušiť túto rezerváciu?")) {
+      await handleStatusChange(reservationId, "CANCELLED");
+    }
+  };
+
+  // Reschedule modal handlers
+  const handleOpenReschedule = (reservation: Reservation) => {
+    setRescheduleReservation(reservation);
+    setRescheduleDate("");
+    setRescheduleSlot("");
+    setAvailableSlots([]);
+    setShowRescheduleModal(true);
+  };
+
+  const fetchAvailableSlotsForReschedule = async (date: string, duration: number) => {
+    setLoadingSlots(true);
+    try {
+      const response = await fetch(
+        `/api/reservations/available-slots?date=${date}&duration=${duration}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch slots");
+      const data = await response.json();
+      setAvailableSlots(data.slots || []);
+    } catch (error) {
+      console.error("Error fetching available slots:", error);
+      setAvailableSlots([]);
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
+
+  const handleSaveReschedule = async () => {
+    if (!rescheduleReservation || !rescheduleDate || !rescheduleSlot) {
+      alert("Prosím vyberte dátum a čas");
+      return;
+    }
+
+    setActionInProgress(true);
+    try {
+      const scheduledAt = new Date(`${rescheduleDate}T${rescheduleSlot}`).toISOString();
+      const response = await fetch(`/api/reservations/${rescheduleReservation.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scheduledAt }),
+      });
+
+      if (response.ok) {
+        await fetchReservations();
+        setShowRescheduleModal(false);
+        alert("Termín rezervácie bol úspešne zmenený");
+      } else {
+        alert("Nepodarilo sa zmeniť termín rezervácie");
+      }
+    } catch (error) {
+      console.error("Error rescheduling:", error);
+      alert("Nepodarilo sa zmeniť termín rezervácie");
+    } finally {
+      setActionInProgress(false);
+    }
+  };
+
+  const calculateEndTime = (startTime: string, durationMinutes: number): string => {
+    const [hours, minutes] = startTime.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes + durationMinutes;
+    const endHours = Math.floor(totalMinutes / 60) % 24;
+    const endMinutes = totalMinutes % 60;
+    return `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
   };
 
   const getStatusColor = (status: string) => {
@@ -304,15 +401,49 @@ export default function ReservationsPage() {
                             </span>
                           </td>
                           <td className="py-3 px-4">
-                            <button
-                              onClick={() => {
-                                setSelectedReservation(reservation);
-                                setShowDetailModal(true);
-                              }}
-                              className="px-3 py-1 text-sm text-white hover:bg-slate-700 rounded"
-                            >
-                              Zobraziť detaily
-                            </button>
+                            <div className="flex items-center gap-2">
+                              {/* View Details */}
+                              <button
+                                onClick={() => handleViewDetails(reservation)}
+                                className="text-slate-300 hover:text-white p-1"
+                                title="Zobraziť detaily"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              
+                              {/* Approve (PENDING only) */}
+                              {reservation.status === "PENDING" && (
+                                <button
+                                  onClick={() => handleQuickApprove(reservation.id)}
+                                  className="text-green-400 hover:text-green-300 p-1"
+                                  title="Schváliť"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </button>
+                              )}
+                              
+                              {/* Cancel (PENDING/CONFIRMED) */}
+                              {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
+                                <button
+                                  onClick={() => handleQuickCancel(reservation.id)}
+                                  className="text-red-400 hover:text-red-300 p-1"
+                                  title="Zrušiť"
+                                >
+                                  <Ban className="w-4 h-4" />
+                                </button>
+                              )}
+                              
+                              {/* Reschedule (PENDING/CONFIRMED) */}
+                              {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
+                                <button
+                                  onClick={() => handleOpenReschedule(reservation)}
+                                  className="text-blue-400 hover:text-blue-300 p-1"
+                                  title="Zmeniť termín"
+                                >
+                                  <Calendar className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       );
@@ -516,6 +647,168 @@ export default function ReservationsPage() {
                       Vymazať
                     </button>
                   )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reschedule Modal */}
+      {showRescheduleModal && rescheduleReservation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-white">
+                  Zmeniť termín rezervácie
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowRescheduleModal(false);
+                    setRescheduleDate("");
+                    setRescheduleSlot("");
+                    setAvailableSlots([]);
+                  }}
+                  className="text-slate-300 hover:text-white"
+                >
+                  <XCircle className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {/* Current Reservation Info */}
+                <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
+                  <p className="text-sm text-slate-300 mb-2">Aktuálny termín:</p>
+                  <p className="text-white font-medium">
+                    {formatDateTime(new Date(rescheduleReservation.scheduledAt))}
+                  </p>
+                  <p className="text-sm text-slate-300 mt-1">
+                    Trvanie: {rescheduleReservation.durationMinutes} minút
+                  </p>
+                </div>
+
+                {/* Date Picker */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Nový dátum
+                  </label>
+                  <input
+                    type="date"
+                    value={rescheduleDate}
+                    onChange={(e) => {
+                      setRescheduleDate(e.target.value);
+                      setRescheduleSlot("");
+                      if (e.target.value) {
+                        fetchAvailableSlotsForReschedule(e.target.value, rescheduleReservation.durationMinutes);
+                      }
+                    }}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
+                    style={{ backgroundColor: "#1f1f1f" }}
+                  />
+                </div>
+
+                {/* Time Slots */}
+                {rescheduleDate && (
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-3">
+                      <Clock className="inline w-4 h-4 mr-2" />
+                      Dostupné časové sloty pre {rescheduleReservation.durationMinutes} minút
+                    </label>
+                    {loadingSlots ? (
+                      <div className="text-center py-4 text-slate-300">
+                        Načítavam sloty...
+                      </div>
+                    ) : availableSlots.length > 0 ? (
+                      <>
+                        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
+                          {availableSlots.map((slot) => (
+                            <button
+                              key={slot.time}
+                              onClick={() => setRescheduleSlot(slot.time)}
+                              disabled={!slot.available || slot.isPast}
+                              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                                rescheduleSlot === slot.time
+                                  ? "ring-2 ring-white"
+                                  : ""
+                              }`}
+                              style={{
+                                backgroundColor: slot.available && !slot.isPast
+                                  ? rescheduleSlot === slot.time
+                                    ? "#c20003"
+                                    : "#2a7c2a"
+                                  : "#666",
+                                color: "white",
+                                opacity: !slot.available || slot.isPast ? 0.4 : 1,
+                                cursor: !slot.available || slot.isPast ? "not-allowed" : "pointer",
+                              }}
+                            >
+                              {slot.time}
+                            </button>
+                          ))}
+                        </div>
+                        
+                        {/* Legend */}
+                        <div className="flex gap-4 mt-3 text-xs text-slate-300">
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#2a7c2a" }}></div>
+                            <span>Dostupné</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#666" }}></div>
+                            <span>Obsadené</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 rounded" style={{ backgroundColor: "#c20003" }}></div>
+                            <span>Vybrané</span>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-center py-4 text-slate-300">
+                        Žiadne dostupné sloty pre tento dátum
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Time Range Summary */}
+                {rescheduleSlot && (
+                  <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f", border: "2px solid #c20003" }}>
+                    <div className="flex items-center justify-center">
+                      <Clock className="inline w-5 h-5 mr-2 text-red-500" />
+                      <span className="text-white font-semibold text-lg">
+                        Nový termín: {rescheduleSlot} - {calculateEndTime(rescheduleSlot, rescheduleReservation.durationMinutes)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-300 text-center mt-2">
+                      Trvanie: {rescheduleReservation.durationMinutes} minút
+                    </p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-2 pt-4">
+                  <button
+                    onClick={handleSaveReschedule}
+                    disabled={actionInProgress || !rescheduleDate || !rescheduleSlot}
+                    className="flex-1 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: "#c20003" }}
+                  >
+                    {actionInProgress ? "Ukladám..." : "Uložiť"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowRescheduleModal(false);
+                      setRescheduleDate("");
+                      setRescheduleSlot("");
+                      setAvailableSlots([]);
+                    }}
+                    className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                  >
+                    Zrušiť
+                  </button>
                 </div>
               </div>
             </div>
