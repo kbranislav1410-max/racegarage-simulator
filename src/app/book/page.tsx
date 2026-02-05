@@ -49,7 +49,8 @@ export default function BookPage() {
       const response = await fetch(
         `/api/customers/search?q=${encodeURIComponent(email)}`
       );
-      const customers = await response.json();
+      const data = await response.json();
+      const customers = data.customers || [];
 
       // Find exact email match
       interface CustomerSearchResult {
