@@ -133,6 +133,7 @@ export default function BookPage() {
               lastName: formData.lastName,
               street: formData.street,
               city: formData.city,
+              phone: formData.phone,
             }),
       };
 

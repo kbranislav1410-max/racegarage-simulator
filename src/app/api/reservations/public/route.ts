@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
         },
       });
     } else {
-      // Validate that we have all required guest fields
+      // Validate that we have all required fields for new customer
       if (
         !validatedData.firstName ||
         !validatedData.lastName
@@ -120,18 +120,44 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Create reservation with guest information
-      reservation = await prisma.reservation.create({
-        data: {
-          guestEmail: email,
-          guestName: `${validatedData.firstName} ${validatedData.lastName}`,
-          guestStreet: validatedData.street,
-          guestCity: validatedData.city,
-          scheduledAt,
-          durationMinutes,
-          status: "PENDING",
-        },
+      // Create new customer and reservation in a transaction
+      const result = await prisma.$transaction(async (tx) => {
+        // Create new customer
+        const newCustomer = await tx.customer.create({
+          data: {
+            email: email.toLowerCase(),
+            firstName: validatedData.firstName!,
+            lastName: validatedData.lastName!,
+            street: validatedData.street || null,
+            city: validatedData.city || null,
+            phone: validatedData.phone || null,
+            newsletter: false,
+          },
+        });
+
+        // Create reservation linked to new customer
+        const newReservation = await tx.reservation.create({
+          data: {
+            customerId: newCustomer.id,
+            scheduledAt,
+            durationMinutes,
+            status: "PENDING",
+          },
+          include: {
+            customer: {
+              select: {
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        });
+
+        return newReservation;
       });
+
+      reservation = result;
     }
 
     // TODO: Send confirmation email

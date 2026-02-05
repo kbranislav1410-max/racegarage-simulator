@@ -11,6 +11,7 @@ export const createPublicReservationSchema = z.object({
   lastName: z.string().min(1).optional(),
   street: z.string().optional(),
   city: z.string().optional(),
+  phone: z.string().optional(),
 });
 
 // Schema for internal reservation creation
