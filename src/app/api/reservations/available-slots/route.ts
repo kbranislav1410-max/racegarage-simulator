@@ -31,12 +31,12 @@ function generateTimeSlots(date: Date): { time: string; datetime: Date }[] {
   return slots;
 }
 
-// Check if a slot overlaps with existing reservations
+// Check if a slot has continuous availability for the requested duration
 async function checkSlotAvailability(
   slotStart: Date,
-  slotDuration: number = SLOT_DURATION
+  requestedDuration: number
 ): Promise<boolean> {
-  const slotEnd = new Date(slotStart.getTime() + slotDuration * 60000);
+  const slotEnd = new Date(slotStart.getTime() + requestedDuration * 60000);
 
   // Query only reservations that could potentially overlap
   // No buffer needed - fetch reservations where:
@@ -83,10 +83,21 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const dateParam = searchParams.get("date");
+    const durationParam = searchParams.get("duration");
 
     if (!dateParam) {
       return NextResponse.json(
         { error: "Date parameter is required" },
+        { status: 400 }
+      );
+    }
+
+    // Get duration, default to 30 minutes if not provided
+    const requestedDuration = durationParam ? parseInt(durationParam) : 30;
+    
+    if (isNaN(requestedDuration) || requestedDuration < 15 || requestedDuration > 180) {
+      return NextResponse.json(
+        { error: "Invalid duration. Must be between 15 and 180 minutes." },
         { status: 400 }
       );
     }
@@ -114,14 +125,15 @@ export async function GET(request: NextRequest) {
     // Generate all possible time slots
     const allSlots = generateTimeSlots(date);
 
-    // Check availability for each slot
+    // Check availability for each slot with the requested duration
     const slotsWithAvailability = await Promise.all(
       allSlots.map(async (slot) => {
         // Don't show past slots for today
         const now = new Date();
         const isPast = slot.datetime < now;
         
-        const isAvailable = isPast ? false : await checkSlotAvailability(slot.datetime);
+        // Check if this slot has continuous availability for the requested duration
+        const isAvailable = isPast ? false : await checkSlotAvailability(slot.datetime, requestedDuration);
 
         return {
           time: slot.time,
@@ -133,6 +145,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       date: dateParam,
+      duration: requestedDuration,
       slots: slotsWithAvailability,
     });
   } catch (error) {

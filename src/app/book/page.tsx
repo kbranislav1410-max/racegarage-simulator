@@ -121,8 +121,8 @@ export default function BookPage() {
     }
   };
 
-  // Fetch available slots when date changes
-  const fetchAvailableSlots = async (date: string) => {
+  // Fetch available slots when date or duration changes
+  const fetchAvailableSlots = async (date: string, duration: number) => {
     if (!date) {
       setAvailableSlots([]);
       return;
@@ -131,7 +131,7 @@ export default function BookPage() {
     setLoadingSlots(true);
     try {
       const response = await fetch(
-        `/api/reservations/available-slots?date=${encodeURIComponent(date)}`
+        `/api/reservations/available-slots?date=${encodeURIComponent(date)}&duration=${duration}`
       );
 
       if (!response.ok) {
@@ -154,7 +154,17 @@ export default function BookPage() {
   const handleDateChange = (newDate: string) => {
     setFormData({ ...formData, scheduledDate: newDate, scheduledTime: "" });
     setSelectedSlot("");
-    fetchAvailableSlots(newDate);
+    fetchAvailableSlots(newDate, formData.durationMinutes);
+  };
+
+  // Handle duration change
+  const handleDurationChange = (newDuration: number) => {
+    setFormData({ ...formData, durationMinutes: newDuration, scheduledTime: "" });
+    setSelectedSlot("");
+    // If date is already selected, refetch slots with new duration
+    if (formData.scheduledDate) {
+      fetchAvailableSlots(formData.scheduledDate, newDuration);
+    }
   };
 
   // Handle slot selection
@@ -398,6 +408,26 @@ export default function BookPage() {
 
             <div className="mb-4">
               <label className="block text-sm font-medium text-white mb-2">
+                <Clock className="inline w-4 h-4 mr-2" />
+                Trvanie rezervácie
+              </label>
+              <select
+                value={formData.durationMinutes}
+                onChange={(e) => handleDurationChange(Number(e.target.value))}
+                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                required
+              >
+                {DURATION_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value} style={{ backgroundColor: '#1f1f1f' }}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-white mb-2">
                 <Calendar className="inline w-4 h-4 mr-2" />
                 Vyberte dátum
               </label>
@@ -412,11 +442,19 @@ export default function BookPage() {
               />
             </div>
 
+            {!formData.scheduledDate && (
+              <div className="mb-4 p-4 rounded-lg" style={{ backgroundColor: '#1a1a1a', border: '1px solid #444' }}>
+                <p className="text-sm text-slate-300 text-center">
+                  ℹ️ Po výbere dátumu sa zobrazia dostupné časové sloty pre vami zvolené trvanie ({formData.durationMinutes} minút)
+                </p>
+              </div>
+            )}
+
             {formData.scheduledDate && (
               <div className="mb-4">
                 <label className="block text-sm font-medium text-white mb-3">
                   <Clock className="inline w-4 h-4 mr-2" />
-                  Dostupné časové sloty (Vyberte čas)
+                  Dostupné časové sloty pre {formData.durationMinutes} minút (Vyberte čas)
                 </label>
                 
                 {loadingSlots ? (
@@ -462,7 +500,7 @@ export default function BookPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-slate-300">
-                    Žiadne dostupné termíny pre tento dátum.
+                    Žiadne dostupné termíny pre tento dátum a trvanie.
                   </div>
                 )}
 
@@ -484,30 +522,6 @@ export default function BookPage() {
                 )}
               </div>
             )}
-
-            <div>
-              <label className="block text-sm font-medium text-white mb-2">
-                Trvanie
-              </label>
-              <select
-                value={formData.durationMinutes}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    durationMinutes: Number(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
-                required
-              >
-                {DURATION_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value} style={{ backgroundColor: '#1f1f1f' }}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
 
             <div className="border-t border-slate-700 pt-4">
               <h3 className="text-lg font-semibold text-white mb-4">
