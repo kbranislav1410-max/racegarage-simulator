@@ -112,6 +112,27 @@ interface CustomerSummary {
   lastRide: string | null;
 }
 
+interface Reservation {
+  id: string;
+  customerId: string | null;
+  customer: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    street: string | null;
+    city: string | null;
+    phone: string | null;
+  } | null;
+  guestEmail: string | null;
+  guestName: string | null;
+  scheduledAt: string;
+  durationMinutes: number;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+}
+
 export default function DashboardPage() {
   const { canViewFinancials } = usePermissions();
   const router = useRouter();
@@ -152,6 +173,14 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [revenueFilter, setRevenueFilter] = useState<"all" | "racegarage" | "pdDriveClub">("all");
   const [customerFilter, setCustomerFilter] = useState<"rides" | "newCustomers" | "returningCustomers">("rides");
+
+  // Reservations State
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [loadingReservations, setLoadingReservations] = useState(false);
 
   // Record Ride Modal State
   const [showRecordModal, setShowRecordModal] = useState(false);
@@ -271,6 +300,32 @@ export default function DashboardPage() {
     return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
   };
 
+  // Get status label in Slovak
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      PENDING: "Čakajúce",
+      CONFIRMED: "Potvrdené",
+      REJECTED: "Zamietnuté",
+      CANCELLED: "Zrušené",
+      COMPLETED: "Dokončené",
+      NO_SHOW: "Neprišiel"
+    };
+    return labels[status] || status;
+  };
+
+  // Get status color
+  const getStatusColor = (status: string) => {
+    const colors: Record<string, string> = {
+      PENDING: "#eab308",      // yellow
+      CONFIRMED: "#22c55e",    // green
+      REJECTED: "#ef4444",     // red
+      CANCELLED: "#f97316",    // orange
+      COMPLETED: "#3b82f6",    // blue
+      NO_SHOW: "#6b7280"       // gray
+    };
+    return colors[status] || "#6b7280";
+  };
+
   useEffect(() => {
     async function fetchStats() {
       try {
@@ -288,6 +343,30 @@ export default function DashboardPage() {
 
     fetchStats();
   }, []);
+
+  // Fetch reservations for selected date
+  useEffect(() => {
+    async function fetchReservations() {
+      try {
+        setLoadingReservations(true);
+        const response = await fetch(`/api/reservations?date=${selectedDate}`);
+        if (response.ok) {
+          const data = await response.json();
+          // Sort by scheduled time
+          const sorted = data.reservations.sort((a: Reservation, b: Reservation) => {
+            return new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime();
+          });
+          setReservations(sorted);
+        }
+      } catch (error) {
+        console.error("Failed to fetch reservations:", error);
+      } finally {
+        setLoadingReservations(false);
+      }
+    }
+
+    fetchReservations();
+  }, [selectedDate]);
 
   // Search customers
   useEffect(() => {
@@ -551,6 +630,94 @@ export default function DashboardPage() {
             <Search size={24} />
             <span>Vyhľadať zákazníka</span>
           </button>
+        </div>
+
+        {/* Reservation Overview */}
+        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-xl font-semibold text-white">Rezervácie</h2>
+              <p className="text-sm text-slate-400 mt-1">Prehľad rezervácií na vybraný deň</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-slate-400" />
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="px-3 py-2 rounded-lg text-white"
+                  style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                />
+              </div>
+              <button
+                onClick={() => router.push('/reservations')}
+                className="px-4 py-2 rounded-lg text-white hover:brightness-90 transition-colors flex items-center gap-2"
+                style={{ backgroundColor: "#c20003" }}
+              >
+                Spravovať všetky
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {loadingReservations ? (
+            <div className="text-center py-8">
+              <p className="text-slate-300">Načítavam rezervácie...</p>
+            </div>
+          ) : reservations.length === 0 ? (
+            <div className="text-center py-8">
+              <Calendar className="w-12 h-12 text-slate-500 mx-auto mb-3" />
+              <p className="text-slate-400">Na tento deň nie sú žiadne rezervácie</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {reservations.map((reservation) => {
+                const scheduledTime = new Date(reservation.scheduledAt);
+                const customerName = reservation.customer
+                  ? `${reservation.customer.firstName} ${reservation.customer.lastName}`
+                  : reservation.guestName || "Hosť";
+                const email = reservation.customer?.email || reservation.guestEmail || "";
+
+                return (
+                  <div
+                    key={reservation.id}
+                    className="rounded-lg p-4 hover:brightness-95 transition-all cursor-pointer"
+                    style={{ backgroundColor: "#1f1f1f" }}
+                    onClick={() => router.push('/reservations')}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-white">
+                            {scheduledTime.getHours().toString().padStart(2, '0')}:
+                            {scheduledTime.getMinutes().toString().padStart(2, '0')}
+                          </div>
+                          <div className="text-xs text-slate-400">
+                            {reservation.durationMinutes} min
+                          </div>
+                        </div>
+                        <div className="h-12 w-px bg-slate-700"></div>
+                        <div>
+                          <div className="text-white font-medium">{customerName}</div>
+                          <div className="text-sm text-slate-400">{email}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="px-3 py-1 rounded-full text-sm font-medium text-white"
+                          style={{ backgroundColor: getStatusColor(reservation.status) }}
+                        >
+                          {getStatusLabel(reservation.status)}
+                        </span>
+                        <ChevronRight className="w-5 h-5 text-slate-400" />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Customer Statistics and Financial Indicators Side by Side */}
