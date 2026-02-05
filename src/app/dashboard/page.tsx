@@ -352,8 +352,9 @@ export default function DashboardPage() {
         const response = await fetch(`/api/reservations?date=${selectedDate}`);
         if (response.ok) {
           const data = await response.json();
+          // API returns array directly, not wrapped in object
           // Sort by scheduled time
-          const sorted = data.reservations.sort((a: Reservation, b: Reservation) => {
+          const sorted = data.sort((a: Reservation, b: Reservation) => {
             return new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime();
           });
           setReservations(sorted);
