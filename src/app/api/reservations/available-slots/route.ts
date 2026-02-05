@@ -38,14 +38,17 @@ async function checkSlotAvailability(
 ): Promise<boolean> {
   const slotEnd = new Date(slotStart.getTime() + slotDuration * 60000);
 
+  // Query only reservations that could potentially overlap
+  // No buffer needed - fetch reservations where:
+  // - Reservation starts before our slot ends AND
+  // - Reservation ends after our slot starts
   const conflicts = await prisma.reservation.findMany({
     where: {
       status: {
         in: ["PENDING", "CONFIRMED"],
       },
       scheduledAt: {
-        gte: new Date(slotStart.getTime() - 2 * 60 * 60 * 1000), // 2 hours before
-        lte: new Date(slotEnd.getTime() + 2 * 60 * 60 * 1000), // 2 hours after
+        lt: slotEnd, // Reservation starts before slot ends
       },
     },
     select: {
@@ -60,13 +63,16 @@ async function checkSlotAvailability(
       reservation.scheduledAt.getTime() + reservation.durationMinutes * 60000
     );
 
-    // Check if time slots overlap
-    if (
-      (slotStart >= reservation.scheduledAt && slotStart < reservationEnd) ||
-      (slotEnd > reservation.scheduledAt && slotEnd <= reservationEnd) ||
-      (slotStart <= reservation.scheduledAt && slotEnd >= reservationEnd)
-    ) {
-      return false; // Slot is not available
+    // Reservation ends after slot starts? Then we have overlap
+    if (reservationEnd > slotStart) {
+      // Double check the overlap logic
+      if (
+        (slotStart >= reservation.scheduledAt && slotStart < reservationEnd) ||
+        (slotEnd > reservation.scheduledAt && slotEnd <= reservationEnd) ||
+        (slotStart <= reservation.scheduledAt && slotEnd >= reservationEnd)
+      ) {
+        return false; // Slot is not available
+      }
     }
   }
 
