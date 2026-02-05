@@ -491,7 +491,7 @@ export default function BookPage() {
         <div className="mt-6 pt-6 border-t border-slate-700 text-center">
           <p className="text-sm text-slate-400">
             Už máte potvrdenú rezerváciu?{" "}
-            <Link href="/login" className="text-white hover:underline font-medium" style={{ color: '#c20003' }}>
+            <Link href="/login" className="hover:underline font-medium" style={{ color: '#c20003' }}>
               Prihlásenie pre zamestnancov
             </Link>
           </p>
