@@ -173,6 +173,15 @@ export default function BookPage() {
     setFormData({ ...formData, scheduledTime: time });
   };
 
+  // Calculate end time based on start time and duration
+  const calculateEndTime = (startTime: string, durationMinutes: number): string => {
+    const [hours, minutes] = startTime.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes + durationMinutes;
+    const endHours = Math.floor(totalMinutes / 60);
+    const endMinutes = totalMinutes % 60;
+    return `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -454,7 +463,7 @@ export default function BookPage() {
               <div className="mb-4">
                 <label className="block text-sm font-medium text-white mb-3">
                   <Clock className="inline w-4 h-4 mr-2" />
-                  Dostupné časové sloty pre {formData.durationMinutes} minút (Vyberte čas)
+                  Dostupné časové sloty pre {formData.durationMinutes} minút (Vyberte čas začiatku rezervácie)
                 </label>
                 
                 {loadingSlots ? (
@@ -462,42 +471,58 @@ export default function BookPage() {
                     Načítavam dostupné termíny...
                   </div>
                 ) : availableSlots.length > 0 ? (
-                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: '#1a1a1a' }}>
-                    {availableSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        type="button"
-                        disabled={!slot.available || slot.isPast}
-                        onClick={() => handleSlotSelect(slot.time)}
-                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                          selectedSlot === slot.time
-                            ? 'ring-2 ring-offset-2 ring-offset-slate-900'
-                            : ''
-                        } ${
-                          !slot.available || slot.isPast
-                            ? 'cursor-not-allowed opacity-40'
-                            : 'hover:brightness-110'
-                        }`}
-                        style={{
-                          backgroundColor: selectedSlot === slot.time
-                            ? '#c20003'
-                            : slot.available && !slot.isPast
-                            ? '#2a7c2a'
-                            : '#666',
-                          color: 'white',
-                        }}
-                        title={
-                          slot.isPast
-                            ? 'Už prešlo'
-                            : slot.available
-                            ? 'Dostupné'
-                            : 'Obsadené'
-                        }
-                      >
-                        {slot.time}
-                      </button>
-                    ))}
-                  </div>
+                  <>
+                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: '#1a1a1a' }}>
+                      {availableSlots.map((slot) => (
+                        <button
+                          key={slot.time}
+                          type="button"
+                          disabled={!slot.available || slot.isPast}
+                          onClick={() => handleSlotSelect(slot.time)}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            selectedSlot === slot.time
+                              ? 'ring-2 ring-offset-2 ring-offset-slate-900'
+                              : ''
+                          } ${
+                            !slot.available || slot.isPast
+                              ? 'cursor-not-allowed opacity-40'
+                              : 'hover:brightness-110'
+                          }`}
+                          style={{
+                            backgroundColor: selectedSlot === slot.time
+                              ? '#c20003'
+                              : slot.available && !slot.isPast
+                              ? '#2a7c2a'
+                              : '#666',
+                            color: 'white',
+                          }}
+                          title={
+                            slot.isPast
+                              ? 'Už prešlo'
+                              : slot.available
+                              ? 'Dostupné'
+                              : 'Obsadené'
+                          }
+                        >
+                          {slot.time}
+                        </button>
+                      ))}
+                    </div>
+
+                    {selectedSlot && (
+                      <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f', border: '2px solid #c20003' }}>
+                        <div className="flex items-center justify-center">
+                          <Clock className="inline w-5 h-5 mr-2 text-red-500" />
+                          <span className="text-white font-semibold text-lg">
+                            Celková rezervácia: {selectedSlot} - {calculateEndTime(selectedSlot, formData.durationMinutes)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-300 text-center mt-2">
+                          Vaša rezervácia bude trvať {formData.durationMinutes} minút
+                        </p>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-8 text-slate-300">
                     Žiadne dostupné termíny pre tento dátum a trvanie.
