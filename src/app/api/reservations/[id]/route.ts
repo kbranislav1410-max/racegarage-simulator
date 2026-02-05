@@ -53,7 +53,20 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await request.json();
-    const validatedData = updateReservationStatusSchema.parse(body);
+    
+    // Check if this is a reschedule request (has scheduledAt) or status update
+    const isReschedule = 'scheduledAt' in body;
+    
+    let validatedData: any;
+    if (isReschedule) {
+      // Validate scheduledAt field
+      validatedData = {
+        scheduledAt: new Date(body.scheduledAt),
+      };
+    } else {
+      // Validate status update
+      validatedData = updateReservationStatusSchema.parse(body);
+    }
 
     const existingReservation = await prisma.reservation.findUnique({
       where: { id },
@@ -71,7 +84,9 @@ export async function PATCH(
 
     const updatedReservation = await prisma.reservation.update({
       where: { id },
-      data: {
+      data: isReschedule ? {
+        scheduledAt: validatedData.scheduledAt,
+      } : {
         status: validatedData.status,
         notes: validatedData.notes,
       },
@@ -87,37 +102,51 @@ export async function PATCH(
     });
 
     // Create audit log
-    await createAuditLog(
-      "UPDATE_RESERVATION_STATUS",
-      "Reservation",
-      id,
-      {
-        oldStatus: existingReservation.status,
-        newStatus: validatedData.status,
-        email: existingReservation.customer?.email || existingReservation.guestEmail,
-      }
-    );
+    if (isReschedule) {
+      await createAuditLog(
+        "RESCHEDULE_RESERVATION",
+        "Reservation",
+        id,
+        {
+          oldTime: existingReservation.scheduledAt,
+          newTime: validatedData.scheduledAt,
+          email: existingReservation.customer?.email || existingReservation.guestEmail,
+        }
+      );
+    } else {
+      await createAuditLog(
+        "UPDATE_RESERVATION_STATUS",
+        "Reservation",
+        id,
+        {
+          oldStatus: existingReservation.status,
+          newStatus: validatedData.status,
+          email: existingReservation.customer?.email || existingReservation.guestEmail,
+        }
+      );
+    }
 
-    // Send email notification based on status change
-    const email = existingReservation.customer?.email || existingReservation.guestEmail;
-    const customerName = existingReservation.customer
-      ? `${existingReservation.customer.firstName} ${existingReservation.customer.lastName}`
-      : existingReservation.guestName;
+    // Send email notification based on status change (only for status updates)
+    if (!isReschedule) {
+      const email = existingReservation.customer?.email || existingReservation.guestEmail;
+      const customerName = existingReservation.customer
+        ? `${existingReservation.customer.firstName} ${existingReservation.customer.lastName}`
+        : existingReservation.guestName;
 
-    if (email) {
-      if (validatedData.status === "CONFIRMED") {
-        await sendReservationEmail(
-          email,
-          customerName || "Customer",
-          "confirmed",
-          {
-            scheduledAt: updatedReservation.scheduledAt,
-            durationMinutes: updatedReservation.durationMinutes,
-          }
-        );
-      } else if (validatedData.status === "REJECTED" || validatedData.status === "CANCELLED") {
-        await sendReservationEmail(
-          email,
+      if (email) {
+        if (validatedData.status === "CONFIRMED") {
+          await sendReservationEmail(
+            email,
+            customerName || "Customer",
+            "confirmed",
+            {
+              scheduledAt: updatedReservation.scheduledAt,
+              durationMinutes: updatedReservation.durationMinutes,
+            }
+          );
+        } else if (validatedData.status === "REJECTED" || validatedData.status === "CANCELLED") {
+          await sendReservationEmail(
+            email,
           customerName || "Customer",
           validatedData.status.toLowerCase() as "rejected" | "cancelled",
           {
@@ -127,6 +156,7 @@ export async function PATCH(
           }
         );
       }
+    }
     }
 
     return NextResponse.json(updatedReservation);
