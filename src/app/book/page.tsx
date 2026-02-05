@@ -445,7 +445,7 @@ export default function BookPage() {
             {!formData.scheduledDate && (
               <div className="mb-4 p-4 rounded-lg" style={{ backgroundColor: '#1a1a1a', border: '1px solid #444' }}>
                 <p className="text-sm text-slate-300 text-center">
-                  ℹ️ Po výbere dátumu sa zobrazia dostupné časové sloty pre vami zvolené trvanie ({formData.durationMinutes} minút)
+                  ℹ️ Po výbere dátumu sa zobrazia dostupné časové sloty pre vámi zvolené trvanie ({formData.durationMinutes} minút)
                 </p>
               </div>
             )}
