@@ -49,6 +49,23 @@ export default function BookPage() {
       const response = await fetch(
         `/api/customers/search?q=${encodeURIComponent(email)}`
       );
+      
+      // Check if response is ok before parsing
+      if (!response.ok) {
+        console.warn("Customer search API returned error, proceeding as new customer");
+        // Proceed as new customer even if API fails
+        setExistingCustomer(null);
+        setFormData({
+          ...formData,
+          firstName: "",
+          lastName: "",
+          street: "",
+          city: "",
+        });
+        setStep(2);
+        return;
+      }
+
       const data = await response.json();
       const customers = data.customers || [];
 
@@ -85,8 +102,18 @@ export default function BookPage() {
       }
 
       setStep(2);
-    } catch {
-      setError("Failed to check email. Please try again.");
+    } catch (error) {
+      console.warn("Error checking customer email, proceeding as new customer:", error);
+      // Even if there's an error, allow user to proceed as new customer
+      setExistingCustomer(null);
+      setFormData({
+        ...formData,
+        firstName: "",
+        lastName: "",
+        street: "",
+        city: "",
+      });
+      setStep(2);
     } finally {
       setCheckingEmail(false);
     }
