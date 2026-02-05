@@ -36,6 +36,19 @@ export default function BookPage() {
   const [success, setSuccess] = useState(false);
   const [checkingEmail, setCheckingEmail] = useState(false);
 
+  // Helper function to proceed as new customer
+  const proceedAsNewCustomer = () => {
+    setExistingCustomer(null);
+    setFormData({
+      ...formData,
+      firstName: "",
+      lastName: "",
+      street: "",
+      city: "",
+    });
+    setStep(2);
+  };
+
   const handleEmailCheck = async () => {
     if (!email) {
       setError("Please enter your email address");
@@ -53,16 +66,7 @@ export default function BookPage() {
       // Check if response is ok before parsing
       if (!response.ok) {
         console.warn("Customer search API returned error, proceeding as new customer");
-        // Proceed as new customer even if API fails
-        setExistingCustomer(null);
-        setFormData({
-          ...formData,
-          firstName: "",
-          lastName: "",
-          street: "",
-          city: "",
-        });
-        setStep(2);
+        proceedAsNewCustomer();
         return;
       }
 
@@ -91,29 +95,14 @@ export default function BookPage() {
           city: customer.city || "",
         });
       } else {
-        setExistingCustomer(null);
-        setFormData({
-          ...formData,
-          firstName: "",
-          lastName: "",
-          street: "",
-          city: "",
-        });
+        proceedAsNewCustomer();
+        return;
       }
 
       setStep(2);
     } catch (error) {
       console.warn("Error checking customer email, proceeding as new customer:", error);
-      // Even if there's an error, allow user to proceed as new customer
-      setExistingCustomer(null);
-      setFormData({
-        ...formData,
-        firstName: "",
-        lastName: "",
-        street: "",
-        city: "",
-      });
-      setStep(2);
+      proceedAsNewCustomer();
     } finally {
       setCheckingEmail(false);
     }
