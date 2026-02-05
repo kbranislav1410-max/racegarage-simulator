@@ -291,12 +291,6 @@ export default function BookPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && email && !checkingEmail) {
-                    e.preventDefault();
-                    handleEmailCheck();
-                  }
-                }}
                 className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
                 style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                 placeholder="vasa.adresa@priklad.sk"
