@@ -181,6 +181,10 @@ export default function DashboardPage() {
   });
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loadingReservations, setLoadingReservations] = useState(false);
+  const [activeBookingDetails, setActiveBookingDetails] = useState<Reservation | null>(null);
+  const [displayBookingPanel, setDisplayBookingPanel] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(null);
+  const [showReservationModal, setShowReservationModal] = useState(false);
 
   // Record Ride Modal State
   const [showRecordModal, setShowRecordModal] = useState(false);
@@ -324,6 +328,41 @@ export default function DashboardPage() {
       NO_SHOW: "#6b7280"       // gray
     };
     return colors[status] || "#6b7280";
+  };
+
+  // Generate hourly time slots for the day (9 AM to 9 PM)
+  const buildDayTimeSlots = () => {
+    const slotList = [];
+    const startHour = 9;
+    const endHour = 21;
+    
+    for (let hr = startHour; hr < endHour; hr++) {
+      slotList.push(`${hr.toString().padStart(2, '0')}:00`);
+      slotList.push(`${hr.toString().padStart(2, '0')}:30`);
+    }
+    return slotList;
+  };
+
+  // Find reservation that occupies a specific time slot
+  const findBookingAtTime = (timeStr: string) => {
+    const [targetHr, targetMin] = timeStr.split(':').map(Number);
+    const targetMinutes = targetHr * 60 + targetMin;
+    
+    return reservations.find(booking => {
+      const bookingTime = new Date(booking.scheduledAt);
+      const bookingStartMin = bookingTime.getHours() * 60 + bookingTime.getMinutes();
+      const bookingEndMin = bookingStartMin + booking.durationMinutes;
+      
+      return targetMinutes >= bookingStartMin && targetMinutes < bookingEndMin;
+    });
+  };
+
+  // Open details panel for a booking
+  const openBookingDetails = (booking: Reservation | undefined) => {
+    if (booking) {
+      setActiveBookingDetails(booking);
+      setDisplayBookingPanel(true);
+    }
   };
 
   useEffect(() => {
@@ -633,7 +672,7 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Reservation Overview */}
+        {/* Reservation Overview - Compact Time Slot Grid */}
         <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex justify-between items-center mb-6">
             <div>
@@ -666,60 +705,163 @@ export default function DashboardPage() {
             <div className="text-center py-8">
               <p className="text-slate-300">Načítavam rezervácie...</p>
             </div>
-          ) : reservations.length === 0 ? (
-            <div className="text-center py-8">
-              <Calendar className="w-12 h-12 text-slate-500 mx-auto mb-3" />
-              <p className="text-slate-400">Na tento deň nie sú žiadne rezervácie</p>
-            </div>
           ) : (
-            <div className="space-y-3">
-              {reservations.map((reservation) => {
-                const scheduledTime = new Date(reservation.scheduledAt);
-                const customerName = reservation.customer
-                  ? `${reservation.customer.firstName} ${reservation.customer.lastName}`
-                  : reservation.guestName || "Hosť";
-                const email = reservation.customer?.email || reservation.guestEmail || "";
-
-                return (
-                  <div
-                    key={reservation.id}
-                    className="rounded-lg p-4 hover:brightness-95 transition-all cursor-pointer"
-                    style={{ backgroundColor: "#1f1f1f" }}
-                    onClick={() => router.push('/reservations')}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-white">
-                            {scheduledTime.getHours().toString().padStart(2, '0')}:
-                            {scheduledTime.getMinutes().toString().padStart(2, '0')}
-                          </div>
-                          <div className="text-xs text-slate-400">
-                            {reservation.durationMinutes} min
-                          </div>
-                        </div>
-                        <div className="h-12 w-px bg-slate-700"></div>
-                        <div>
-                          <div className="text-white font-medium">{customerName}</div>
-                          <div className="text-sm text-slate-400">{email}</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span
-                          className="px-3 py-1 rounded-full text-sm font-medium text-white"
-                          style={{ backgroundColor: getStatusColor(reservation.status) }}
-                        >
-                          {getStatusLabel(reservation.status)}
-                        </span>
-                        <ChevronRight className="w-5 h-5 text-slate-400" />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <>
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-3 rounded-lg" style={{ backgroundColor: "#1a1a1a" }}>
+                {buildDayTimeSlots().map((timeSlot) => {
+                  const bookingAtSlot = findBookingAtTime(timeSlot);
+                  const hasBooking = !!bookingAtSlot;
+                  
+                  return (
+                    <button
+                      key={timeSlot}
+                      type="button"
+                      onClick={() => openBookingDetails(bookingAtSlot)}
+                      disabled={!hasBooking}
+                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                        hasBooking ? 'hover:brightness-110 cursor-pointer' : 'cursor-default'
+                      }`}
+                      style={{
+                        backgroundColor: hasBooking ? getStatusColor(bookingAtSlot.status) : '#4a4a4a',
+                        color: 'white',
+                        opacity: hasBooking ? 1 : 0.5
+                      }}
+                    >
+                      {timeSlot}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              {/* Legend */}
+              <div className="mt-4 flex flex-wrap items-center gap-4 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#4a4a4a', opacity: 0.5 }}></div>
+                  <span className="text-slate-400">Voľné</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#eab308' }}></div>
+                  <span className="text-slate-400">Čakajúce</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#22c55e' }}></div>
+                  <span className="text-slate-400">Potvrdené</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#3b82f6' }}></div>
+                  <span className="text-slate-400">Dokončené</span>
+                </div>
+              </div>
+            </>
           )}
         </div>
+
+        {/* Booking Details Modal */}
+        {displayBookingPanel && activeBookingDetails && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-6">
+                  <h2 className="text-2xl font-bold text-white">Detaily rezervácie</h2>
+                  <button
+                    onClick={() => setDisplayBookingPanel(false)}
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Customer Info */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-3">Informácie o zákazníkovi</h3>
+                    <div className="rounded-lg p-4 space-y-2" style={{ backgroundColor: "#1f1f1f" }}>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Meno:</span>
+                        <span className="text-white font-medium">
+                          {activeBookingDetails.customer
+                            ? `${activeBookingDetails.customer.firstName} ${activeBookingDetails.customer.lastName}`
+                            : activeBookingDetails.guestName || "Hosť"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">E-mail:</span>
+                        <span className="text-white">
+                          {activeBookingDetails.customer?.email || activeBookingDetails.guestEmail || "—"}
+                        </span>
+                      </div>
+                      {activeBookingDetails.customer?.phone && (
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Telefón:</span>
+                          <span className="text-white">{activeBookingDetails.customer.phone}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Reservation Info */}
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-3">Detaily rezervácie</h3>
+                    <div className="rounded-lg p-4 space-y-2" style={{ backgroundColor: "#1f1f1f" }}>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Naplánované na:</span>
+                        <span className="text-white font-medium">
+                          {new Date(activeBookingDetails.scheduledAt).toLocaleString('sk-SK', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Trvanie:</span>
+                        <span className="text-white">{activeBookingDetails.durationMinutes} minút</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Stav:</span>
+                        <span
+                          className="px-3 py-1 rounded-full text-sm font-medium"
+                          style={{ backgroundColor: getStatusColor(activeBookingDetails.status) }}
+                        >
+                          {getStatusLabel(activeBookingDetails.status)}
+                        </span>
+                      </div>
+                      {activeBookingDetails.notes && (
+                        <div className="pt-2 border-t border-slate-700">
+                          <span className="text-slate-400 block mb-1">Poznámky:</span>
+                          <span className="text-white">{activeBookingDetails.notes}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        setDisplayBookingPanel(false);
+                        router.push('/reservations');
+                      }}
+                      className="flex-1 px-4 py-2 rounded-lg text-white hover:brightness-90 transition-colors"
+                      style={{ backgroundColor: "#c20003" }}
+                    >
+                      Spravovať v zozname rezervácií
+                    </button>
+                    <button
+                      onClick={() => setDisplayBookingPanel(false)}
+                      className="px-4 py-2 rounded-lg text-white hover:brightness-90 transition-colors"
+                      style={{ backgroundColor: "#4a4a4a" }}
+                    >
+                      Zavrieť
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Customer Statistics and Financial Indicators Side by Side */}
         {canViewFinancials && (
