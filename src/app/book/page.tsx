@@ -36,6 +36,15 @@ export default function BookPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [checkingEmail, setCheckingEmail] = useState(false);
+  
+  // New state for available slots
+  const [availableSlots, setAvailableSlots] = useState<Array<{
+    time: string;
+    available: boolean;
+    isPast: boolean;
+  }>>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState("");
 
   // Helper function to proceed as new customer
   const proceedAsNewCustomer = () => {
@@ -110,6 +119,48 @@ export default function BookPage() {
     } finally {
       setCheckingEmail(false);
     }
+  };
+
+  // Fetch available slots when date changes
+  const fetchAvailableSlots = async (date: string) => {
+    if (!date) {
+      setAvailableSlots([]);
+      return;
+    }
+
+    setLoadingSlots(true);
+    try {
+      const response = await fetch(
+        `/api/reservations/available-slots?date=${encodeURIComponent(date)}`
+      );
+
+      if (!response.ok) {
+        console.error("Failed to fetch available slots");
+        setAvailableSlots([]);
+        return;
+      }
+
+      const data = await response.json();
+      setAvailableSlots(data.slots || []);
+    } catch (error) {
+      console.error("Error fetching available slots:", error);
+      setAvailableSlots([]);
+    } finally {
+      setLoadingSlots(false);
+    }
+  };
+
+  // Handle date change
+  const handleDateChange = (newDate: string) => {
+    setFormData({ ...formData, scheduledDate: newDate, scheduledTime: "" });
+    setSelectedSlot("");
+    fetchAvailableSlots(newDate);
+  };
+
+  // Handle slot selection
+  const handleSlotSelect = (time: string) => {
+    setSelectedSlot(time);
+    setFormData({ ...formData, scheduledTime: time });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -345,42 +396,94 @@ export default function BookPage() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  <Calendar className="inline w-4 h-4 mr-2" />
-                  Dátum
-                </label>
-                <input
-                  type="date"
-                  value={formData.scheduledDate}
-                  onChange={(e) =>
-                    setFormData({ ...formData, scheduledDate: e.target.value })
-                  }
-                  min={new Date().toISOString().split("T")[0]}
-                  className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  <Clock className="inline w-4 h-4 mr-2" />
-                  Čas
-                </label>
-                <input
-                  type="time"
-                  value={formData.scheduledTime}
-                  onChange={(e) =>
-                    setFormData({ ...formData, scheduledTime: e.target.value })
-                  }
-                  className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
-                  required
-                />
-              </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-white mb-2">
+                <Calendar className="inline w-4 h-4 mr-2" />
+                Vyberte dátum
+              </label>
+              <input
+                type="date"
+                value={formData.scheduledDate}
+                onChange={(e) => handleDateChange(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                required
+              />
             </div>
+
+            {formData.scheduledDate && (
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-white mb-3">
+                  <Clock className="inline w-4 h-4 mr-2" />
+                  Dostupné časové sloty (Vyberte čas)
+                </label>
+                
+                {loadingSlots ? (
+                  <div className="text-center py-8 text-slate-300">
+                    Načítavam dostupné termíny...
+                  </div>
+                ) : availableSlots.length > 0 ? (
+                  <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: '#1a1a1a' }}>
+                    {availableSlots.map((slot) => (
+                      <button
+                        key={slot.time}
+                        type="button"
+                        disabled={!slot.available || slot.isPast}
+                        onClick={() => handleSlotSelect(slot.time)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                          selectedSlot === slot.time
+                            ? 'ring-2 ring-offset-2 ring-offset-slate-900'
+                            : ''
+                        } ${
+                          !slot.available || slot.isPast
+                            ? 'cursor-not-allowed opacity-40'
+                            : 'hover:brightness-110'
+                        }`}
+                        style={{
+                          backgroundColor: selectedSlot === slot.time
+                            ? '#c20003'
+                            : slot.available && !slot.isPast
+                            ? '#2a7c2a'
+                            : '#666',
+                          color: 'white',
+                        }}
+                        title={
+                          slot.isPast
+                            ? 'Už prešlo'
+                            : slot.available
+                            ? 'Dostupné'
+                            : 'Obsadené'
+                        }
+                      >
+                        {slot.time}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-300">
+                    Žiadne dostupné termíny pre tento dátum.
+                  </div>
+                )}
+
+                {formData.scheduledDate && availableSlots.length > 0 && (
+                  <div className="mt-3 flex items-center justify-center gap-6 text-xs text-slate-300">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: '#2a7c2a' }}></div>
+                      <span>Dostupné</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded" style={{ backgroundColor: '#666' }}></div>
+                      <span>Obsadené</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded ring-2 ring-white" style={{ backgroundColor: '#c20003' }}></div>
+                      <span>Vybrané</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-white mb-2">
