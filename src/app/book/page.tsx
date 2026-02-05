@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock, User, Mail, MapPin } from "lucide-react";
-import Link from "next/link";
+import { Calendar, Clock, User, Mail, MapPin, Phone } from "lucide-react";
 
 const DURATION_OPTIONS = [
   { value: 15, label: "15 minút" },
@@ -21,6 +20,7 @@ export default function BookPage() {
     lastName: string;
     street: string | null;
     city: string | null;
+    phone: string | null;
   } | null>(null);
   const [formData, setFormData] = useState({
     scheduledDate: "",
@@ -30,6 +30,7 @@ export default function BookPage() {
     lastName: "",
     street: "",
     city: "",
+    phone: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -45,6 +46,7 @@ export default function BookPage() {
       lastName: "",
       street: "",
       city: "",
+      phone: "",
     });
     setStep(2);
   };
@@ -80,6 +82,7 @@ export default function BookPage() {
         lastName: string;
         street?: string;
         city?: string;
+        phone?: string;
       }
       const customer = customers.find(
         (c: CustomerSearchResult) => c.email.toLowerCase() === email.toLowerCase()
@@ -93,6 +96,7 @@ export default function BookPage() {
           lastName: customer.lastName,
           street: customer.street || "",
           city: customer.city || "",
+          phone: customer.phone || "",
         });
       } else {
         proceedAsNewCustomer();
@@ -192,6 +196,7 @@ export default function BookPage() {
                 lastName: "",
                 street: "",
                 city: "",
+                phone: "",
               });
             }}
             className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
@@ -284,9 +289,6 @@ export default function BookPage() {
                 placeholder="vasa.adresa@priklad.sk"
                 required
               />
-              <p className="mt-2 text-sm text-slate-400">
-                Skontrolujeme, či už máte u nás účet
-              </p>
             </div>
 
             <button
@@ -465,6 +467,26 @@ export default function BookPage() {
                   style={{ backgroundColor: '#1f1f1f', border: 'none' }}
                 />
               </div>
+
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-white mb-2">
+                  <Phone className="inline w-4 h-4 mr-2" />
+                  Telefónne číslo
+                </label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  readOnly={!!existingCustomer}
+                  className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                    existingCustomer ? "opacity-60" : ""
+                  }`}
+                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                  placeholder="+421 XXX XXX XXX"
+                />
+              </div>
             </div>
 
             <div className="flex gap-4">
@@ -487,15 +509,6 @@ export default function BookPage() {
             </div>
           </form>
         )}
-
-        <div className="mt-6 pt-6 border-t border-slate-700 text-center">
-          <p className="text-sm text-slate-400">
-            Už máte potvrdenú rezerváciu?{" "}
-            <Link href="/login" className="hover:underline font-medium" style={{ color: '#c20003' }}>
-              Prihlásenie pre zamestnancov
-            </Link>
-          </p>
-        </div>
       </div>
     </div>
   );
