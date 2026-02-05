@@ -453,7 +453,7 @@ export default function BookPage() {
 
               <div className="mt-4">
                 <label className="block text-sm font-medium text-white mb-2">
-                  Mesto
+                  Mesto *
                 </label>
                 <input
                   type="text"
@@ -466,13 +466,14 @@ export default function BookPage() {
                     existingCustomer ? "opacity-60" : ""
                   }`}
                   style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                  required={!existingCustomer}
                 />
               </div>
 
               <div className="mt-4">
                 <label className="block text-sm font-medium text-white mb-2">
                   <Phone className="inline w-4 h-4 mr-2" />
-                  Telefónne číslo
+                  Telefónne číslo *
                 </label>
                 <input
                   type="tel"
@@ -485,7 +486,10 @@ export default function BookPage() {
                     existingCustomer ? "opacity-60" : ""
                   }`}
                   style={{ backgroundColor: '#1f1f1f', border: 'none' }}
-                  placeholder="+421 XXX XXX XXX"
+                  placeholder="+421 XXX XXX XXX alebo 0XXX XXX XXX"
+                  required={!existingCustomer}
+                  pattern="^(\+421\s?\d{3}\s?\d{3}\s?\d{3}|0\d{3}\s?\d{3}\s?\d{3})$"
+                  title="Telefónne číslo musí byť vo formáte +421 xxx xxx xxx alebo 0xxx xxx xxx"
                 />
               </div>
             </div>

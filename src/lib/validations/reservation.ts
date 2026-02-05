@@ -1,17 +1,21 @@
 import { z } from "zod";
 
+// Phone number validation for Slovak format
+// Accepts: +421 xxx xxx xxx or 0xxx xxx xxx (with or without spaces)
+const phoneRegex = /^(\+421\s?\d{3}\s?\d{3}\s?\d{3}|0\d{3}\s?\d{3}\s?\d{3})$/;
+
 // Schema for creating a public reservation
 export const createPublicReservationSchema = z.object({
   scheduledAt: z.string().datetime(),
   durationMinutes: z.number().int().positive(),
   email: z.string().email(),
-  // For registered customers, these will be optional (fetched from DB)
-  // For new customers, these are required
-  firstName: z.string().min(1).optional(),
-  lastName: z.string().min(1).optional(),
+  // Required fields for new customers
+  firstName: z.string().min(1, "Meno je povinné"),
+  lastName: z.string().min(1, "Priezvisko je povinné"),
+  city: z.string().min(1, "Mesto je povinné"),
+  phone: z.string().regex(phoneRegex, "Telefónne číslo musí byť vo formáte +421 xxx xxx xxx alebo 0xxx xxx xxx"),
+  // Optional fields
   street: z.string().optional(),
-  city: z.string().optional(),
-  phone: z.string().optional(),
 });
 
 // Schema for internal reservation creation
