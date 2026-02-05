@@ -159,7 +159,14 @@ export default function BookPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#1f1f1f' }}>
+      <div 
+        className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat" 
+        style={{ 
+          backgroundColor: '#1a1a1a',
+          backgroundImage: 'url(/login-bg.jpg)',
+          backgroundBlendMode: 'overlay'
+        }}
+      >
         <div className="rounded-lg shadow-xl p-8 max-w-md w-full text-center" style={{ backgroundColor: '#292929' }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c20003' }}>
             <svg
@@ -211,7 +218,14 @@ export default function BookPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#1f1f1f' }}>
+    <div 
+      className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat" 
+      style={{ 
+        backgroundColor: '#1a1a1a',
+        backgroundImage: 'url(/login-bg.jpg)',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
       <div className="rounded-lg shadow-xl p-8 max-w-2xl w-full" style={{ backgroundColor: '#292929' }}>
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-white mb-2">
