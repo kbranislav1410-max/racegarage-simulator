@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock, User, Mail, MapPin, Phone } from "lucide-react";
+import { Calendar, Clock, User, Mail, MapPin, Phone, Info } from "lucide-react";
 
 const DURATION_OPTIONS = [
   { value: 15, label: "15 minút" },
@@ -304,6 +304,40 @@ export default function BookPage() {
           <p className="text-slate-300">
             Rezervujte si čas na našom závodnom simulátore
           </p>
+        </div>
+
+        {/* Operational Information */}
+        <div className="mb-6 p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f', border: '1px solid #444' }}>
+          <div className="flex items-start mb-3">
+            <Info className="w-5 h-5 mr-2 mt-0.5" style={{ color: '#c20003' }} />
+            <h3 className="text-lg font-semibold text-white">Kde nás nájdete</h3>
+          </div>
+          <div className="space-y-3 text-slate-300">
+            <div className="flex items-start">
+              <MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
+              <div>
+                <p className="font-medium text-white">Adresa:</p>
+                <p>RACE Garage s.r.o.</p>
+                <p>Priemyselná 6121/4D</p>
+                <p>915 01 Nové Mesto nad Váhom</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <Clock className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
+              <div>
+                <p className="font-medium text-white">Otváracie hodiny:</p>
+                <p>Pondelok - Nedeľa: 9:00 - 21:00</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <Phone className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
+              <div>
+                <p className="font-medium text-white">Kontakt:</p>
+                <p>Tel: +421 948 302 086</p>
+                <p>Email: info@racegarage.sk</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Progress Indicator */}
