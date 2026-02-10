@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Calendar, Clock, User, Mail, MapPin, Phone, Info } from "lucide-react";
+import { Calendar, Clock, User, Mail, MapPin, Phone, Info, ArrowLeft } from "lucide-react";
 
 const DURATION_OPTIONS = [
   { value: 15, label: "15 minút" },
@@ -260,28 +260,38 @@ export default function BookPage() {
             Vaša žiadosť o rezerváciu bola prijatá. Po jej schválení vám pošleme
             potvrdzujúci e-mail na adresu <strong className="text-white">{email}</strong>.
           </p>
-          <button
-            onClick={() => {
-              setSuccess(false);
-              setStep(1);
-              setEmail("");
-              setExistingCustomer(null);
-              setFormData({
-                scheduledDate: "",
-                scheduledTime: "",
-                durationMinutes: 30,
-                firstName: "",
-                lastName: "",
-                street: "",
-                city: "",
-                phone: "",
-              });
-            }}
-            className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-            style={{ backgroundColor: '#c20003' }}
-          >
-            Vytvoriť ďalšiu rezerváciu
-          </button>
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setStep(1);
+                setEmail("");
+                setExistingCustomer(null);
+                setFormData({
+                  scheduledDate: "",
+                  scheduledTime: "",
+                  durationMinutes: 30,
+                  firstName: "",
+                  lastName: "",
+                  street: "",
+                  city: "",
+                  phone: "",
+                });
+              }}
+              className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
+              style={{ backgroundColor: '#c20003' }}
+            >
+              Vytvoriť ďalšiu rezerváciu
+            </button>
+            <a
+              href="https://racegarage.sk/"
+              className="px-6 py-2 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#1f1f1f' }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Späť na web
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -298,9 +308,19 @@ export default function BookPage() {
     >
       <div className="rounded-lg shadow-xl p-8 max-w-2xl w-full" style={{ backgroundColor: '#292929' }}>
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Rezervácia simulátora
-          </h1>
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-3xl font-bold text-white">
+              Rezervácia simulátora
+            </h1>
+            <a
+              href="https://racegarage.sk/"
+              className="px-4 py-2 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm"
+              style={{ backgroundColor: '#1f1f1f' }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Späť na web
+            </a>
+          </div>
           <p className="text-slate-300">
             Rezervujte si čas na našom závodnom simulátore
           </p>
