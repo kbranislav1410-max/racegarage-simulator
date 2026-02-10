@@ -285,6 +285,7 @@ export default function BookPage() {
             </button>
             <a
               href="https://racegarage.sk/"
+              rel="noopener noreferrer"
               className="px-6 py-2 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
               style={{ backgroundColor: '#1f1f1f' }}
             >
@@ -314,6 +315,7 @@ export default function BookPage() {
             </h1>
             <a
               href="https://racegarage.sk/"
+              rel="noopener noreferrer"
               className="px-4 py-2 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm"
               style={{ backgroundColor: '#1f1f1f' }}
             >
