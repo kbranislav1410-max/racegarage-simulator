@@ -14,6 +14,7 @@ const DURATION_OPTIONS = [
 export default function BookPage() {
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
+  const [showFacilityImage, setShowFacilityImage] = useState(true);
   const [existingCustomer, setExistingCustomer] = useState<{
     id: string;
     firstName: string;
@@ -424,28 +425,40 @@ export default function BookPage() {
                   <MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
                     <p className="font-medium text-white">Adresa:</p>
-                    <p>PD Drive Club</p>
-                    <p>Bystrická cesta 55/B</p>
-                    <p>034 01 Ružomberok</p>
+                    <p className="text-sm">PD Drive Club</p>
+                    <p className="text-sm">Bystrická cesta 55/B</p>
+                    <p className="text-sm">034 01 Ružomberok</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Clock className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
                     <p className="font-medium text-white">Otváracie hodiny:</p>
-                    <p>PONDELOK-PIATOK: 8:00 - 18:00</p>
-                    <p>SOBOTA-NEDEĽA: 10:00 - 18:00</p>
+                    <p className="text-sm">PONDELOK-PIATOK: 8:00 - 18:00</p>
+                    <p className="text-sm">SOBOTA-NEDEĽA: 10:00 - 18:00</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Phone className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
                     <p className="font-medium text-white">Kontakt:</p>
-                    <p>Tel: +421 917 567 825</p>
-                    <p>Email: info@racegarage.sk</p>
+                    <p className="text-sm">Tel: +421 917 567 825</p>
+                    <p className="text-sm">Email: info@racegarage.sk</p>
                   </div>
                 </div>
               </div>
+              {/* Facility Image */}
+              {showFacilityImage && (
+                <div className="mt-4">
+                  <img
+                    src="/prevadzka.jpg"
+                    alt="Prevádzka - PD Drive Club"
+                    className="w-full h-auto rounded-lg object-cover"
+                    style={{ maxHeight: '300px' }}
+                    onError={() => setShowFacilityImage(false)}
+                  />
+                </div>
+              )}
             </div>
           </form>
         )}
@@ -742,28 +755,40 @@ export default function BookPage() {
                   <MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
                     <p className="font-medium text-white">Adresa:</p>
-                    <p>PD Drive Club</p>
-                    <p>Bystrická cesta 55/B</p>
-                    <p>034 01 Ružomberok</p>
+                    <p className="text-sm">PD Drive Club</p>
+                    <p className="text-sm">Bystrická cesta 55/B</p>
+                    <p className="text-sm">034 01 Ružomberok</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Clock className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
                     <p className="font-medium text-white">Otváracie hodiny:</p>
-                    <p>PONDELOK-PIATOK: 8:00 - 18:00</p>
-                    <p>SOBOTA-NEDEĽA: 10:00 - 18:00</p>
+                    <p className="text-sm">PONDELOK-PIATOK: 8:00 - 18:00</p>
+                    <p className="text-sm">SOBOTA-NEDEĽA: 10:00 - 18:00</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Phone className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
                     <p className="font-medium text-white">Kontakt:</p>
-                    <p>Tel: +421 917 567 825</p>
-                    <p>Email: info@racegarage.sk</p>
+                    <p className="text-sm">Tel: +421 917 567 825</p>
+                    <p className="text-sm">Email: info@racegarage.sk</p>
                   </div>
                 </div>
               </div>
+              {/* Facility Image */}
+              {showFacilityImage && (
+                <div className="mt-4">
+                  <img
+                    src="/prevadzka.jpg"
+                    alt="Prevádzka - PD Drive Club"
+                    className="w-full h-auto rounded-lg object-cover"
+                    style={{ maxHeight: '300px' }}
+                    onError={() => setShowFacilityImage(false)}
+                  />
+                </div>
+              )}
             </div>
           </form>
         )}
