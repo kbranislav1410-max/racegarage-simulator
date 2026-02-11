@@ -205,12 +205,16 @@ Ak chcete zmeniť vzhľad alebo obsah emailov:
 
 ## Bezpečnosť
 
-**DÔLEŽITÉ:** Nikdy nenahrávajte `.env` súbor do Git repozitára!
+**DÔLEŽITÉ:** Ochrana citlivých údajov!
 
+- **Nikdy** nenahrávajte `.env` súbor do Git repozitára!
+- **Nikdy** nevkladajte reálne API kľúče alebo heslá do `.env.example` súboru!
 - `.env` súbor je automaticky ignorovaný cez `.gitignore`
+- `.env.example` má obsahovať iba vzorové/placeholder hodnoty (napr. `re_your_api_key_here`)
 - Pre produkčné servery nastavte environment premenné priamo v hostingovom prostredí
 - Pre Vercel: Project Settings → Environment Variables
 - Pre iné platformy: konzultujte dokumentáciu platformy
+- Ak omylom nahráte citlivé údaje, okamžite zmeňte API kľúče a heslá!
 
 ## Záver
 
