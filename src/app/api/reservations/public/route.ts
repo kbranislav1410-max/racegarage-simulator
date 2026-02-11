@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma/client";
 import { createPublicReservationSchema } from "@/lib/validations/reservation";
 import { ZodError } from "zod";
+import { sendReservationEmail } from "@/lib/email/service";
 
 // Check for time conflicts
 async function checkTimeConflict(
@@ -160,12 +161,22 @@ export async function POST(request: NextRequest) {
       reservation = result;
     }
 
-    // TODO: Send confirmation email
-    // await sendEmail({
-    //   to: email,
-    //   subject: "Reservation Received",
-    //   ...
-    // });
+    // Send confirmation email to customer (don't wait for completion)
+    if (reservation.customer) {
+      const customerName = `${reservation.customer.firstName} ${reservation.customer.lastName}`;
+      sendReservationEmail(
+        reservation.customer.email,
+        customerName,
+        "pending",
+        {
+          scheduledAt: reservation.scheduledAt,
+          durationMinutes: reservation.durationMinutes,
+        }
+      ).catch((error) => {
+        // Log error but don't fail the reservation creation
+        console.error("Failed to send reservation confirmation email:", error);
+      });
+    }
 
     return NextResponse.json({
       message: "Reservation created successfully",

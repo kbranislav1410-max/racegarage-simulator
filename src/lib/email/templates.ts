@@ -20,7 +20,7 @@ export interface ReservationData {
   customerName: string;
   scheduledAt: string;
   durationMinutes: number;
-  status: "confirmed" | "rejected" | "cancelled";
+  status: "pending" | "confirmed" | "rejected" | "cancelled";
   notes?: string | null;
 }
 
@@ -153,6 +153,27 @@ export function generateReservationHTML(data: ReservationData): string {
   let bodyContent: string;
 
   switch (data.status) {
+    case "pending":
+      headerColor = "#3b82f6";
+      headerText = "Reservation Received";
+      bodyContent = `
+        <p style="margin: 0 0 20px 0; color: #374151; font-size: 16px; line-height: 1.5;">
+          Thank you for your reservation request! We have received your booking and will review it shortly.
+        </p>
+        <div style="background-color: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
+          <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+            <strong style="color: #1f2937;">Date & Time:</strong> ${data.scheduledAt}
+          </p>
+          <p style="margin: 0; color: #6b7280; font-size: 14px;">
+            <strong style="color: #1f2937;">Duration:</strong> ${data.durationMinutes} minutes
+          </p>
+        </div>
+        <p style="margin: 20px 0 0 0; color: #374151; font-size: 16px; line-height: 1.5;">
+          You will receive a confirmation email once your reservation has been approved. 
+          If you have any questions, please don't hesitate to contact us.
+        </p>
+      `;
+      break;
     case "confirmed":
       headerColor = "#10b981";
       headerText = "Reservation Confirmed";
@@ -277,6 +298,16 @@ export function generateReservationText(data: ReservationData): string {
   let bodyContent: string;
 
   switch (data.status) {
+    case "pending":
+      statusText = "RECEIVED";
+      bodyContent = `Thank you for your reservation request! We have received your booking and will review it shortly.
+
+Date & Time: ${data.scheduledAt}
+Duration: ${data.durationMinutes} minutes
+
+You will receive a confirmation email once your reservation has been approved. 
+If you have any questions, please don't hesitate to contact us.`;
+      break;
     case "confirmed":
       statusText = "CONFIRMED";
       bodyContent = `Great news! Your reservation has been confirmed.

@@ -196,13 +196,13 @@ export async function sendRideCompletionEmail(
  * Send reservation notification email to customer
  * @param email Customer email
  * @param customerName Customer name
- * @param type Email type: confirmed, rejected, or cancelled
+ * @param type Email type: pending, confirmed, rejected, or cancelled
  * @param reservationDetails Reservation details
  */
 export async function sendReservationEmail(
   email: string,
   customerName: string,
-  type: "confirmed" | "rejected" | "cancelled",
+  type: "pending" | "confirmed" | "rejected" | "cancelled",
   reservationDetails: {
     scheduledAt: Date;
     durationMinutes: number;
@@ -223,6 +223,9 @@ export async function sendReservationEmail(
 
     let subject: string;
     switch (type) {
+      case "pending":
+        subject = "Reservation Request Received - Racing Simulator";
+        break;
       case "confirmed":
         subject = "Reservation Confirmed - Racing Simulator";
         break;
