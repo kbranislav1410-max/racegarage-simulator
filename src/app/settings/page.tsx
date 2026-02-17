@@ -164,10 +164,10 @@ export default function SettingsPage() {
 
   return (
     <ProtectedLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-white">Nastavenia</h1>
-          <p className="text-slate-300 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Nastavenia</h1>
+          <p className="text-sm sm:text-base text-slate-300 mt-2">
             Konfigurácia obchodných nastavení a preferencií
           </p>
         </div>
@@ -185,15 +185,15 @@ export default function SettingsPage() {
         )}
 
         {/* Working Hours */}
-        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+        <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 mb-4">
             <Calendar className="w-5 h-5 text-white" />
-            <h2 className="text-xl font-bold text-white">Pracovné hodiny</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">Pracovné hodiny</h2>
           </div>
           <div className="space-y-3">
             {DAYS.map((day) => (
-              <div key={day} className="flex items-center gap-4">
-                <div className="w-32">
+              <div key={day} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div className="sm:w-32">
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -207,7 +207,7 @@ export default function SettingsPage() {
                           },
                         })
                       }
-                      className="rounded"
+                      className="rounded w-5 h-5"
                     />
                     <span className="text-sm font-medium text-white">
                       {DAY_LABELS[day]}
@@ -228,7 +228,8 @@ export default function SettingsPage() {
                       })
                     }
                     disabled={!workingHours[day].enabled}
-                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-800 disabled:text-slate-500"
+                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-800 disabled:text-slate-500 flex-1"
+                    style={{ minHeight: '44px' }}
                   />
                   <span className="text-slate-300">-</span>
                   <input
@@ -244,7 +245,8 @@ export default function SettingsPage() {
                       })
                     }
                     disabled={!workingHours[day].enabled}
-                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-800 disabled:text-slate-500"
+                    className="px-3 py-2 border border-slate-600 rounded-lg disabled:bg-slate-800 disabled:text-slate-500 flex-1"
+                    style={{ minHeight: '44px' }}
                   />
                 </div>
               </div>
@@ -254,15 +256,15 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Slot Durations */}
-          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+          <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
             <div className="flex items-center gap-2 mb-4">
               <Clock className="w-5 h-5 text-white" />
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-lg sm:text-xl font-bold text-white">
                 Možnosti trvania slotov
               </h2>
             </div>
             <div className="space-y-3">
-              <p className="text-sm text-slate-300">
+              <p className="text-xs sm:text-sm text-slate-300">
                 Dostupné možnosti trvania (minúty)
               </p>
               <div className="flex flex-wrap gap-2">
@@ -270,6 +272,7 @@ export default function SettingsPage() {
                   <label
                     key={duration}
                     className="flex items-center gap-2 px-3 py-2 border border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700"
+                    style={{ minHeight: '44px' }}
                   >
                     <input
                       type="checkbox"
@@ -281,7 +284,7 @@ export default function SettingsPage() {
                           setSlotDurations(slotDurations.filter((d) => d !== duration));
                         }
                       }}
-                      className="rounded"
+                      className="rounded w-5 h-5"
                     />
                     <span className="text-sm font-medium">{duration} min</span>
                   </label>
@@ -291,10 +294,10 @@ export default function SettingsPage() {
           </div>
 
           {/* Currency */}
-          <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+          <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="w-5 h-5 text-white" />
-              <h2 className="text-xl font-bold text-white">
+              <h2 className="text-lg sm:text-xl font-bold text-white">
                 Predvolená mena
               </h2>
             </div>
@@ -303,7 +306,7 @@ export default function SettingsPage() {
                 value={defaultCurrency}
                 onChange={(e) => setDefaultCurrency(e.target.value)}
                 className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f" }}
+                style={{ backgroundColor: "#1f1f1f", minHeight: '44px' }}
               >
                 <option value="EUR">EUR (€)</option>
                 <option value="USD">USD ($)</option>
@@ -314,35 +317,35 @@ export default function SettingsPage() {
         </div>
 
         {/* Payment Rules */}
-        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-          <h2 className="text-xl font-bold text-white mb-4">
+        <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+          <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
             Pravidlá platieb
           </h2>
           <div>
             <label className="block text-sm font-medium text-white mb-2">
               Príjemca platby kartou
             </label>
-            <p className="text-sm text-slate-300 mb-3">
+            <p className="text-xs sm:text-sm text-slate-300 mb-3">
               Vyberte, kto má predvolene prijímať platby kartou
             </p>
-            <div className="flex gap-4">
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <label className="flex items-center gap-2 px-4 py-3 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700" style={{ minHeight: '44px' }}>
                 <input
                   type="radio"
                   name="cardReceiver"
                   checked={cardPaymentReceiver === "FRIEND"}
                   onChange={() => setCardPaymentReceiver("FRIEND")}
-                  className="text-slate-800"
+                  className="text-slate-800 w-5 h-5"
                 />
                 <span className="font-medium text-white">Priateľ</span>
               </label>
-              <label className="flex items-center gap-2 px-4 py-2 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700">
+              <label className="flex items-center gap-2 px-4 py-3 border-2 border-slate-600 rounded-lg cursor-pointer hover:bg-slate-700" style={{ minHeight: '44px' }}>
                 <input
                   type="radio"
                   name="cardReceiver"
                   checked={cardPaymentReceiver === "ME"}
                   onChange={() => setCardPaymentReceiver("ME")}
-                  className="text-slate-800"
+                  className="text-slate-800 w-5 h-5"
                 />
                 <span className="font-medium text-white">Ja</span>
               </label>
@@ -351,14 +354,14 @@ export default function SettingsPage() {
         </div>
 
         {/* Email Settings */}
-        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
+        <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 mb-4">
             <Mail className="w-5 h-5 text-white" />
-            <h2 className="text-xl font-bold text-white">Nastavenia emailu</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-white">Nastavenia emailu</h2>
           </div>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-white mb-2">
                 Meno odosielateľa
               </label>
               <input
@@ -367,11 +370,11 @@ export default function SettingsPage() {
                 onChange={(e) => setEmailSenderName(e.target.value)}
                 placeholder="Racegarage Simulator"
                 className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f" }}
+                style={{ backgroundColor: "#1f1f1f", minHeight: '44px' }}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-white mb-2">
                 Emailová adresa odosielateľa
               </label>
               <input
@@ -380,29 +383,29 @@ export default function SettingsPage() {
                 onChange={(e) => setEmailFromAddress(e.target.value)}
                 placeholder="noreply@racegarage.local"
                 className="w-full px-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f" }}
+                style={{ backgroundColor: "#1f1f1f", minHeight: '44px' }}
               />
             </div>
           </div>
         </div>
 
         {/* Newsletter Subscribers */}
-        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-          <div className="flex items-center justify-between mb-4">
+        <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-white" />
-              <h2 className="text-xl font-bold text-white">Newsletter</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-white">Newsletter</h2>
             </div>
             <button
               onClick={handleShowNewsletterModal}
-              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-              style={{ backgroundColor: "#c20003" }}
+              className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors w-full sm:w-auto"
+              style={{ backgroundColor: "#c20003", minHeight: '44px' }}
             >
               <Users className="w-4 h-4" />
-              Zobraziť odberateľov
+              <span className="text-sm sm:text-base">Zobraziť odberateľov</span>
             </button>
           </div>
-          <p className="text-sm text-slate-300">
+          <p className="text-xs sm:text-sm text-slate-300">
             Zoznam zákazníkov, ktorí majú záujem o newsletter a propagačné materiály
           </p>
         </div>
@@ -411,8 +414,8 @@ export default function SettingsPage() {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ backgroundColor: "#c20003" }}
+            className="w-full sm:w-auto px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            style={{ backgroundColor: "#c20003", minHeight: '44px' }}
           >
             {saving ? "Ukladám..." : "Uložiť zmeny"}
           </button>
@@ -423,100 +426,145 @@ export default function SettingsPage() {
       {showNewsletterModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
                   Odberatelia Newslettera
                 </h2>
                 <button
                   onClick={() => setShowNewsletterModal(false)}
                   className="text-slate-400 hover:text-slate-300"
+                  style={{ minWidth: '44px', minHeight: '44px' }}
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-slate-300">
+              <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <p className="text-sm sm:text-base text-slate-300">
                   Celkový počet odberateľov: <span className="font-semibold">{newsletterSubscribers.length}</span>
                 </p>
                 <button
                   onClick={handleExportSubscribers}
                   disabled={newsletterSubscribers.length === 0}
-                  className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ backgroundColor: "#c20003" }}
+                  className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto" 
+                  style={{ backgroundColor: "#c20003", minHeight: '44px' }}
                 >
                   <Download className="w-4 h-4" />
-                  Exportovať CSV
+                  <span className="text-sm sm:text-base">Exportovať CSV</span>
                 </button>
               </div>
 
               {loadingSubscribers ? (
-                <div className="text-center py-8 text-slate-300">
+                <div className="text-center py-8 text-sm sm:text-base text-slate-300">
                   Načítavam...
                 </div>
               ) : newsletterSubscribers.length === 0 ? (
-                <div className="text-center py-8 text-slate-300">
+                <div className="text-center py-8 text-sm sm:text-base text-slate-300">
                   Zatiaľ nemáte žiadnych odberateľov newslettera.
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                          Meno
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                          Email
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                          Mesto
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                          Telefón
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                          Registrovaný
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-700" style={{ backgroundColor: "#292929" }}>
-                      {newsletterSubscribers.map((subscriber: any) => (
-                        <tr key={subscriber.id} className="hover:bg-slate-700">
-                          <td className="px-6 py-4 whitespace-nowrap">
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                            Meno
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                            Email
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                            Mesto
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                            Telefón
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                            Registrovaný
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700" style={{ backgroundColor: "#292929" }}>
+                        {newsletterSubscribers.map((subscriber: any) => (
+                          <tr key={subscriber.id} className="hover:bg-slate-700">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-white">
+                                {subscriber.firstName} {subscriber.lastName}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-slate-300">{subscriber.email}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-slate-300">
+                                {subscriber.city || "-"}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-slate-300">
+                                {subscriber.phone || "-"}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-slate-300">
+                                {formatDate(subscriber.createdAt)}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  {/* Mobile Card View */}
+                  <div className="md:hidden space-y-3">
+                    {newsletterSubscribers.map((subscriber: any) => (
+                      <div
+                        key={subscriber.id}
+                        className="p-4 rounded-lg border border-slate-700"
+                        style={{ backgroundColor: "#1f1f1f" }}
+                      >
+                        <div className="space-y-2">
+                          <div>
                             <div className="text-sm font-medium text-white">
                               {subscriber.firstName} {subscriber.lastName}
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-300">{subscriber.email}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-300">
-                              {subscriber.city || "-"}
+                          </div>
+                          <div>
+                            <div className="text-xs text-slate-400">Email</div>
+                            <div className="text-sm text-slate-300 break-all">{subscriber.email}</div>
+                          </div>
+                          {subscriber.city && (
+                            <div>
+                              <div className="text-xs text-slate-400">Mesto</div>
+                              <div className="text-sm text-slate-300">{subscriber.city}</div>
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-300">
-                              {subscriber.phone || "-"}
+                          )}
+                          {subscriber.phone && (
+                            <div>
+                              <div className="text-xs text-slate-400">Telefón</div>
+                              <div className="text-sm text-slate-300">{subscriber.phone}</div>
                             </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-slate-300">
-                              {formatDate(subscriber.createdAt)}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          )}
+                          <div>
+                            <div className="text-xs text-slate-400">Registrovaný</div>
+                            <div className="text-sm text-slate-300">{formatDate(subscriber.createdAt)}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
 
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={() => setShowNewsletterModal(false)}
-                  className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                  className="w-full sm:w-auto px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white flex items-center justify-center"
+                  style={{ minHeight: '44px' }}
                 >
                   Zavrieť
                 </button>
