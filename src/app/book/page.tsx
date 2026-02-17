@@ -533,8 +533,7 @@ export default function BookPage() {
               <div className="mb-4">
                 <label className="block text-sm sm:text-base font-medium text-white mb-3">
                   <Clock className="inline w-4 h-4 mr-2 flex-shrink-0" />
-                  <span className="inline">Dostupné časové sloty pre {formData.durationMinutes} minút</span>
-                  <span className="block sm:inline mt-1 sm:mt-0 text-xs sm:text-sm text-slate-300">(Vyberte čas začiatku rezervácie)</span>
+                  <span>Dostupné časové sloty pre {formData.durationMinutes} minút (Vyberte čas začiatku rezervácie)</span>
                 </label>
                 
                 {loadingSlots ? (
@@ -566,7 +565,7 @@ export default function BookPage() {
                               ? '#2a7c2a'
                               : '#666',
                             color: 'white',
-                            minHeight: '44px',
+                            minHeight: '48px',
                           }}
                           title={
                             slot.isPast
