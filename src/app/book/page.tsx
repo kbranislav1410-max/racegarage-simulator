@@ -231,14 +231,14 @@ export default function BookPage() {
   if (success) {
     return (
       <div 
-        className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat" 
+        className="min-h-screen flex items-center justify-center p-2 sm:p-4 bg-cover bg-center bg-no-repeat" 
         style={{ 
           backgroundColor: '#1a1a1a',
           backgroundImage: 'url(/login-bg.jpg)',
           backgroundBlendMode: 'overlay'
         }}
       >
-        <div className="rounded-lg shadow-xl p-8 max-w-md w-full text-center" style={{ backgroundColor: '#292929' }}>
+        <div className="rounded-lg shadow-xl p-6 sm:p-8 max-w-md w-full text-center" style={{ backgroundColor: '#292929' }}>
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#c20003' }}>
             <svg
               className="w-8 h-8 text-white"
@@ -254,12 +254,12 @@ export default function BookPage() {
               />
             </svg>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
             Rezervácia odoslaná!
           </h2>
-          <p className="text-slate-300 mb-6">
+          <p className="text-sm sm:text-base text-slate-300 mb-6">
             Vaša žiadosť o rezerváciu bola prijatá. Po jej schválení vám pošleme
-            potvrdzujúci e-mail na adresu <strong className="text-white">{email}</strong>.
+            potvrdzujúci e-mail na adresu <strong className="text-white break-all">{email}</strong>.
           </p>
           <div className="flex flex-col gap-3">
             <button
@@ -279,16 +279,16 @@ export default function BookPage() {
                   phone: "",
                 });
               }}
-              className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-              style={{ backgroundColor: '#c20003' }}
+              className="px-6 py-3 text-white rounded-lg hover:brightness-90 transition-colors text-base font-medium"
+              style={{ backgroundColor: '#c20003', minHeight: '48px' }}
             >
               Vytvoriť ďalšiu rezerváciu
             </button>
             <a
               href="https://racegarage.sk/"
               rel="noopener noreferrer"
-              className="px-6 py-2 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#1f1f1f' }}
+              className="px-6 py-3 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2 text-base font-medium"
+              style={{ backgroundColor: '#1f1f1f', minHeight: '48px' }}
             >
               <ArrowLeft className="w-4 h-4" />
               Späť na web
@@ -301,38 +301,38 @@ export default function BookPage() {
 
   return (
     <div 
-      className="min-h-screen flex items-center justify-center p-4 bg-cover bg-center bg-no-repeat" 
+      className="min-h-screen flex items-center justify-center p-2 sm:p-4 bg-cover bg-center bg-no-repeat" 
       style={{ 
         backgroundColor: '#1a1a1a',
         backgroundImage: 'url(/login-bg.jpg)',
         backgroundBlendMode: 'overlay'
       }}
     >
-      <div className="rounded-lg shadow-xl p-8 max-w-2xl w-full" style={{ backgroundColor: '#292929' }}>
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <h1 className="text-3xl font-bold text-white">
+      <div className="rounded-lg shadow-xl p-4 sm:p-6 md:p-8 max-w-2xl w-full" style={{ backgroundColor: '#292929' }}>
+        <div className="mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Rezervácia simulátora
             </h1>
             <a
               href="https://racegarage.sk/"
               rel="noopener noreferrer"
-              className="px-4 py-2 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center gap-2 text-sm"
+              className="px-4 py-2.5 text-white rounded-lg hover:bg-slate-700 transition-colors flex items-center justify-center gap-2 text-sm"
               style={{ backgroundColor: '#1f1f1f' }}
             >
               <ArrowLeft className="w-4 h-4" />
               Späť na web
             </a>
           </div>
-          <p className="text-slate-300">
+          <p className="text-sm sm:text-base text-slate-300">
             Rezervujte si čas na našom závodnom simulátore
           </p>
         </div>
 
         {/* Progress Indicator */}
-        <div className="flex items-center mb-8">
+        <div className="flex items-center mb-6 sm:mb-8">
           <div
-            className={`flex items-center justify-center w-8 h-8 rounded-full ${
+            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm sm:text-base ${
               step >= 1
                 ? "text-white"
                 : "bg-slate-700 text-slate-400"
@@ -342,13 +342,13 @@ export default function BookPage() {
             1
           </div>
           <div
-            className={`flex-1 h-1 mx-2 ${
+            className={`flex-1 h-1 mx-1 sm:mx-2 ${
               step >= 2 ? "" : "bg-slate-700"
             }`}
             style={step >= 2 ? { backgroundColor: '#c20003' } : {}}
           />
           <div
-            className={`flex items-center justify-center w-8 h-8 rounded-full ${
+            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm sm:text-base ${
               step >= 2
                 ? "text-white"
                 : "bg-slate-700 text-slate-400"
@@ -358,13 +358,13 @@ export default function BookPage() {
             2
           </div>
           <div
-            className={`flex-1 h-1 mx-2 ${
+            className={`flex-1 h-1 mx-1 sm:mx-2 ${
               step >= 3 ? "" : "bg-slate-700"
             }`}
             style={step >= 3 ? { backgroundColor: '#c20003' } : {}}
           />
           <div
-            className={`flex items-center justify-center w-8 h-8 rounded-full ${
+            className={`flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full text-sm sm:text-base ${
               step >= 3
                 ? "text-white"
                 : "bg-slate-700 text-slate-400"
@@ -390,7 +390,7 @@ export default function BookPage() {
             className="space-y-4"
           >
             <div>
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm sm:text-base font-medium text-white mb-2">
                 <Mail className="inline w-4 h-4 mr-2" />
                 E-mailová adresa
               </label>
@@ -398,8 +398,8 @@ export default function BookPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                className="w-full px-4 py-3 sm:py-2.5 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none text-base"
+                style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                 placeholder="vasa.adresa@priklad.sk"
                 required
               />
@@ -408,42 +408,42 @@ export default function BookPage() {
             <button
               type="submit"
               disabled={checkingEmail || !email}
-              className="w-full px-4 py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 sm:py-3.5 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base sm:text-lg font-medium"
               style={{ backgroundColor: '#c20003' }}
             >
               {checkingEmail ? "Kontrolujem..." : "Pokračovať"}
             </button>
 
             {/* Operational Information */}
-            <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f' }}>
+            <div className="mt-6 p-3 sm:p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f' }}>
               <div className="flex items-start mb-3">
-                <Info className="w-5 h-5 mr-2 mt-0.5" style={{ color: '#c20003' }} />
-                <h3 className="text-lg font-semibold text-white">Kde nás nájdete</h3>
+                <Info className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#c20003' }} />
+                <h3 className="text-base sm:text-lg font-semibold text-white">Kde nás nájdete</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-300">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-slate-300">
                 <div className="flex items-start">
                   <MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
-                    <p className="font-medium text-white">Adresa:</p>
-                    <p className="text-sm">PD Drive Club</p>
-                    <p className="text-sm">Bystrická cesta 55/B</p>
-                    <p className="text-sm">034 01 Ružomberok</p>
+                    <p className="font-medium text-white text-sm sm:text-base">Adresa:</p>
+                    <p className="text-xs sm:text-sm">PD Drive Club</p>
+                    <p className="text-xs sm:text-sm">Bystrická cesta 55/B</p>
+                    <p className="text-xs sm:text-sm">034 01 Ružomberok</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Clock className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
-                    <p className="font-medium text-white">Otváracie hodiny:</p>
-                    <p className="text-sm">PONDELOK-PIATOK: 8:00 - 18:00</p>
-                    <p className="text-sm">SOBOTA-NEDEĽA: 10:00 - 18:00</p>
+                    <p className="font-medium text-white text-sm sm:text-base">Otváracie hodiny:</p>
+                    <p className="text-xs sm:text-sm">PONDELOK-PIATOK: 8:00 - 18:00</p>
+                    <p className="text-xs sm:text-sm">SOBOTA-NEDEĽA: 10:00 - 18:00</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Phone className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
-                    <p className="font-medium text-white">Kontakt:</p>
-                    <p className="text-sm">Tel: +421 917 567 825</p>
-                    <p className="text-sm">Email: info@racegarage.sk</p>
+                    <p className="font-medium text-white text-sm sm:text-base">Kontakt:</p>
+                    <p className="text-xs sm:text-sm">Tel: +421 917 567 825</p>
+                    <p className="text-xs sm:text-sm">Email: info@racegarage.sk</p>
                   </div>
                 </div>
               </div>
@@ -486,15 +486,15 @@ export default function BookPage() {
             )}
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm sm:text-base font-medium text-white mb-2">
                 <Clock className="inline w-4 h-4 mr-2" />
                 Trvanie rezervácie
               </label>
               <select
                 value={formData.durationMinutes}
                 onChange={(e) => handleDurationChange(Number(e.target.value))}
-                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                className="w-full px-4 py-3 sm:py-2.5 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none text-base"
+                style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                 required
               >
                 {DURATION_OPTIONS.map((option) => (
@@ -506,7 +506,7 @@ export default function BookPage() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-white mb-2">
+              <label className="block text-sm sm:text-base font-medium text-white mb-2">
                 <Calendar className="inline w-4 h-4 mr-2" />
                 Vyberte dátum
               </label>
@@ -515,8 +515,8 @@ export default function BookPage() {
                 value={formData.scheduledDate}
                 onChange={(e) => handleDateChange(e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
-                className="w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none"
-                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                className="w-full px-4 py-3 sm:py-2.5 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none text-base"
+                style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                 required
               />
             </div>
@@ -531,9 +531,9 @@ export default function BookPage() {
 
             {formData.scheduledDate && (
               <div className="mb-4">
-                <label className="block text-sm font-medium text-white mb-3">
-                  <Clock className="inline w-4 h-4 mr-2" />
-                  Dostupné časové sloty pre {formData.durationMinutes} minút (Vyberte čas začiatku rezervácie)
+                <label className="block text-sm sm:text-base font-medium text-white mb-3">
+                  <Clock className="inline w-4 h-4 mr-2 flex-shrink-0" />
+                  <span>Dostupné časové sloty pre {formData.durationMinutes} minút (Vyberte čas začiatku rezervácie)</span>
                 </label>
                 
                 {loadingSlots ? (
@@ -542,21 +542,21 @@ export default function BookPage() {
                   </div>
                 ) : availableSlots.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: '#1a1a1a' }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: '#1a1a1a' }}>
                       {availableSlots.map((slot) => (
                         <button
                           key={slot.time}
                           type="button"
                           disabled={!slot.available || slot.isPast}
                           onClick={() => handleSlotSelect(slot.time)}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                          className={`px-3 py-3 sm:py-2 rounded-lg text-sm font-medium transition-all ${
                             selectedSlot === slot.time
                               ? 'ring-2 ring-offset-2 ring-offset-slate-900'
                               : ''
                           } ${
                             !slot.available || slot.isPast
                               ? 'cursor-not-allowed opacity-40'
-                              : 'hover:brightness-110'
+                              : 'hover:brightness-110 active:scale-95'
                           }`}
                           style={{
                             backgroundColor: selectedSlot === slot.time
@@ -565,6 +565,7 @@ export default function BookPage() {
                               ? '#2a7c2a'
                               : '#666',
                             color: 'white',
+                            minHeight: '48px',
                           }}
                           title={
                             slot.isPast
@@ -580,14 +581,14 @@ export default function BookPage() {
                     </div>
 
                     {selectedSlot && (
-                      <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f', border: '2px solid #c20003' }}>
+                      <div className="mt-4 p-3 sm:p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f', border: '2px solid #c20003' }}>
                         <div className="flex items-center justify-center">
-                          <Clock className="inline w-5 h-5 mr-2 text-red-500" />
-                          <span className="text-white font-semibold text-lg">
+                          <Clock className="inline w-5 h-5 mr-2 text-red-500 flex-shrink-0" />
+                          <span className="text-white font-semibold text-base sm:text-lg text-center">
                             Celková rezervácia: {selectedSlot} - {calculateEndTime(selectedSlot, formData.durationMinutes)}
                           </span>
                         </div>
-                        <p className="text-sm text-slate-300 text-center mt-2">
+                        <p className="text-xs sm:text-sm text-slate-300 text-center mt-2">
                           Vaša rezervácia bude trvať {formData.durationMinutes} minút
                         </p>
                       </div>
@@ -618,15 +619,15 @@ export default function BookPage() {
               </div>
             )}
 
-            <div className="border-t border-slate-700 pt-4">
-              <h3 className="text-lg font-semibold text-white mb-4">
+            <div className="border-t border-slate-700 pt-4 mt-4">
+              <h3 className="text-base sm:text-lg font-semibold text-white mb-4">
                 <User className="inline w-5 h-5 mr-2" />
                 Osobné údaje
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm sm:text-base font-medium text-white mb-2">
                     Meno *
                   </label>
                   <input
@@ -636,16 +637,16 @@ export default function BookPage() {
                       setFormData({ ...formData, firstName: e.target.value })
                     }
                     readOnly={!!existingCustomer}
-                    className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                    className={`w-full px-4 py-3 sm:py-2.5 rounded-lg text-white text-base focus:ring-2 focus:ring-offset-2 focus:outline-none ${
                       existingCustomer ? "opacity-60" : ""
                     }`}
-                    style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                    style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                     required={!existingCustomer}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm sm:text-base font-medium text-white mb-2">
                     Priezvisko *
                   </label>
                   <input
@@ -655,17 +656,17 @@ export default function BookPage() {
                       setFormData({ ...formData, lastName: e.target.value })
                     }
                     readOnly={!!existingCustomer}
-                    className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                    className={`w-full px-4 py-3 sm:py-2.5 rounded-lg text-white text-base focus:ring-2 focus:ring-offset-2 focus:outline-none ${
                       existingCustomer ? "opacity-60" : ""
                     }`}
-                    style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                    style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                     required={!existingCustomer}
                   />
                 </div>
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm sm:text-base font-medium text-white mb-2">
                   <MapPin className="inline w-4 h-4 mr-2" />
                   Ulica
                 </label>
@@ -676,15 +677,15 @@ export default function BookPage() {
                     setFormData({ ...formData, street: e.target.value })
                   }
                   readOnly={!!existingCustomer}
-                  className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                  className={`w-full px-4 py-3 sm:py-2.5 rounded-lg text-white text-base focus:ring-2 focus:ring-offset-2 focus:outline-none ${
                     existingCustomer ? "opacity-60" : ""
                   }`}
-                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                  style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                 />
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm sm:text-base font-medium text-white mb-2">
                   Mesto *
                 </label>
                 <input
@@ -694,16 +695,16 @@ export default function BookPage() {
                     setFormData({ ...formData, city: e.target.value })
                   }
                   readOnly={!!existingCustomer}
-                  className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                  className={`w-full px-4 py-3 sm:py-2.5 rounded-lg text-white text-base focus:ring-2 focus:ring-offset-2 focus:outline-none ${
                     existingCustomer ? "opacity-60" : ""
                   }`}
-                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                  style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                   required={!existingCustomer}
                 />
               </div>
 
               <div className="mt-4">
-                <label className="block text-sm font-medium text-white mb-2">
+                <label className="block text-sm sm:text-base font-medium text-white mb-2">
                   <Phone className="inline w-4 h-4 mr-2" />
                   Telefónne číslo *
                 </label>
@@ -714,10 +715,10 @@ export default function BookPage() {
                     setFormData({ ...formData, phone: e.target.value })
                   }
                   readOnly={!!existingCustomer}
-                  className={`w-full px-4 py-2 rounded-lg text-white focus:ring-2 focus:ring-offset-2 focus:outline-none ${
+                  className={`w-full px-4 py-3 sm:py-2.5 rounded-lg text-white text-base focus:ring-2 focus:ring-offset-2 focus:outline-none ${
                     existingCustomer ? "opacity-60" : ""
                   }`}
-                  style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                  style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
                   required={!existingCustomer}
                   pattern="^(\+421\s?\d{3}\s?\d{3}\s?\d{3}|0\d{3}\s?\d{3}\s?\d{3})$"
                   title="Telefónne číslo musí byť vo formáte +421 xxx xxx xxx alebo 0xxx xxx xxx"
@@ -725,55 +726,55 @@ export default function BookPage() {
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-6 py-3 text-white rounded-lg hover:bg-slate-700 transition-colors"
-                style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+                className="w-full sm:w-auto px-6 py-3 sm:py-3 text-white rounded-lg hover:bg-slate-700 transition-colors text-base font-medium"
+                style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '48px' }}
               >
                 Späť
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-6 py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ backgroundColor: '#c20003' }}
+                className="flex-1 px-6 py-3 sm:py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base sm:text-lg font-medium"
+                style={{ backgroundColor: '#c20003', minHeight: '48px' }}
               >
                 {loading ? "Odosielam..." : "Odoslať rezerváciu"}
               </button>
             </div>
 
             {/* Operational Information */}
-            <div className="mt-6 p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f' }}>
+            <div className="mt-6 p-3 sm:p-4 rounded-lg" style={{ backgroundColor: '#1f1f1f' }}>
               <div className="flex items-start mb-3">
-                <Info className="w-5 h-5 mr-2 mt-0.5" style={{ color: '#c20003' }} />
-                <h3 className="text-lg font-semibold text-white">Kde nás nájdete</h3>
+                <Info className="w-5 h-5 mr-2 mt-0.5 flex-shrink-0" style={{ color: '#c20003' }} />
+                <h3 className="text-base sm:text-lg font-semibold text-white">Kde nás nájdete</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-300">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-slate-300">
                 <div className="flex items-start">
                   <MapPin className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
-                    <p className="font-medium text-white">Adresa:</p>
-                    <p className="text-sm">PD Drive Club</p>
-                    <p className="text-sm">Bystrická cesta 55/B</p>
-                    <p className="text-sm">034 01 Ružomberok</p>
+                    <p className="font-medium text-white text-sm sm:text-base">Adresa:</p>
+                    <p className="text-xs sm:text-sm">PD Drive Club</p>
+                    <p className="text-xs sm:text-sm">Bystrická cesta 55/B</p>
+                    <p className="text-xs sm:text-sm">034 01 Ružomberok</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Clock className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
-                    <p className="font-medium text-white">Otváracie hodiny:</p>
-                    <p className="text-sm">PONDELOK-PIATOK: 8:00 - 18:00</p>
-                    <p className="text-sm">SOBOTA-NEDEĽA: 10:00 - 18:00</p>
+                    <p className="font-medium text-white text-sm sm:text-base">Otváracie hodiny:</p>
+                    <p className="text-xs sm:text-sm">PONDELOK-PIATOK: 8:00 - 18:00</p>
+                    <p className="text-xs sm:text-sm">SOBOTA-NEDEĽA: 10:00 - 18:00</p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Phone className="w-4 h-4 mr-2 mt-1 flex-shrink-0" style={{ color: '#c20003' }} />
                   <div>
-                    <p className="font-medium text-white">Kontakt:</p>
-                    <p className="text-sm">Tel: +421 917 567 825</p>
-                    <p className="text-sm">Email: info@racegarage.sk</p>
+                    <p className="font-medium text-white text-sm sm:text-base">Kontakt:</p>
+                    <p className="text-xs sm:text-sm">Tel: +421 917 567 825</p>
+                    <p className="text-xs sm:text-sm">Email: info@racegarage.sk</p>
                   </div>
                 </div>
               </div>

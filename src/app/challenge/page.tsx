@@ -319,13 +319,13 @@ export default function ChallengePage() {
 
         {/* Month Selector */}
         <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
-          <div className="flex items-center gap-4">
-            <Calendar className="w-5 h-5 text-slate-400" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+            <Calendar className="w-5 h-5 text-slate-400 hidden sm:block" />
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-              style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+              className="w-full sm:w-auto px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+              style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '44px' }}
             >
               {monthNames.map((name, index) => (
                 <option key={index + 1} value={index + 1}>
@@ -336,8 +336,8 @@ export default function ChallengePage() {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-              style={{ backgroundColor: '#1f1f1f', border: 'none' }}
+              className="w-full sm:w-auto px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
+              style={{ backgroundColor: '#1f1f1f', border: 'none', minHeight: '44px' }}
             >
               {Array.from({ length: YEAR_RANGE }, (_, i) => currentDate.getFullYear() - i).map((year) => (
                 <option key={year} value={year}>
@@ -358,18 +358,18 @@ export default function ChallengePage() {
         {loading ? (
           <div className="text-center py-12 text-slate-400">Načítavam...</div>
         ) : !challengeMonth ? (
-          <div className="rounded-lg shadow p-8 text-center" style={{ backgroundColor: "#292929" }}>
+          <div className="rounded-lg shadow p-6 sm:p-8 text-center" style={{ backgroundColor: "#292929" }}>
             <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-white mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
               Žiadna výzva pre {monthNames[selectedMonth - 1]} {selectedYear}
             </h2>
-            <p className="text-slate-300 mb-6">
+            <p className="text-sm sm:text-base text-slate-300 mb-6">
               Vytvorte výzvu pre sledovanie okruhových časov a rebríčkov
             </p>
             <button
               onClick={() => setShowCreateChallengeModal(true)}
               className="px-6 py-2 text-white rounded-lg transition-colors"
-              style={{ backgroundColor: "#c20003" }}
+              style={{ backgroundColor: "#c20003", minHeight: "44px" }}
             >
               Vytvoriť výzvu
             </button>
@@ -377,29 +377,29 @@ export default function ChallengePage() {
         ) : (
           <div className="space-y-6">
             {/* Challenge Info */}
-            <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-              <h2 className="text-xl font-bold text-white mb-4">
+            <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+              <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
                 Výzva {monthNames[challengeMonth.month - 1]} {challengeMonth.year}
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-sm text-slate-300">Trať</p>
-                  <p className="font-medium text-white">{challengeMonth.trackName}</p>
+                  <p className="text-xs sm:text-sm text-slate-300">Trať</p>
+                  <p className="font-medium text-white break-words">{challengeMonth.trackName}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-slate-300">Auto</p>
-                  <p className="font-medium text-white">{challengeMonth.carName}</p>
+                  <p className="text-xs sm:text-sm text-slate-300">Auto</p>
+                  <p className="font-medium text-white break-words">{challengeMonth.carName}</p>
                 </div>
                 {challengeMonth.durationMinutes && (
                   <div>
-                    <p className="text-sm text-slate-300">Trvanie</p>
+                    <p className="text-xs sm:text-sm text-slate-300">Trvanie</p>
                     <p className="font-medium text-white">{challengeMonth.durationMinutes} minút</p>
                   </div>
                 )}
                 {challengeMonth.prizeDescription && (
                   <div>
-                    <p className="text-sm text-slate-300">Výhra</p>
-                    <p className="font-medium text-white">{challengeMonth.prizeDescription}</p>
+                    <p className="text-xs sm:text-sm text-slate-300">Výhra</p>
+                    <p className="font-medium text-white break-words">{challengeMonth.prizeDescription}</p>
                   </div>
                 )}
               </div>
@@ -407,12 +407,12 @@ export default function ChallengePage() {
 
             {/* Rebríček */}
             <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6 border-b border-slate-700">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-bold text-white">
+              <div className="p-4 sm:p-6 border-b border-slate-700">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
                     Rebríček
                   </h2>
-                  <span className="text-sm text-slate-300">
+                  <span className="text-xs sm:text-sm text-slate-300">
                     {totalAttempts} {totalAttempts === 1 ? 'pokus' : 'pokusov'}
                   </span>
                 </div>
@@ -426,12 +426,13 @@ export default function ChallengePage() {
                     value={leaderboardSearch}
                     onChange={(e) => setLeaderboardSearch(e.target.value)}
                     className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                    style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                    style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                   />
                 </div>
               </div>
 
-              <div className="overflow-x-auto">
+              {/* Desktop Table View */}
+              <div className="overflow-x-auto hidden md:block">
                 <table className="w-full">
                   <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
                     <tr>
@@ -511,6 +512,7 @@ export default function ChallengePage() {
                                 onClick={() => handleDeleteAttempt(entry.id, entry.customerName)}
                                 className="text-red-600 hover:text-red-900"
                                 title="Odstrániť pokus"
+                                style={{ minWidth: "44px", minHeight: "44px" }}
                               >
                                 <Trash2 className="w-5 h-5" />
                               </button>
@@ -522,6 +524,69 @@ export default function ChallengePage() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden divide-y divide-slate-700">
+                {filteredAttempts.length === 0 ? (
+                  <div className="p-6 text-center text-slate-400">
+                    {leaderboardSearch
+                      ? "Nenašli sa žiadni zákazníci"
+                      : "Zatiaľ žiadne pokusy. Buďte prvý kto zaznamená čas!"}
+                  </div>
+                ) : (
+                  filteredAttempts.map((entry) => (
+                    <div
+                      key={entry.id}
+                      className={`p-4 ${entry.rank <= 3 ? "bg-yellow-900/20" : ""}`}
+                    >
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex items-center gap-2">
+                          {entry.rank <= 3 && (
+                            <Trophy
+                              className={`w-5 h-5 ${
+                                entry.rank === 1
+                                  ? "text-yellow-500"
+                                  : entry.rank === 2
+                                  ? "text-gray-400"
+                                  : "text-amber-600"
+                              }`}
+                            />
+                          )}
+                          <span className="text-lg font-bold text-white">
+                            #{entry.rank}
+                          </span>
+                        </div>
+                        <div className="text-lg font-mono font-bold text-white">
+                          {formatLapTime(entry.lapTimeMs)}
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1 mb-3">
+                        <div className="text-sm font-medium text-white">
+                          {entry.customerName}
+                        </div>
+                        <div className="text-sm text-slate-400 break-words">
+                          {entry.customerEmail}
+                        </div>
+                        <div className="text-xs text-slate-500">
+                          {new Date(entry.recordedAt).toLocaleDateString('sk-SK')}
+                        </div>
+                      </div>
+
+                      {canDelete && (
+                        <button
+                          onClick={() => handleDeleteAttempt(entry.id, entry.customerName)}
+                          className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                          style={{ minHeight: "44px" }}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          Odstrániť pokus
+                        </button>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -530,14 +595,15 @@ export default function ChallengePage() {
         {showCreateChallengeModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="rounded-lg max-w-md w-full" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
                     Vytvoriť výzvu
                   </h2>
                   <button
                     onClick={() => setShowCreateChallengeModal(false)}
                     className="text-slate-400 hover:text-slate-300"
+                    style={{ minWidth: "44px", minHeight: "44px" }}
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -567,7 +633,7 @@ export default function ChallengePage() {
                         setChallengeFormData({ ...challengeFormData, trackName: e.target.value })
                       }
                       className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      style={{ backgroundColor: "#1f1f1f", minHeight: "44px" }}
                       placeholder="napr. Nürburgring Nordschleife"
                       required
                     />
@@ -584,7 +650,7 @@ export default function ChallengePage() {
                         setChallengeFormData({ ...challengeFormData, carName: e.target.value })
                       }
                       className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      style={{ backgroundColor: "#1f1f1f", minHeight: "44px" }}
                       placeholder="napr. Porsche 911 GT3 RS"
                       required
                     />
@@ -601,18 +667,18 @@ export default function ChallengePage() {
                         setChallengeFormData({ ...challengeFormData, prizeDescription: e.target.value })
                       }
                       className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f" }}
+                      style={{ backgroundColor: "#1f1f1f", minHeight: "44px" }}
                       placeholder="napr. 50€ voucher, pohár, tričko..."
                     />
                     <p className="text-xs text-slate-400 mt-1">Voliteľné - čo je výhrou daného mesiaca</p>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={challengeFormSubmitting}
                       className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: "#c20003" }}
+                      style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                     >
                       {challengeFormSubmitting ? "Vytváram..." : "Vytvoriť výzvu"}
                     </button>
@@ -620,6 +686,7 @@ export default function ChallengePage() {
                       type="button"
                       onClick={() => setShowCreateChallengeModal(false)}
                       className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                      style={{ minHeight: "44px" }}
                     >
                       Zrušiť
                     </button>
@@ -634,14 +701,15 @@ export default function ChallengePage() {
         {showRecordAttemptModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
                     {attemptStep === "search" ? "Vybrať zákazníka" : "Zaznamenať čas okruhu"}
                   </h2>
                   <button
                     onClick={resetAttemptModal}
                     className="text-slate-400 hover:text-slate-300"
+                    style={{ minWidth: "44px", minHeight: "44px" }}
                   >
                     <X className="w-6 h-6" />
                   </button>
@@ -658,7 +726,7 @@ export default function ChallengePage() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        style={{ backgroundColor: "#1f1f1f", minHeight: "44px" }}
                         autoFocus
                       />
                     </div>
@@ -677,11 +745,12 @@ export default function ChallengePage() {
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
                             className="w-full px-4 py-3 text-left hover:bg-slate-800 transition-colors"
+                            style={{ minHeight: "60px" }}
                           >
                             <div className="font-medium text-white">
                               {customer.firstName} {customer.lastName}
                             </div>
-                            <div className="text-sm text-slate-300">{customer.email}</div>
+                            <div className="text-sm text-slate-300 break-words">{customer.email}</div>
                             {(customer.street || customer.city) && (
                               <div className="text-sm text-slate-400">
                                 {formatAddress(customer.street, customer.city)}
@@ -712,7 +781,7 @@ export default function ChallengePage() {
                       <p className="font-medium text-white">
                         {selectedCustomer?.firstName} {selectedCustomer?.lastName}
                       </p>
-                      <p className="text-sm text-slate-300">{selectedCustomer?.email}</p>
+                      <p className="text-sm text-slate-300 break-words">{selectedCustomer?.email}</p>
                       <button
                         type="button"
                         onClick={() => {
@@ -720,6 +789,7 @@ export default function ChallengePage() {
                           setSelectedCustomer(null);
                         }}
                         className="text-sm text-slate-300 hover:text-white mt-2"
+                        style={{ minHeight: "44px" }}
                       >
                         Zmeniť zákazníka
                       </button>
@@ -743,7 +813,7 @@ export default function ChallengePage() {
                           setAttemptFormData({ ...attemptFormData, lapTime: e.target.value })
                         }
                         className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                         placeholder="mm:ss:mmm (napr. 01:23:456) alebo ms (napr. 83456)"
                         required
                       />
@@ -756,12 +826,12 @@ export default function ChallengePage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4">
                       <button
                         type="submit"
                         disabled={attemptFormSubmitting}
                         className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: "#c20003" }}
+                        style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                       >
                         {attemptFormSubmitting ? "Zaznamenávam..." : "Zaznamenať pokus"}
                       </button>
@@ -769,6 +839,7 @@ export default function ChallengePage() {
                         type="button"
                         onClick={resetAttemptModal}
                         className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                        style={{ minHeight: "44px" }}
                       >
                         Zrušiť
                       </button>

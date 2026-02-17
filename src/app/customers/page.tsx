@@ -199,58 +199,61 @@ export default function CustomersPage() {
 
   return (
     <ProtectedLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white">Zákazníci</h1>
-            <p className="text-slate-300 mt-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">Zákazníci</h1>
+            <p className="text-sm sm:text-base text-slate-300 mt-1 sm:mt-2">
               Spravujte zákaznícke účty a informácie
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-            style={{ backgroundColor: "#c20003" }}
+            className="flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg hover:brightness-90 transition-colors text-sm sm:text-base"
+            style={{ backgroundColor: "#c20003", minHeight: "44px" }}
           >
-            <Plus className="w-4 h-4" />
-            Pridať zákazníka
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>Pridať zákazníka</span>
           </button>
         </div>
 
         {/* Search */}
         <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
-          <form onSubmit={handleSearch} className="flex gap-2">
+          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Hľadať podľa mena, emailu alebo adresy..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f", border: "none", color: "white" }}
+                className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                style={{ backgroundColor: "#1f1f1f", border: "none", color: "white", minHeight: "44px" }}
               />
             </div>
-            <button
-              type="submit"
-              className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-              style={{ backgroundColor: "#c20003" }}
-            >
-              Hľadať
-            </button>
-            {search && (
+            <div className="flex gap-2">
               <button
-                type="button"
-                onClick={() => {
-                  setSearch("");
-                  setSearchInput("");
-                }}
-                className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                type="submit"
+                className="flex-1 sm:flex-none px-6 py-2.5 text-white rounded-lg hover:brightness-90 transition-colors text-sm sm:text-base"
+                style={{ backgroundColor: "#c20003", minHeight: "44px" }}
               >
-                Vymazať
+                Hľadať
               </button>
-            )}
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    setSearchInput("");
+                  }}
+                  className="flex-1 sm:flex-none px-4 py-2.5 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm sm:text-base"
+                  style={{ minHeight: "44px" }}
+                >
+                  Vymazať
+                </button>
+              )}
+            </div>
           </form>
         </div>
 
@@ -261,8 +264,8 @@ export default function CustomersPage() {
           </div>
         )}
 
-        {/* Customer table */}
-        <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
+        {/* Customer table - Desktop view */}
+        <div className="rounded-lg shadow overflow-hidden hidden md:block" style={{ backgroundColor: "#292929" }}>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
@@ -377,18 +380,120 @@ export default function CustomersPage() {
           )}
         </div>
 
+        {/* Customer cards - Mobile view */}
+        <div className="md:hidden space-y-3">
+          {loading ? (
+            <div className="rounded-lg shadow p-6 text-center text-slate-300" style={{ backgroundColor: "#292929" }}>
+              Načítavam...
+            </div>
+          ) : customers.length === 0 ? (
+            <div className="rounded-lg shadow p-6 text-center text-slate-300" style={{ backgroundColor: "#292929" }}>
+              Nenašli sa žiadni zákazníci. Kliknite na &quot;Pridať zákazníka&quot; pre začatie.
+            </div>
+          ) : (
+            <>
+              {customers.map((customer) => (
+                <div
+                  key={customer.id}
+                  className="rounded-lg shadow p-4"
+                  style={{ backgroundColor: "#292929" }}
+                >
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold text-white">
+                        {customer.firstName} {customer.lastName}
+                      </h3>
+                      <p className="text-sm text-slate-300 mt-1">{customer.email}</p>
+                    </div>
+                    <div className="flex items-center gap-2 ml-2">
+                      <button
+                        onClick={() => handleViewCustomer(customer.id)}
+                        className="text-slate-300 hover:text-white p-2 rounded-lg hover:bg-slate-700 active:scale-95 transition-all"
+                        title="Zobraziť detaily"
+                        style={{ minWidth: "44px", minHeight: "44px" }}
+                      >
+                        <Eye className="w-5 h-5" />
+                      </button>
+                      {canDelete && (
+                        <button
+                          onClick={() => handleDeleteCustomer(customer.id)}
+                          className="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-slate-700 active:scale-95 transition-all"
+                          title="Odstrániť"
+                          style={{ minWidth: "44px", minHeight: "44px" }}
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="space-y-2 text-sm">
+                    {(customer.street || customer.city) && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-slate-400 min-w-[70px]">Adresa:</span>
+                        <span className="text-slate-300">
+                          {formatAddress(customer.street, customer.city)}
+                        </span>
+                      </div>
+                    )}
+                    {customer.phone && (
+                      <div className="flex items-start gap-2">
+                        <span className="text-slate-400 min-w-[70px]">Telefón:</span>
+                        <span className="text-slate-300">{customer.phone}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {/* Mobile Pagination */}
+              {pagination.totalPages > 1 && (
+                <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
+                  <div className="text-xs text-slate-300 text-center mb-3">
+                    Zobrazených {(pagination.page - 1) * pagination.limit + 1} až{" "}
+                    {Math.min(pagination.page * pagination.limit, pagination.total)} z{" "}
+                    {pagination.total} zákazníkov
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() =>
+                        setPagination({ ...pagination, page: pagination.page - 1 })
+                      }
+                      disabled={pagination.page === 1}
+                      className="flex-1 px-4 py-3 border border-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                      style={{ minHeight: "44px" }}
+                    >
+                      Predchádzajúce
+                    </button>
+                    <button
+                      onClick={() =>
+                        setPagination({ ...pagination, page: pagination.page + 1 })
+                      }
+                      disabled={pagination.page === pagination.totalPages}
+                      className="flex-1 px-4 py-3 border border-slate-600 text-white rounded-lg hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                      style={{ minHeight: "44px" }}
+                    >
+                      Ďalšie
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
         {/* Create Customer Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Pridať nového zákazníka</h2>
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">Pridať nového zákazníka</h2>
                   <button
                     onClick={() => setShowCreateModal(false)}
-                    className="text-slate-400 hover:text-slate-300"
+                    className="text-slate-400 hover:text-slate-300 p-2"
+                    style={{ minWidth: "44px", minHeight: "44px" }}
                   >
-                    <X className="w-6 h-6" />
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
                 </div>
 
@@ -399,7 +504,7 @@ export default function CustomersPage() {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-white mb-2">
                         Meno *
@@ -410,8 +515,8 @@ export default function CustomersPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, firstName: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        className="w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                        style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                         required
                       />
                       {formErrors.firstName && (
@@ -429,8 +534,8 @@ export default function CustomersPage() {
                         onChange={(e) =>
                           setFormData({ ...formData, lastName: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        className="w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                        style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                         required
                       />
                       {formErrors.lastName && (
@@ -449,8 +554,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                       required
                     />
                     {formErrors.email && (
@@ -468,8 +573,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, street: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                     />
                   </div>
 
@@ -483,8 +588,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, city: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                     />
                   </div>
 
@@ -498,8 +603,8 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                     />
                   </div>
 
@@ -511,27 +616,28 @@ export default function CustomersPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, newsletter: e.target.checked })
                       }
-                      className="w-4 h-4 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
-                      style={{ accentColor: "#c20003" }}
+                      className="w-5 h-5 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
+                      style={{ accentColor: "#c20003", minWidth: "20px", minHeight: "20px" }}
                     />
                     <label htmlFor="newsletter" className="text-sm text-white cursor-pointer">
                       Zákazník má záujem o newsletter (propagačné materiály a novinky)
                     </label>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={formSubmitting}
-                      className="flex-1 px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: "#c20003" }}
+                      className="flex-1 px-6 py-3 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                      style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                     >
                       {formSubmitting ? "Vytváram..." : "Vytvoriť zákazníka"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowCreateModal(false)}
-                      className="px-6 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                      className="px-6 py-3 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm sm:text-base"
+                      style={{ minHeight: "44px" }}
                     >
                       Zrušiť
                     </button>
@@ -546,63 +652,64 @@ export default function CustomersPage() {
         {showDetailModal && selectedCustomer && customerSummary && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
                     Detaily zákazníka
                   </h2>
                   <button
                     onClick={() => setShowDetailModal(false)}
-                    className="text-slate-400 hover:text-slate-300"
+                    className="text-slate-400 hover:text-slate-300 p-2"
+                    style={{ minWidth: "44px", minHeight: "44px" }}
                   >
-                    <X className="w-6 h-6" />
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
                 </div>
 
                 {/* Basic Info */}
-                <div className="rounded-lg p-4 mb-6" style={{ backgroundColor: "#1f1f1f" }}>
-                  <h3 className="font-semibold text-white mb-3">Základné informácie</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-lg p-4 mb-4 sm:mb-6" style={{ backgroundColor: "#1f1f1f" }}>
+                  <h3 className="font-semibold text-white mb-3 text-sm sm:text-base">Základné informácie</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <p className="text-sm text-slate-400">Meno</p>
-                      <p className="font-medium text-white">
+                      <p className="text-xs sm:text-sm text-slate-400">Meno</p>
+                      <p className="font-medium text-white text-sm sm:text-base">
                         {selectedCustomer.firstName} {selectedCustomer.lastName}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">Email</p>
-                      <p className="font-medium text-white">{selectedCustomer.email}</p>
+                      <p className="text-xs sm:text-sm text-slate-400">Email</p>
+                      <p className="font-medium text-white text-sm sm:text-base break-all">{selectedCustomer.email}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">Adresa</p>
-                      <p className="font-medium text-white">
+                      <p className="text-xs sm:text-sm text-slate-400">Adresa</p>
+                      <p className="font-medium text-white text-sm sm:text-base">
                         {formatAddress(selectedCustomer.street, selectedCustomer.city)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400">Telefón</p>
-                      <p className="font-medium text-white">{selectedCustomer.phone || "-"}</p>
+                      <p className="text-xs sm:text-sm text-slate-400">Telefón</p>
+                      <p className="font-medium text-white text-sm sm:text-base">{selectedCustomer.phone || "-"}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Summary */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
                   <div className="rounded-lg p-4" style={{ backgroundColor: "#1a3a52" }}>
-                    <p className="text-sm text-blue-300 mb-1">Celkový počet jázd</p>
-                    <p className="text-2xl font-bold text-blue-100">
+                    <p className="text-xs sm:text-sm text-blue-300 mb-1">Celkový počet jázd</p>
+                    <p className="text-xl sm:text-2xl font-bold text-blue-100">
                       {customerSummary.totalRides}
                     </p>
                   </div>
                   <div className="rounded-lg p-4" style={{ backgroundColor: "#1a4d2e" }}>
-                    <p className="text-sm text-green-300 mb-1">Celkový počet minút</p>
-                    <p className="text-2xl font-bold text-green-100">
+                    <p className="text-xs sm:text-sm text-green-300 mb-1">Celkový počet minút</p>
+                    <p className="text-xl sm:text-2xl font-bold text-green-100">
                       {customerSummary.totalMinutes}
                     </p>
                   </div>
                   <div className="rounded-lg p-4" style={{ backgroundColor: "#4a1a4d" }}>
-                    <p className="text-sm text-purple-300 mb-1">Posledná jazda</p>
-                    <p className="text-sm font-medium text-purple-100">
+                    <p className="text-xs sm:text-sm text-purple-300 mb-1">Posledná jazda</p>
+                    <p className="text-xs sm:text-sm font-medium text-purple-100">
                       {formatDate(customerSummary.lastRide)}
                     </p>
                   </div>
@@ -610,9 +717,9 @@ export default function CustomersPage() {
 
                 {/* Ride History */}
                 <div className="rounded-lg p-4" style={{ backgroundColor: "#1f1f1f" }}>
-                  <h3 className="font-semibold text-white mb-3">Nedávne jazdy</h3>
+                  <h3 className="font-semibold text-white mb-3 text-sm sm:text-base">Nedávne jazdy</h3>
                   {selectedCustomer.rideSessions.length === 0 ? (
-                    <p className="text-slate-300 text-center py-4">Zatiaľ žiadne jazdy</p>
+                    <p className="text-slate-300 text-center py-4 text-sm">Zatiaľ žiadne jazdy</p>
                   ) : (
                     <div className="space-y-3">
                       {selectedCustomer.rideSessions.map((ride) => (
@@ -621,16 +728,16 @@ export default function CustomersPage() {
                           className="rounded-lg p-3"
                           style={{ backgroundColor: "#292929" }}
                         >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-medium text-white">
+                          <div className="flex justify-between items-start flex-col sm:flex-row gap-2">
+                            <div className="flex-1">
+                              <p className="font-medium text-white text-sm sm:text-base">
                                 {formatDateTime(ride.startAt)}
                               </p>
-                              <p className="text-sm text-slate-300">
+                              <p className="text-xs sm:text-sm text-slate-300">
                                 Trvanie: {ride.minutes} minút • Zdroj: {ride.source}
                               </p>
                               {ride.notes && (
-                                <p className="text-sm text-slate-400 mt-1">
+                                <p className="text-xs sm:text-sm text-slate-400 mt-1">
                                   {ride.notes}
                                 </p>
                               )}
@@ -642,11 +749,11 @@ export default function CustomersPage() {
                   )}
                 </div>
 
-                <div className="mt-6 flex justify-end">
+                <div className="mt-4 sm:mt-6 flex justify-end">
                   <button
                     onClick={() => setShowDetailModal(false)}
-                    className="px-6 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-                    style={{ backgroundColor: "#c20003" }}
+                    className="w-full sm:w-auto px-6 py-3 text-white rounded-lg hover:brightness-90 transition-colors text-sm sm:text-base"
+                    style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                   >
                     Zavrieť
                   </button>
