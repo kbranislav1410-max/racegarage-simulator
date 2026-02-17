@@ -166,13 +166,13 @@ export default function PaymentsPage() {
 
   return (
     <ProtectedLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Platby a Vyúčtovania
           </h1>
-          <p className="text-slate-300 mt-2">
+          <p className="text-slate-300 mt-1 sm:mt-2 text-sm sm:text-base">
             50/50 vyúčtovanie a sledovanie platieb
           </p>
         </div>
@@ -180,17 +180,18 @@ export default function PaymentsPage() {
         {/* Navigation Tabs */}
         <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
           <div className="border-b border-slate-700">
-            <nav className="flex -mb-px">
+            <nav className="flex -mb-px overflow-x-auto">
               <a
                 href="/payments"
-                className="px-6 py-4 text-sm font-medium border-b-2 text-white"
-                style={{ borderBottomColor: "#c20003" }}
+                className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 text-white whitespace-nowrap"
+                style={{ borderBottomColor: "#c20003", minHeight: '44px' }}
               >
                 Platby
               </a>
               <a
                 href="/payments/settlements"
-                className="px-6 py-4 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600"
+                className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600 whitespace-nowrap"
+                style={{ minHeight: '44px' }}
               >
                 Vyúčtovania
               </a>
@@ -199,14 +200,14 @@ export default function PaymentsPage() {
         </div>
 
         {/* Month Selector & Export */}
-        <div className="rounded-lg shadow p-4 flex items-center gap-4" style={{ backgroundColor: "#292929" }}>
+        <div className="rounded-lg shadow p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4" style={{ backgroundColor: "#292929" }}>
           <div className="flex items-center gap-2 flex-1">
-            <Calendar className="w-5 h-5 text-slate-400" />
+            <Calendar className="w-5 h-5 text-slate-400 hidden sm:block" />
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-              style={{ backgroundColor: '#292929', border: 'none' }}
+              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white w-full sm:w-auto text-sm sm:text-base"
+              style={{ backgroundColor: '#292929', border: 'none', minHeight: '44px' }}
             >
               {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
                 <option key={month} value={month}>
@@ -219,8 +220,8 @@ export default function PaymentsPage() {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-              style={{ backgroundColor: '#292929', border: 'none' }}
+              className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white w-full sm:w-auto text-sm sm:text-base"
+              style={{ backgroundColor: '#292929', border: 'none', minHeight: '44px' }}
             >
               {Array.from({ length: 5 }, (_, i) => currentDate.getFullYear() - i).map(
                 (year) => (
@@ -234,7 +235,8 @@ export default function PaymentsPage() {
           <button
             onClick={handleExportCSV}
             disabled={!settlement || settlement.payments.length === 0}
-            className="flex items-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+            style={{ minHeight: '44px' }}
           >
             <Download className="w-4 h-4" />
             Exportovať CSV
@@ -255,35 +257,35 @@ export default function PaymentsPage() {
         ) : settlement ? (
           <>
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-                <h3 className="text-sm font-medium text-slate-400">Celkové Príjmy</h3>
-                <p className="text-3xl font-bold text-white mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+                <h3 className="text-xs sm:text-sm font-medium text-slate-400">Celkové Príjmy</h3>
+                <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
                   {formatCurrency(settlement.summary.totalRevenue)}
                 </p>
-                <p className="text-sm text-slate-400 mt-1">
+                <p className="text-xs sm:text-sm text-slate-400 mt-1">
                   {settlement.summary.totalPayments} platieb
                 </p>
               </div>
 
-              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-                <h3 className="text-sm font-medium text-slate-400">Celkom pre PD Drive Club</h3>
-                <p className="text-3xl font-bold text-white mt-2">
+              <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+                <h3 className="text-xs sm:text-sm font-medium text-slate-400">Celkom pre PD Drive Club</h3>
+                <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
                   {formatCurrency(settlement.summary.sumFriend)}
                 </p>
-                <p className="text-sm text-slate-400 mt-1">PD Drive club platby</p>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1">PD Drive club platby</p>
               </div>
 
-              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-                <h3 className="text-sm font-medium text-slate-400">Celkom pre Racegarage</h3>
-                <p className="text-3xl font-bold text-white mt-2">
+              <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+                <h3 className="text-xs sm:text-sm font-medium text-slate-400">Celkom pre Racegarage</h3>
+                <p className="text-2xl sm:text-3xl font-bold text-white mt-2">
                   {formatCurrency(settlement.summary.sumMe)}
                 </p>
-                <p className="text-sm text-slate-400 mt-1">Poukazy a ostatné</p>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1">Poukazy a ostatné</p>
               </div>
 
               <div
-                className={`rounded-lg shadow p-6 ${
+                className={`rounded-lg shadow p-4 sm:p-6 ${
                   settlement.summary.friendOwesMe > 0
                     ? "border-2 border-green-500"
                     : settlement.summary.friendOwesMe < 0
@@ -292,9 +294,9 @@ export default function PaymentsPage() {
                 }`}
                 style={{ backgroundColor: "#292929" }}
               >
-                <h3 className="text-sm font-medium text-slate-400">Vyúčtovanie</h3>
+                <h3 className="text-xs sm:text-sm font-medium text-slate-400">Vyúčtovanie</h3>
                 <p
-                  className={`text-3xl font-bold mt-2 ${
+                  className={`text-2xl sm:text-3xl font-bold mt-2 ${
                     settlement.summary.friendOwesMe > 0
                       ? "text-green-400"
                       : settlement.summary.friendOwesMe < 0
@@ -306,7 +308,7 @@ export default function PaymentsPage() {
                     ? "€0.00"
                     : formatCurrency(Math.abs(settlement.summary.friendOwesMe))}
                 </p>
-                <p className="text-sm text-slate-300 mt-1 font-medium">
+                <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium">
                   {settlement.summary.friendOwesMe > 0
                     ? "PD Drive Club mi dlhuje"
                     : settlement.summary.friendOwesMe < 0
@@ -317,12 +319,12 @@ export default function PaymentsPage() {
             </div>
 
             {/* Settlement Message */}
-            <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#c20003" }}>
+            <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#c20003" }}>
               <div className="flex items-center gap-3 text-white">
-                <Euro className="w-8 h-8" />
+                <Euro className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
                 <div>
-                  <h3 className="text-sm font-medium opacity-90">Výsledok 50/50 vyúčtovania</h3>
-                  <p className="text-xl font-bold mt-1">
+                  <h3 className="text-xs sm:text-sm font-medium opacity-90">Výsledok 50/50 vyúčtovania</h3>
+                  <p className="text-base sm:text-xl font-bold mt-1">
                     {settlement.summary.settlementMessage}
                   </p>
                 </div>
@@ -331,20 +333,20 @@ export default function PaymentsPage() {
 
             {/* Payment Methods Breakdown */}
             {Object.keys(settlement.byMethod).length > 0 && (
-              <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-                <h2 className="text-xl font-bold text-white mb-4">
+              <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                   Rozdelenie podľa metód platby
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                   {Object.entries(settlement.byMethod).map(([method, data]) => (
-                    <div key={method} className="border border-slate-700 rounded-lg p-4">
-                      <h4 className="text-sm font-medium text-slate-400">
+                    <div key={method} className="border border-slate-700 rounded-lg p-3 sm:p-4">
+                      <h4 className="text-xs sm:text-sm font-medium text-slate-400">
                         {getMethodLabel(method as any)}
                       </h4>
-                      <p className="text-2xl font-bold text-white mt-2">
+                      <p className="text-xl sm:text-2xl font-bold text-white mt-2">
                         {formatCurrency(data.total)}
                       </p>
-                      <p className="text-sm text-slate-400 mt-1">{data.count} platieb</p>
+                      <p className="text-xs sm:text-sm text-slate-400 mt-1">{data.count} platieb</p>
                     </div>
                   ))}
                 </div>
@@ -353,118 +355,204 @@ export default function PaymentsPage() {
 
             {/* Payments Table */}
             <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6 border-b border-slate-700">
-                <h2 className="text-xl font-bold text-white">História platieb</h2>
+              <div className="p-4 sm:p-6 border-b border-slate-700">
+                <h2 className="text-lg sm:text-xl font-bold text-white">História platieb</h2>
               </div>
               
               {settlement.payments.length === 0 ? (
-                <div className="p-8 text-center text-slate-400">
+                <div className="p-6 sm:p-8 text-center text-slate-400 text-sm sm:text-base">
                   Žiadne platby zaznamenané pre {settlement.monthName} {settlement.year}
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Dátum a Čas
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Zákazník
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Suma
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Metóda
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Príjemca
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Jazda
-                        </th>
-                        <th className="px-6 py-3 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">
-                          Akcie
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-700">
-                      {settlement.payments.map((payment) => {
-                        const date = new Date(payment.createdAt);
-                        return (
-                          <tr key={payment.id} className="hover:bg-slate-700">
-                            <td className="px-6 py-4 whitespace-nowrap">
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Dátum a Čas
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Zákazník
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Suma
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Metóda
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Príjemca
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Jazda
+                          </th>
+                          <th className="px-6 py-3 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">
+                            Akcie
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-700">
+                        {settlement.payments.map((payment) => {
+                          const date = new Date(payment.createdAt);
+                          return (
+                            <tr key={payment.id} className="hover:bg-slate-700">
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-medium text-white">
+                                  {date.toLocaleDateString()}
+                                </div>
+                                <div className="text-sm text-slate-400">
+                                  {date.toLocaleTimeString()}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4">
+                                {payment.customer ? (
+                                  <div>
+                                    <div className="text-sm font-medium text-white">
+                                      {payment.customer.firstName} {payment.customer.lastName}
+                                    </div>
+                                    <div className="text-sm text-slate-400">
+                                      {payment.customer.email}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-sm text-slate-400">N/A</span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <div className="text-sm font-bold text-white">
+                                  {formatCurrency(payment.amountCents)}
+                                </div>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span
+                                  className={`px-2 py-1 text-xs font-medium rounded-full ${getMethodBadge(
+                                    payment.method
+                                  )}`}
+                                >
+                                  {getMethodLabel(payment.method)}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                <span
+                                  className={`px-2 py-1 text-xs font-medium rounded-full ${getReceiverBadge(
+                                    payment.receiver
+                                  )}`}
+                                >
+                                  {getReceiverLabel(payment.receiver)}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                {payment.session ? (
+                                  <div className="text-sm text-slate-300">
+                                    {payment.session.minutes} min
+                                  </div>
+                                ) : (
+                                  <span className="text-sm text-slate-400">-</span>
+                                )}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-right">
+                                {canDelete && (
+                                  <button
+                                    onClick={() => handleDeletePayment(payment.id)}
+                                    className="text-red-400 hover:text-red-300 transition-colors"
+                                    title="Odstrániť platbu"
+                                    style={{ minWidth: '44px', minHeight: '44px' }}
+                                  >
+                                    <Trash2 className="w-5 h-5" />
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden divide-y divide-slate-700">
+                    {settlement.payments.map((payment) => {
+                      const date = new Date(payment.createdAt);
+                      return (
+                        <div key={payment.id} className="p-4 space-y-3">
+                          {/* Date and Amount */}
+                          <div className="flex justify-between items-start">
+                            <div>
                               <div className="text-sm font-medium text-white">
                                 {date.toLocaleDateString()}
                               </div>
-                              <div className="text-sm text-slate-400">
+                              <div className="text-xs text-slate-400">
                                 {date.toLocaleTimeString()}
                               </div>
-                            </td>
-                            <td className="px-6 py-4">
-                              {payment.customer ? (
-                                <div>
-                                  <div className="text-sm font-medium text-white">
-                                    {payment.customer.firstName} {payment.customer.lastName}
-                                  </div>
-                                  <div className="text-sm text-slate-400">
-                                    {payment.customer.email}
-                                  </div>
-                                </div>
-                              ) : (
-                                <span className="text-sm text-slate-400">N/A</span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="text-sm font-bold text-white">
-                                {formatCurrency(payment.amountCents)}
+                            </div>
+                            <div className="text-lg font-bold text-white">
+                              {formatCurrency(payment.amountCents)}
+                            </div>
+                          </div>
+
+                          {/* Customer */}
+                          {payment.customer && (
+                            <div>
+                              <div className="text-xs text-slate-400 mb-1">Zákazník</div>
+                              <div className="text-sm font-medium text-white">
+                                {payment.customer.firstName} {payment.customer.lastName}
                               </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-xs text-slate-400 break-words">
+                                {payment.customer.email}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Method and Receiver */}
+                          <div className="flex flex-wrap gap-2">
+                            <div>
+                              <div className="text-xs text-slate-400 mb-1">Metóda</div>
                               <span
-                                className={`px-2 py-1 text-xs font-medium rounded-full ${getMethodBadge(
+                                className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getMethodBadge(
                                   payment.method
                                 )}`}
                               >
                                 {getMethodLabel(payment.method)}
                               </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            </div>
+                            <div>
+                              <div className="text-xs text-slate-400 mb-1">Príjemca</div>
                               <span
-                                className={`px-2 py-1 text-xs font-medium rounded-full ${getReceiverBadge(
+                                className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${getReceiverBadge(
                                   payment.receiver
                                 )}`}
                               >
                                 {getReceiverLabel(payment.receiver)}
                               </span>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {payment.session ? (
+                            </div>
+                            {payment.session && (
+                              <div>
+                                <div className="text-xs text-slate-400 mb-1">Jazda</div>
                                 <div className="text-sm text-slate-300">
                                   {payment.session.minutes} min
                                 </div>
-                              ) : (
-                                <span className="text-sm text-slate-400">-</span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right">
-                              {canDelete && (
-                                <button
-                                  onClick={() => handleDeletePayment(payment.id)}
-                                  className="text-red-400 hover:text-red-300 transition-colors"
-                                  title="Odstrániť platbu"
-                                >
-                                  <Trash2 className="w-5 h-5" />
-                                </button>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Delete Button */}
+                          {canDelete && (
+                            <button
+                              onClick={() => handleDeletePayment(payment.id)}
+                              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                              style={{ minHeight: '44px' }}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span className="text-sm font-medium">Odstrániť platbu</span>
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </div>
           </>
