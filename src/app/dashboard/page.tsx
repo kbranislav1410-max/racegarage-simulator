@@ -625,77 +625,78 @@ export default function DashboardPage() {
 
   return (
     <ProtectedLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-white">Prehľad</h1>
-          <p className="text-slate-300 mt-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">Prehľad</h1>
+          <p className="text-sm sm:text-base text-slate-300 mt-1 sm:mt-2">
             Vitajte v systéme Racegarage Simulátor
           </p>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <button
             onClick={handleOpenRecordModal}
             style={{ backgroundColor: "#1a4d2e" }}
-            className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg flex items-center justify-center gap-2 sm:gap-3 font-medium shadow-md hover:shadow-lg transition-all text-sm sm:text-base"
           >
-            <Plus size={24} />
+            <Plus size={20} className="sm:w-6 sm:h-6" />
             <span>Nová jazda</span>
           </button>
           
           <button
             onClick={handleNewCustomer}
             style={{ backgroundColor: "#1a3a52" }}
-            className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg flex items-center justify-center gap-2 sm:gap-3 font-medium shadow-md hover:shadow-lg transition-all text-sm sm:text-base"
           >
-            <UserPlus size={24} />
+            <UserPlus size={20} className="sm:w-6 sm:h-6" />
             <span>Nový zákazník</span>
           </button>
           
           <button
             onClick={handleNewVoucher}
             style={{ backgroundColor: "#4a1a4d" }}
-            className="hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="hover:brightness-90 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg flex items-center justify-center gap-2 sm:gap-3 font-medium shadow-md hover:shadow-lg transition-all text-sm sm:text-base"
           >
-            <Ticket size={24} />
+            <Ticket size={20} className="sm:w-6 sm:h-6" />
             <span>Nový poukaz</span>
           </button>
           
           <button
             onClick={handleSearchCustomer}
-            className="bg-slate-600 hover:brightness-90 text-white px-6 py-4 rounded-lg flex items-center justify-center gap-3 font-medium shadow-md hover:shadow-lg transition-all"
+            className="bg-slate-600 hover:brightness-90 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg flex items-center justify-center gap-2 sm:gap-3 font-medium shadow-md hover:shadow-lg transition-all text-sm sm:text-base"
           >
-            <Search size={24} />
+            <Search size={20} className="sm:w-6 sm:h-6" />
             <span>Vyhľadať zákazníka</span>
           </button>
         </div>
 
         {/* Reservation Overview - Compact Time Slot Grid */}
-        <div className="rounded-lg shadow p-6" style={{ backgroundColor: "#292929" }}>
-          <div className="flex justify-between items-center mb-6">
+        <div className="rounded-lg shadow p-4 sm:p-6" style={{ backgroundColor: "#292929" }}>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4 sm:mb-6">
             <div>
-              <h2 className="text-xl font-semibold text-white">Rezervácie</h2>
-              <p className="text-sm text-slate-400 mt-1">Prehľad rezervácií na vybraný deň</p>
+              <h2 className="text-lg sm:text-xl font-semibold text-white">Rezervácie</h2>
+              <p className="text-xs sm:text-sm text-slate-400 mt-1">Prehľad rezervácií na vybraný deň</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5 text-slate-400" />
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 flex-shrink-0" />
                 <input
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="px-3 py-2 rounded-lg text-white"
+                  className="px-3 py-2 rounded-lg text-white text-sm sm:text-base flex-1 sm:flex-none"
                   style={{ backgroundColor: "#1f1f1f", border: "none" }}
                 />
               </div>
               <button
                 onClick={() => router.push('/reservations')}
-                className="px-4 py-2 rounded-lg text-white hover:brightness-90 transition-colors flex items-center gap-2"
+                className="px-4 py-2 rounded-lg text-white hover:brightness-90 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
                 style={{ backgroundColor: "#c20003" }}
               >
-                Spravovať všetky
+                <span className="hidden sm:inline">Spravovať všetky</span>
+                <span className="sm:hidden">Všetky rezervácie</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -703,11 +704,11 @@ export default function DashboardPage() {
 
           {loadingReservations ? (
             <div className="text-center py-8">
-              <p className="text-slate-300">Načítavam rezervácie...</p>
+              <p className="text-slate-300 text-sm sm:text-base">Načítavam rezervácie...</p>
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-3 rounded-lg" style={{ backgroundColor: "#1a1a1a" }}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 p-2 sm:p-3 rounded-lg" style={{ backgroundColor: "#1a1a1a" }}>
                 {buildDayTimeSlots().map((timeSlot) => {
                   const bookingAtSlot = findBookingAtTime(timeSlot);
                   const hasBooking = !!bookingAtSlot;
@@ -718,13 +719,14 @@ export default function DashboardPage() {
                       type="button"
                       onClick={() => openBookingDetails(bookingAtSlot)}
                       disabled={!hasBooking}
-                      className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                        hasBooking ? 'hover:brightness-110 cursor-pointer' : 'cursor-default'
+                      className={`px-2 sm:px-3 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+                        hasBooking ? 'hover:brightness-110 cursor-pointer active:scale-95' : 'cursor-default'
                       }`}
                       style={{
                         backgroundColor: hasBooking ? getStatusColor(bookingAtSlot.status) : '#4a4a4a',
                         color: 'white',
-                        opacity: hasBooking ? 1 : 0.5
+                        opacity: hasBooking ? 1 : 0.5,
+                        minHeight: '36px'
                       }}
                     >
                       {timeSlot}
@@ -734,21 +736,21 @@ export default function DashboardPage() {
               </div>
               
               {/* Legend */}
-              <div className="mt-4 flex flex-wrap items-center gap-4 text-xs">
+              <div className="mt-4 flex flex-wrap items-center gap-3 sm:gap-4 text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#4a4a4a', opacity: 0.5 }}></div>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded" style={{ backgroundColor: '#4a4a4a', opacity: 0.5 }}></div>
                   <span className="text-slate-400">Voľné</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#eab308' }}></div>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded" style={{ backgroundColor: '#eab308' }}></div>
                   <span className="text-slate-400">Čakajúce</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#22c55e' }}></div>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded" style={{ backgroundColor: '#22c55e' }}></div>
                   <span className="text-slate-400">Potvrdené</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 rounded" style={{ backgroundColor: '#3b82f6' }}></div>
+                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded" style={{ backgroundColor: '#3b82f6' }}></div>
                   <span className="text-slate-400">Dokončené</span>
                 </div>
               </div>
@@ -865,15 +867,15 @@ export default function DashboardPage() {
 
         {/* Customer Statistics and Financial Indicators Side by Side */}
         {canViewFinancials && (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {/* Customer Statistics Section */}
           <div className="h-full">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-white">Zákazníci</h2>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-0 mb-4">
+              <h2 className="text-lg sm:text-xl font-semibold text-white">Zákazníci</h2>
               <select
                 value={customerFilter}
                 onChange={(e) => setCustomerFilter(e.target.value as typeof customerFilter)}
-                className="px-4 py-2 rounded-lg text-white"
+                className="px-3 sm:px-4 py-2 rounded-lg text-white text-sm sm:text-base"
                 style={{ backgroundColor: '#292929', border: 'none' }}
               >
                 <option value="rides">Počet jázd</option>
@@ -883,8 +885,8 @@ export default function DashboardPage() {
             </div>
 
             {/* Weekly and Monthly Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+            <div className="p-4 sm:p-6 rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
               <h3 className="text-sm font-medium text-slate-300">
                 {getCustomerWeeklyLabel()}
               </h3>
