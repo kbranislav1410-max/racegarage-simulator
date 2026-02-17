@@ -274,11 +274,11 @@ export default function ReservationsPage() {
 
   return (
     <ProtectedLayout>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white">Rezervácie</h1>
-            <p className="text-slate-300 mt-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">Rezervácie</h1>
+            <p className="text-slate-300 mt-1 sm:mt-2 text-sm sm:text-base">
               Spravovať plány rezervácií a rezervačné harmonogramy
             </p>
           </div>
@@ -286,17 +286,17 @@ export default function ReservationsPage() {
 
         {/* Filters */}
         <div className="rounded-lg shadow p-4" style={{ backgroundColor: "#292929" }}>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
             <div className="flex items-center gap-2">
               <Filter className="w-5 h-5 text-slate-300" />
               <span className="text-sm font-medium text-white">Filtre:</span>
             </div>
-            <div>
+            <div className="flex-1 sm:flex-none">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white border-slate-600"
-                style={{ backgroundColor: '#1f1f1f' }}
+                className="w-full sm:w-auto px-3 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white border-slate-600 text-sm sm:text-base"
+                style={{ backgroundColor: '#1f1f1f', minHeight: '44px' }}
               >
                 {STATUS_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -305,20 +305,21 @@ export default function ReservationsPage() {
                 ))}
               </select>
             </div>
-            <div>
+            <div className="flex-1 sm:flex-none">
               <input
                 type="date"
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
-                className="px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
-                style={{ backgroundColor: '#1f1f1f' }}
+                className="w-full sm:w-auto px-3 py-2.5 sm:py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white text-sm sm:text-base"
+                style={{ backgroundColor: '#1f1f1f', minHeight: '44px' }}
                 placeholder="Filtrovať podľa dátumu"
               />
             </div>
             {dateFilter && (
               <button
                 onClick={() => setDateFilter("")}
-                className="px-3 py-2 text-sm text-slate-300 hover:text-white"
+                className="w-full sm:w-auto px-3 py-2.5 sm:py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-slate-700"
+                style={{ minHeight: '44px' }}
               >
                 Vymazať dátum
               </button>
@@ -328,129 +329,228 @@ export default function ReservationsPage() {
 
         {/* Reservations Table */}
         <div className="rounded-lg shadow" style={{ backgroundColor: "#292929" }}>
-          <div className="p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">
+          <div className="p-4 sm:p-6">
+            <h2 className="text-base sm:text-lg font-semibold text-white mb-4">
               {statusFilter === "ALL" ? "Všetky rezervácie" : `${statusFilter} Rezervácie`}
               {dateFilter && ` dňa ${new Date(dateFilter).toLocaleDateString()}`}
             </h2>
 
             {loading ? (
-              <div className="text-center py-8 text-slate-300">
+              <div className="text-center py-8 text-slate-300 text-sm sm:text-base">
                 Načítavam rezervácie...
               </div>
             ) : reservations.length === 0 ? (
-              <div className="text-center py-8 text-slate-300">
+              <div className="text-center py-8 text-slate-300 text-sm sm:text-base">
                 Nenašli sa žiadne rezervácie.
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead style={{ backgroundColor: "#1f1f1f" }}>
-                    <tr className="border-b border-slate-700">
-                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Zákazník
-                      </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Naplánované
-                      </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Trvanie
-                      </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Stav
-                      </th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-white">
-                        Akcie
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {reservations.map((reservation) => {
-                      const customerInfo = getCustomerInfo(reservation);
-                      return (
-                        <tr
-                          key={reservation.id}
-                          className="border-b border-slate-700 hover:bg-slate-700"
-                        >
-                          <td className="py-3 px-4">
-                            <div>
-                              <div className="font-medium text-white">
-                                {customerInfo.name}
-                                {!customerInfo.isRegistered && (
-                                  <span className="ml-2 text-xs text-slate-400">(Hosť)</span>
+              <>
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="w-full">
+                    <thead style={{ backgroundColor: "#1f1f1f" }}>
+                      <tr className="border-b border-slate-700">
+                        <th className="text-left py-3 px-4 text-sm font-medium text-white">
+                          Zákazník
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-white">
+                          Naplánované
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-white">
+                          Trvanie
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-white">
+                          Stav
+                        </th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-white">
+                          Akcie
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reservations.map((reservation) => {
+                        const customerInfo = getCustomerInfo(reservation);
+                        return (
+                          <tr
+                            key={reservation.id}
+                            className="border-b border-slate-700 hover:bg-slate-700"
+                          >
+                            <td className="py-3 px-4">
+                              <div>
+                                <div className="font-medium text-white">
+                                  {customerInfo.name}
+                                  {!customerInfo.isRegistered && (
+                                    <span className="ml-2 text-xs text-slate-400">(Hosť)</span>
+                                  )}
+                                </div>
+                                <div className="text-sm text-slate-300">
+                                  {customerInfo.email}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 text-sm text-white">
+                              {formatDateTime(new Date(reservation.scheduledAt))}
+                            </td>
+                            <td className="py-3 px-4 text-sm text-white">
+                              {reservation.durationMinutes} min
+                            </td>
+                            <td className="py-3 px-4">
+                              <span
+                                className={`inline-block px-2 py-1 text-xs font-medium rounded ${getStatusBadgeClass(
+                                  reservation.status
+                                )}`}
+                              >
+                                {reservation.status}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-2">
+                                {/* View Details */}
+                                <button
+                                  onClick={() => handleViewDetails(reservation)}
+                                  className="text-slate-300 hover:text-white p-1"
+                                  title="Zobraziť detaily"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                
+                                {/* Approve (PENDING only) */}
+                                {reservation.status === "PENDING" && (
+                                  <button
+                                    onClick={() => handleQuickApprove(reservation.id)}
+                                    className="text-green-400 hover:text-green-300 p-1"
+                                    title="Schváliť"
+                                  >
+                                    <CheckCircle className="w-4 h-4" />
+                                  </button>
+                                )}
+                                
+                                {/* Cancel (PENDING/CONFIRMED) */}
+                                {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
+                                  <button
+                                    onClick={() => handleQuickCancel(reservation.id)}
+                                    className="text-red-400 hover:text-red-300 p-1"
+                                    title="Zrušiť"
+                                  >
+                                    <Ban className="w-4 h-4" />
+                                  </button>
+                                )}
+                                
+                                {/* Reschedule (PENDING/CONFIRMED) */}
+                                {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
+                                  <button
+                                    onClick={() => handleOpenReschedule(reservation)}
+                                    className="text-blue-400 hover:text-blue-300 p-1"
+                                    title="Zmeniť termín"
+                                  >
+                                    <Calendar className="w-4 h-4" />
+                                  </button>
                                 )}
                               </div>
-                              <div className="text-sm text-slate-300">
-                                {customerInfo.email}
-                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-3">
+                  {reservations.map((reservation) => {
+                    const customerInfo = getCustomerInfo(reservation);
+                    return (
+                      <div
+                        key={reservation.id}
+                        className="p-4 rounded-lg"
+                        style={{ backgroundColor: "#1f1f1f" }}
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="font-medium text-white text-base">
+                              {customerInfo.name}
+                              {!customerInfo.isRegistered && (
+                                <span className="ml-2 text-xs text-slate-400">(Hosť)</span>
+                              )}
                             </div>
-                          </td>
-                          <td className="py-3 px-4 text-sm text-white">
-                            {formatDateTime(new Date(reservation.scheduledAt))}
-                          </td>
-                          <td className="py-3 px-4 text-sm text-white">
-                            {reservation.durationMinutes} min
-                          </td>
-                          <td className="py-3 px-4">
-                            <span
-                              className={`inline-block px-2 py-1 text-xs font-medium rounded ${getStatusBadgeClass(
-                                reservation.status
-                              )}`}
-                            >
-                              {reservation.status}
+                            <div className="text-sm text-slate-300 mt-1">
+                              {customerInfo.email}
+                            </div>
+                          </div>
+                          <span
+                            className={`inline-block px-2 py-1 text-xs font-medium rounded ${getStatusBadgeClass(
+                              reservation.status
+                            )}`}
+                          >
+                            {reservation.status}
+                          </span>
+                        </div>
+
+                        <div className="space-y-2 mb-3">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Clock className="w-4 h-4 text-slate-400" />
+                            <span className="text-slate-300">
+                              {formatDateTime(new Date(reservation.scheduledAt))}
                             </span>
-                          </td>
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              {/* View Details */}
-                              <button
-                                onClick={() => handleViewDetails(reservation)}
-                                className="text-slate-300 hover:text-white p-1"
-                                title="Zobraziť detaily"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              
-                              {/* Approve (PENDING only) */}
-                              {reservation.status === "PENDING" && (
-                                <button
-                                  onClick={() => handleQuickApprove(reservation.id)}
-                                  className="text-green-400 hover:text-green-300 p-1"
-                                  title="Schváliť"
-                                >
-                                  <CheckCircle className="w-4 h-4" />
-                                </button>
-                              )}
-                              
-                              {/* Cancel (PENDING/CONFIRMED) */}
-                              {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
-                                <button
-                                  onClick={() => handleQuickCancel(reservation.id)}
-                                  className="text-red-400 hover:text-red-300 p-1"
-                                  title="Zrušiť"
-                                >
-                                  <Ban className="w-4 h-4" />
-                                </button>
-                              )}
-                              
-                              {/* Reschedule (PENDING/CONFIRMED) */}
-                              {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
-                                <button
-                                  onClick={() => handleOpenReschedule(reservation)}
-                                  className="text-blue-400 hover:text-blue-300 p-1"
-                                  title="Zmeniť termín"
-                                >
-                                  <Calendar className="w-4 h-4" />
-                                </button>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-slate-400">Trvanie:</span>
+                            <span className="text-white">{reservation.durationMinutes} min</span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2">
+                          {/* View Details */}
+                          <button
+                            onClick={() => handleViewDetails(reservation)}
+                            className="flex items-center gap-2 px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg text-sm transition-colors"
+                            style={{ minHeight: '44px' }}
+                          >
+                            <Eye className="w-4 h-4" />
+                            <span>Detail</span>
+                          </button>
+                          
+                          {/* Approve (PENDING only) */}
+                          {reservation.status === "PENDING" && (
+                            <button
+                              onClick={() => handleQuickApprove(reservation.id)}
+                              className="flex items-center gap-2 px-3 py-2 text-green-400 hover:text-green-300 hover:bg-slate-700 rounded-lg text-sm transition-colors"
+                              style={{ minHeight: '44px' }}
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                              <span>Schváliť</span>
+                            </button>
+                          )}
+                          
+                          {/* Cancel (PENDING/CONFIRMED) */}
+                          {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
+                            <button
+                              onClick={() => handleQuickCancel(reservation.id)}
+                              className="flex items-center gap-2 px-3 py-2 text-red-400 hover:text-red-300 hover:bg-slate-700 rounded-lg text-sm transition-colors"
+                              style={{ minHeight: '44px' }}
+                            >
+                              <Ban className="w-4 h-4" />
+                              <span>Zrušiť</span>
+                            </button>
+                          )}
+                          
+                          {/* Reschedule (PENDING/CONFIRMED) */}
+                          {(reservation.status === "PENDING" || reservation.status === "CONFIRMED") && (
+                            <button
+                              onClick={() => handleOpenReschedule(reservation)}
+                              className="flex items-center gap-2 px-3 py-2 text-blue-400 hover:text-blue-300 hover:bg-slate-700 rounded-lg text-sm transition-colors"
+                              style={{ minHeight: '44px' }}
+                            >
+                              <Calendar className="w-4 h-4" />
+                              <span>Zmeniť</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -460,9 +560,9 @@ export default function ReservationsPage() {
       {showDetailModal && selectedReservation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
                   Detaily rezervácie
                 </h2>
                 <button
@@ -470,9 +570,10 @@ export default function ReservationsPage() {
                     setShowDetailModal(false);
                     setActionNotes("");
                   }}
-                  className="text-slate-300 hover:text-white"
+                  className="text-slate-300 hover:text-white p-2"
+                  style={{ minWidth: '44px', minHeight: '44px' }}
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               </div>
 
@@ -483,7 +584,7 @@ export default function ReservationsPage() {
                     Informácie o zákazníkovi
                   </h3>
                   <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-slate-300">Meno</p>
                         <p className="font-medium text-white">
@@ -492,7 +593,7 @@ export default function ReservationsPage() {
                       </div>
                       <div>
                         <p className="text-sm text-slate-300">E-mail</p>
-                        <p className="font-medium text-white">
+                        <p className="font-medium text-white break-words">
                           {getCustomerInfo(selectedReservation).email}
                         </p>
                       </div>
@@ -514,7 +615,7 @@ export default function ReservationsPage() {
                     Detaily rezervácie
                   </h3>
                   <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-slate-300">Naplánované na</p>
                         <p className="font-medium text-white">
@@ -565,7 +666,7 @@ export default function ReservationsPage() {
                   <textarea
                     value={actionNotes}
                     onChange={(e) => setActionNotes(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
+                    className="w-full px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white text-sm sm:text-base"
                     style={{ backgroundColor: "#1f1f1f" }}
                     rows={3}
                     placeholder="Pridať poznámky k zamietnutiu alebo zrušeniu..."
@@ -573,7 +674,7 @@ export default function ReservationsPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap gap-2 pt-4">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-4">
                   {selectedReservation.status === "PENDING" && (
                     <>
                       <button
@@ -581,7 +682,7 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "CONFIRMED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
+                        className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 text-sm sm:text-base" style={{ backgroundColor: "#c20003", minHeight: '44px' }}
                       >
                         <CheckCircle className="w-4 h-4" />
                         Potvrdiť
@@ -591,7 +692,8 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "REJECTED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 text-sm sm:text-base"
+                        style={{ minHeight: '44px' }}
                       >
                         <XCircle className="w-4 h-4" />
                         Zamietnuť
@@ -606,7 +708,8 @@ export default function ReservationsPage() {
                         handleStatusChange(selectedReservation.id, "CANCELLED")
                       }
                       disabled={actionInProgress}
-                      className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50"
+                      className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 text-sm sm:text-base"
+                      style={{ minHeight: '44px' }}
                     >
                       <Ban className="w-4 h-4" />
                       Zrušiť
@@ -620,7 +723,7 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "COMPLETED")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50" style={{ backgroundColor: "#c20003" }}
+                        className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2  text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 text-sm sm:text-base" style={{ backgroundColor: "#c20003", minHeight: '44px' }}
                       >
                         <Check className="w-4 h-4" />
                         Dokončiť
@@ -630,7 +733,8 @@ export default function ReservationsPage() {
                           handleStatusChange(selectedReservation.id, "NO_SHOW")
                         }
                         disabled={actionInProgress}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50"
+                        className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 text-sm sm:text-base"
+                        style={{ minHeight: '44px' }}
                       >
                         <UserX className="w-4 h-4" />
                         Neprišiel
@@ -641,7 +745,8 @@ export default function ReservationsPage() {
                   {canDelete && (
                     <button
                       onClick={() => handleDelete(selectedReservation.id)}
-                      className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors ml-auto"
+                      className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors sm:ml-auto text-sm sm:text-base"
+                      style={{ minHeight: '44px' }}
                     >
                       <Trash2 className="w-4 h-4" />
                       Vymazať
@@ -658,9 +763,9 @@ export default function ReservationsPage() {
       {showRescheduleModal && rescheduleReservation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-white">
+            <div className="p-4 sm:p-6">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
                   Zmeniť termín rezervácie
                 </h2>
                 <button
@@ -670,9 +775,10 @@ export default function ReservationsPage() {
                     setRescheduleSlot("");
                     setAvailableSlots([]);
                   }}
-                  className="text-slate-300 hover:text-white"
+                  className="text-slate-300 hover:text-white p-2"
+                  style={{ minWidth: '44px', minHeight: '44px' }}
                 >
-                  <XCircle className="w-6 h-6" />
+                  <XCircle className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
               </div>
 
@@ -680,7 +786,7 @@ export default function ReservationsPage() {
                 {/* Current Reservation Info */}
                 <div className="p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                   <p className="text-sm text-slate-300 mb-2">Aktuálny termín:</p>
-                  <p className="text-white font-medium">
+                  <p className="text-white font-medium text-sm sm:text-base">
                     {formatDateTime(new Date(rescheduleReservation.scheduledAt))}
                   </p>
                   <p className="text-sm text-slate-300 mt-1">
@@ -704,8 +810,8 @@ export default function ReservationsPage() {
                       }
                     }}
                     min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-3 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white"
-                    style={{ backgroundColor: "#1f1f1f" }}
+                    className="w-full px-3 py-2.5 sm:py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-800 focus:border-transparent text-white text-sm sm:text-base"
+                    style={{ backgroundColor: "#1f1f1f", minHeight: '44px' }}
                   />
                 </div>
 
@@ -717,18 +823,18 @@ export default function ReservationsPage() {
                       Dostupné časové sloty pre {rescheduleReservation.durationMinutes} minút
                     </label>
                     {loadingSlots ? (
-                      <div className="text-center py-4 text-slate-300">
+                      <div className="text-center py-4 text-slate-300 text-sm sm:text-base">
                         Načítavam sloty...
                       </div>
                     ) : availableSlots.length > 0 ? (
                       <>
-                        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-96 overflow-y-auto p-2 rounded-lg" style={{ backgroundColor: "#1f1f1f" }}>
                           {availableSlots.map((slot) => (
                             <button
                               key={slot.time}
                               onClick={() => setRescheduleSlot(slot.time)}
                               disabled={!slot.available || slot.isPast}
-                              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                              className={`px-3 py-2.5 sm:py-2 rounded-lg text-sm font-medium transition-all ${
                                 rescheduleSlot === slot.time
                                   ? "ring-2 ring-white"
                                   : ""
@@ -742,6 +848,7 @@ export default function ReservationsPage() {
                                 color: "white",
                                 opacity: !slot.available || slot.isPast ? 0.4 : 1,
                                 cursor: !slot.available || slot.isPast ? "not-allowed" : "pointer",
+                                minHeight: '44px',
                               }}
                             >
                               {slot.time}
@@ -750,7 +857,7 @@ export default function ReservationsPage() {
                         </div>
                         
                         {/* Legend */}
-                        <div className="flex gap-4 mt-3 text-xs text-slate-300">
+                        <div className="flex flex-wrap gap-3 sm:gap-4 mt-3 text-xs text-slate-300">
                           <div className="flex items-center gap-1">
                             <div className="w-3 h-3 rounded" style={{ backgroundColor: "#2a7c2a" }}></div>
                             <span>Dostupné</span>
@@ -776,11 +883,13 @@ export default function ReservationsPage() {
                 {/* Time Range Summary */}
                 {rescheduleSlot && (
                   <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: "#1f1f1f", border: "2px solid #c20003" }}>
-                    <div className="flex items-center justify-center">
-                      <Clock className="inline w-5 h-5 mr-2 text-red-500" />
-                      <span className="text-white font-semibold text-lg">
-                        Nový termín: {rescheduleSlot} - {calculateEndTime(rescheduleSlot, rescheduleReservation.durationMinutes)}
-                      </span>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+                      <div className="flex items-center">
+                        <Clock className="inline w-5 h-5 mr-2 text-red-500" />
+                        <span className="text-white font-semibold text-base sm:text-lg">
+                          Nový termín: {rescheduleSlot} - {calculateEndTime(rescheduleSlot, rescheduleReservation.durationMinutes)}
+                        </span>
+                      </div>
                     </div>
                     <p className="text-sm text-slate-300 text-center mt-2">
                       Trvanie: {rescheduleReservation.durationMinutes} minút
@@ -789,12 +898,12 @@ export default function ReservationsPage() {
                 )}
 
                 {/* Action Buttons */}
-                <div className="flex gap-2 pt-4">
+                <div className="flex flex-col sm:flex-row gap-2 pt-4">
                   <button
                     onClick={handleSaveReschedule}
                     disabled={actionInProgress || !rescheduleDate || !rescheduleSlot}
-                    className="flex-1 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: "#c20003" }}
+                    className="flex-1 px-4 py-3 sm:py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                    style={{ backgroundColor: "#c20003", minHeight: '44px' }}
                   >
                     {actionInProgress ? "Ukladám..." : "Uložiť"}
                   </button>
@@ -805,7 +914,8 @@ export default function ReservationsPage() {
                       setRescheduleSlot("");
                       setAvailableSlots([]);
                     }}
-                    className="px-4 py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                    className="px-4 py-3 sm:py-2 border border-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm sm:text-base"
+                    style={{ minHeight: '44px' }}
                   >
                     Zrušiť
                   </button>
