@@ -789,7 +789,7 @@ export default function ChallengePage() {
                           setSelectedCustomer(null);
                         }}
                         className="text-sm text-slate-300 hover:text-white mt-2"
-                        style={{ minHeight: "32px" }}
+                        style={{ minHeight: "44px" }}
                       >
                         Zmeniť zákazníka
                       </button>
