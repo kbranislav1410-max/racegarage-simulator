@@ -69,7 +69,7 @@ export function Sidebar({ isOpen = true, onClose }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "text-white p-6 rounded-2xl transition-transform duration-300 ease-in-out",
+          "text-white p-6 rounded-2xl transition-transform duration-300 ease-in-out flex flex-col",
           // Desktop: always visible, fixed width
           "lg:w-64 lg:translate-x-0 lg:static",
           // Mobile: fixed position, slide in/out
