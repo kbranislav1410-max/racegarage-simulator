@@ -183,15 +183,14 @@ export default function PaymentsPage() {
             <nav className="flex -mb-px overflow-x-auto">
               <a
                 href="/payments"
-                className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 text-white whitespace-nowrap"
-                style={{ borderBottomColor: "#c20003", minHeight: '44px' }}
+                className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 text-white whitespace-nowrap flex items-center"
+                style={{ borderBottomColor: "#c20003" }}
               >
                 Platby
               </a>
               <a
                 href="/payments/settlements"
-                className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600 whitespace-nowrap"
-                style={{ minHeight: '44px' }}
+                className="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-600 whitespace-nowrap flex items-center"
               >
                 Vyúčtovania
               </a>
@@ -456,7 +455,7 @@ export default function PaymentsPage() {
                                 {canDelete && (
                                   <button
                                     onClick={() => handleDeletePayment(payment.id)}
-                                    className="text-red-400 hover:text-red-300 transition-colors"
+                                    className="inline-flex items-center justify-center p-2 text-red-400 hover:text-red-300 hover:bg-slate-700 rounded transition-colors"
                                     title="Odstrániť platbu"
                                     style={{ minWidth: '44px', minHeight: '44px' }}
                                   >
@@ -499,7 +498,7 @@ export default function PaymentsPage() {
                               <div className="text-sm font-medium text-white">
                                 {payment.customer.firstName} {payment.customer.lastName}
                               </div>
-                              <div className="text-xs text-slate-400 break-words">
+                              <div className="text-xs text-slate-400 break-all overflow-wrap-anywhere">
                                 {payment.customer.email}
                               </div>
                             </div>
