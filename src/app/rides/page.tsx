@@ -310,59 +310,59 @@ export default function RidesPage() {
 
   return (
     <ProtectedLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Jazdy
             </h1>
-            <p className="text-slate-300 mt-2">
+            <p className="text-sm sm:text-base text-slate-300 mt-1 sm:mt-2">
               Sledovanie a správa jázd simulátora
             </p>
           </div>
           <button
             onClick={() => setShowRecordModal(true)}
-            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-            style={{ backgroundColor: "#c20003" }}
+            className="flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg hover:brightness-90 transition-colors text-sm sm:text-base"
+            style={{ backgroundColor: "#c20003", minHeight: "44px" }}
           >
-            <Plus className="w-4 h-4" />
-            Nová jazda
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span>Nová jazda</span>
           </button>
         </div>
 
         {/* Date Range Filter & Export */}
-        <div className="rounded-lg shadow p-4 flex items-center gap-4" style={{ backgroundColor: "#292929" }}>
-          <div className="flex items-center gap-4 flex-1">
-            <Calendar className="w-5 h-5 text-white" />
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-white">Od:</label>
+        <div className="rounded-lg shadow p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4" style={{ backgroundColor: "#292929" }}>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 flex-1">
+            <Calendar className="w-5 h-5 text-white hidden sm:block" />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1">
+              <label className="text-xs sm:text-sm font-medium text-white">Od:</label>
               <input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => setDateFrom(e.target.value)}
-                className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                className="px-3 sm:px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
               />
             </div>
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-white">Do:</label>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1">
+              <label className="text-xs sm:text-sm font-medium text-white">Do:</label>
               <input
                 type="date"
                 value={dateTo}
                 onChange={(e) => setDateTo(e.target.value)}
-                className="px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                className="px-3 sm:px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
               />
             </div>
           </div>
           <button
             onClick={handleExportCSV}
-            className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors"
-            style={{ backgroundColor: "#c20003" }}
+            className="flex items-center justify-center gap-2 px-4 py-3 text-white rounded-lg hover:brightness-90 transition-colors text-sm sm:text-base"
+            style={{ backgroundColor: "#c20003", minHeight: "44px" }}
           >
             <Download className="w-4 h-4" />
-            Exportovať CSV
+            <span>Exportovať CSV</span>
           </button>
         </div>
 
@@ -373,8 +373,8 @@ export default function RidesPage() {
           </div>
         )}
 
-        {/* Rides Table */}
-        <div className="rounded-lg shadow overflow-hidden" style={{ backgroundColor: "#292929" }}>
+        {/* Rides Table - Desktop View */}
+        <div className="rounded-lg shadow overflow-hidden hidden md:block" style={{ backgroundColor: "#292929" }}>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="border-b border-slate-700" style={{ backgroundColor: "#1f1f1f" }}>
@@ -409,7 +409,7 @@ export default function RidesPage() {
                 ) : rides.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-8 text-center text-slate-400">
-                      Žiadne jazdy pre obdobie {dateFrom} - {dateTo}. Kliknite &quot;Záznam jazdy&quot; pre pridanie.
+                      Žiadne jazdy pre obdobie {dateFrom} - {dateTo}. Kliknite &quot;Nová jazda&quot; pre pridanie.
                     </td>
                   </tr>
                 ) : (
@@ -456,20 +456,85 @@ export default function RidesPage() {
           </div>
         </div>
 
+        {/* Rides Cards - Mobile View */}
+        <div className="md:hidden space-y-3">
+          {loading ? (
+            <div className="rounded-lg shadow p-6 text-center text-slate-400" style={{ backgroundColor: "#292929" }}>
+              Načítavam...
+            </div>
+          ) : rides.length === 0 ? (
+            <div className="rounded-lg shadow p-6 text-center text-slate-400" style={{ backgroundColor: "#292929" }}>
+              Žiadne jazdy pre obdobie {dateFrom} - {dateTo}. Kliknite &quot;Nová jazda&quot; pre pridanie.
+            </div>
+          ) : (
+            rides.map((ride) => (
+              <div
+                key={ride.id}
+                className="rounded-lg shadow p-4"
+                style={{ backgroundColor: "#292929" }}
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <h3 className="text-base font-semibold text-white">
+                      {ride.customer.firstName} {ride.customer.lastName}
+                    </h3>
+                    <p className="text-sm text-slate-300 mt-1">{ride.customer.email}</p>
+                  </div>
+                  {canDelete && (
+                    <button
+                      onClick={() => handleDeleteRide(ride.id)}
+                      className="text-red-400 hover:text-red-300 p-2 rounded-lg hover:bg-slate-700 active:scale-95 transition-all ml-2"
+                      title="Odstrániť jazdu"
+                      style={{ minWidth: "44px", minHeight: "44px" }}
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  )}
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-start gap-2">
+                    <span className="text-slate-400 min-w-[70px]">Dátum:</span>
+                    <span className="text-slate-300">
+                      {new Date(ride.startAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-slate-400 min-w-[70px]">Čas:</span>
+                    <span className="text-slate-300">
+                      {new Date(ride.startAt).toLocaleTimeString()}
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-slate-400 min-w-[70px]">Minúty:</span>
+                    <span className="text-slate-300">{ride.minutes} min</span>
+                  </div>
+                  {ride.notes && (
+                    <div className="flex items-start gap-2">
+                      <span className="text-slate-400 min-w-[70px]">Poznámky:</span>
+                      <span className="text-slate-300">{ride.notes}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
         {/* Record Ride Modal */}
         {showRecordModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">
                     {step === "search" ? "Výber zákazníka" : "Záznam jazdy"}
                   </h2>
                   <button
                     onClick={resetModal}
-                    className="text-slate-400 hover:text-slate-300"
+                    className="text-slate-400 hover:text-slate-300 p-2"
+                    style={{ minWidth: "44px", minHeight: "44px" }}
                   >
-                    <X className="w-6 h-6" />
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
                 </div>
 
@@ -477,21 +542,21 @@ export default function RidesPage() {
                   <div className="space-y-4">
                     {/* Search Input */}
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5" />
                       <input
                         type="text"
                         placeholder="Hľadať podľa mena, emailu, alebo adresy..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f" }}
+                        className="w-full pl-9 sm:pl-10 pr-4 py-2.5 sm:py-2 border border-slate-600 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent text-white text-sm sm:text-base"
+                        style={{ backgroundColor: "#1f1f1f", minHeight: "44px" }}
                         autoFocus
                       />
                     </div>
 
                     {/* Search Results */}
                     {searchLoading && (
-                      <div className="text-center py-4 text-slate-400">
+                      <div className="text-center py-4 text-slate-400 text-sm">
                         Hľadám...
                       </div>
                     )}
@@ -503,13 +568,14 @@ export default function RidesPage() {
                             key={customer.id}
                             onClick={() => handleSelectCustomer(customer)}
                             className="w-full px-4 py-3 text-left hover:bg-slate-800 transition-colors"
+                            style={{ minHeight: "44px" }}
                           >
-                            <div className="font-medium text-white">
+                            <div className="font-medium text-white text-sm sm:text-base">
                               {customer.firstName} {customer.lastName}
                             </div>
-                            <div className="text-sm text-slate-300">{customer.email}</div>
+                            <div className="text-xs sm:text-sm text-slate-300">{customer.email}</div>
                             {(customer.street || customer.city) && (
-                              <div className="text-sm text-slate-400">
+                              <div className="text-xs sm:text-sm text-slate-400">
                                 {formatAddress(customer.street, customer.city)}
                               </div>
                             )}
@@ -520,11 +586,11 @@ export default function RidesPage() {
 
                     {!searchLoading && searchQuery.length >= 2 && searchResults.length === 0 && (
                       <div className="text-center py-8">
-                        <p className="text-slate-300 mb-4">Nenašli sa žiadni zákazníci</p>
+                        <p className="text-slate-300 mb-4 text-sm sm:text-base">Nenašli sa žiadni zákazníci</p>
                         <button
                           onClick={() => setShowCreateCustomerModal(true)}
-                          className="px-4 py-2 text-white rounded-lg transition-colors"
-                          style={{ backgroundColor: "#c20003" }}
+                          className="px-4 py-3 text-white rounded-lg transition-colors text-sm sm:text-base"
+                          style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                         >
                           Vytvoriť nového zákazníka
                         </button>
@@ -532,7 +598,7 @@ export default function RidesPage() {
                     )}
 
                     {searchQuery.length < 2 && (
-                      <div className="text-center py-8 text-slate-400">
+                      <div className="text-center py-8 text-slate-400 text-sm">
                         Začnite písať pre vyhľadanie zákazníkov...
                       </div>
                     )}
@@ -541,18 +607,18 @@ export default function RidesPage() {
                   <form onSubmit={handleRecordRide} className="space-y-4">
                     {/* Selected Customer */}
                     <div className="rounded-lg p-4 mb-4" style={{ backgroundColor: "#1f1f1f" }}>
-                      <p className="text-sm text-slate-300 mb-1">Zákazník</p>
-                      <p className="font-medium text-white">
+                      <p className="text-xs sm:text-sm text-slate-300 mb-1">Zákazník</p>
+                      <p className="font-medium text-white text-sm sm:text-base">
                         {selectedCustomer?.firstName} {selectedCustomer?.lastName}
                       </p>
-                      <p className="text-sm text-slate-300">{selectedCustomer?.email}</p>
+                      <p className="text-xs sm:text-sm text-slate-300">{selectedCustomer?.email}</p>
                       <button
                         type="button"
                         onClick={() => {
                           setStep("search");
                           setSelectedCustomer(null);
                         }}
-                        className="text-sm text-slate-300 hover:text-white mt-2"
+                        className="text-xs sm:text-sm text-slate-300 hover:text-white mt-2"
                       >
                         Zmeniť zákazníka
                       </button>
@@ -565,7 +631,7 @@ export default function RidesPage() {
                     )}
 
                     {/* Date and Time in separate fields */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-white mb-2">
                           Dátum *
@@ -576,8 +642,8 @@ export default function RidesPage() {
                           onChange={(e) =>
                             setRideFormData({ ...rideFormData, date: e.target.value })
                           }
-                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                          className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                          style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                           required
                         />
                       </div>
@@ -591,8 +657,8 @@ export default function RidesPage() {
                           onChange={(e) =>
                             setRideFormData({ ...rideFormData, time: e.target.value })
                           }
-                          className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                          style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                          className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                          style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                           required
                         />
                       </div>
@@ -602,7 +668,7 @@ export default function RidesPage() {
                     <div className="border-t border-slate-700 pt-4 mt-4">
                       <h3 className="text-sm font-medium text-white mb-4">Platba</h3>
                       
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-white mb-2">
                             Suma (€)
@@ -615,8 +681,8 @@ export default function RidesPage() {
                             onChange={(e) =>
                               setRideFormData({ ...rideFormData, amount: e.target.value })
                             }
-                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                            className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                            style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                             placeholder="0.00"
                           />
                         </div>
@@ -635,8 +701,8 @@ export default function RidesPage() {
                                 voucherCode: "", // Reset voucher code when payment method changes
                               })
                             }
-                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                            className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                            style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                           >
                             <option value="PD_DRIVE_CLUB">PD Drive Club</option>
                             <option value="VOUCHER_PARTNER">Poukaz - Partner</option>
@@ -660,8 +726,8 @@ export default function RidesPage() {
                                 partner: e.target.value as typeof rideFormData.partner,
                               })
                             }
-                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                            className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                            style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                             required
                           >
                             <option value="">Vyberte partnera...</option>
@@ -686,8 +752,8 @@ export default function RidesPage() {
                             onChange={(e) =>
                               setRideFormData({ ...rideFormData, voucherCode: e.target.value })
                             }
-                            className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                            style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                            className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                            style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                             placeholder="Zadajte číslo poukazu"
                             required={rideFormData.paymentMethod === "VOUCHER_PARTNER"}
                           />
@@ -711,8 +777,8 @@ export default function RidesPage() {
                             setRideFormData({ ...rideFormData, minutes: value });
                           }
                         }}
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                        style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                         required
                       />
                     </div>
@@ -728,26 +794,27 @@ export default function RidesPage() {
                           setRideFormData({ ...rideFormData, notes: e.target.value })
                         }
                         rows={3}
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
+                        className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
                         style={{ backgroundColor: "#1f1f1f", border: "none" }}
                         placeholder="Voliteľná poznámka k jazde..."
                       />
                     </div>
 
                     {/* Actions */}
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4">
                       <button
                         type="submit"
                         disabled={rideFormSubmitting}
-                        className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        style={{ backgroundColor: "#c20003" }}
+                        className="flex-1 px-6 py-3 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                        style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                       >
                         {rideFormSubmitting ? "Ukladám..." : "Zaznamenať jazdu"}
                       </button>
                       <button
                         type="button"
                         onClick={resetModal}
-                        className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                        className="px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white text-sm sm:text-base"
+                        style={{ minHeight: "44px" }}
                       >
                         Zrušiť
                       </button>
@@ -763,14 +830,15 @@ export default function RidesPage() {
         {showCreateCustomerModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto" style={{ backgroundColor: "#292929" }}>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Vytvoriť zákazníka</h2>
+              <div className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white">Vytvoriť zákazníka</h2>
                   <button
                     onClick={() => setShowCreateCustomerModal(false)}
-                    className="text-slate-400 hover:text-slate-300"
+                    className="text-slate-400 hover:text-slate-300 p-2"
+                    style={{ minWidth: "44px", minHeight: "44px" }}
                   >
-                    <X className="w-6 h-6" />
+                    <X className="w-5 h-5 sm:w-6 sm:h-6" />
                   </button>
                 </div>
 
@@ -781,7 +849,7 @@ export default function RidesPage() {
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-white mb-2">
                         Meno *
@@ -792,8 +860,8 @@ export default function RidesPage() {
                         onChange={(e) =>
                           setCustomerFormData({ ...customerFormData, firstName: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                        style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                         required
                       />
                       {customerFormErrors.firstName && (
@@ -811,8 +879,8 @@ export default function RidesPage() {
                         onChange={(e) =>
                           setCustomerFormData({ ...customerFormData, lastName: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                        style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                        className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                        style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                         required
                       />
                       {customerFormErrors.lastName && (
@@ -831,8 +899,8 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, email: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                       required
                     />
                     {customerFormErrors.email && (
@@ -850,8 +918,8 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, street: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                     />
                   </div>
 
@@ -865,8 +933,8 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, city: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                     />
                   </div>
 
@@ -880,8 +948,8 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white"
-                      style={{ backgroundColor: "#1f1f1f", border: "none" }}
+                      className="w-full px-4 py-2.5 sm:py-2 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-white text-sm sm:text-base"
+                      style={{ backgroundColor: "#1f1f1f", border: "none", minHeight: "44px" }}
                     />
                   </div>
 
@@ -893,27 +961,28 @@ export default function RidesPage() {
                       onChange={(e) =>
                         setCustomerFormData({ ...customerFormData, newsletter: e.target.checked })
                       }
-                      className="w-4 h-4 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
-                      style={{ accentColor: "#c20003" }}
+                      className="w-5 h-5 border-slate-600 rounded focus:ring-2 focus:ring-red-500"
+                      style={{ accentColor: "#c20003", minWidth: "20px", minHeight: "20px" }}
                     />
                     <label htmlFor="newsletter-rides" className="text-sm text-white cursor-pointer">
                       Zákazník má záujem o newsletter (propagačné materiály a novinky)
                     </label>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={customerFormSubmitting}
-                      className="flex-1 px-6 py-2 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ backgroundColor: "#c20003" }}
+                      className="flex-1 px-6 py-3 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+                      style={{ backgroundColor: "#c20003", minHeight: "44px" }}
                     >
                       {customerFormSubmitting ? "Vytváram..." : "Vytvoriť a vybrať"}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowCreateCustomerModal(false)}
-                      className="px-6 py-2 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white"
+                      className="px-6 py-3 border border-slate-600 rounded-lg hover:bg-slate-700 transition-colors text-white text-sm sm:text-base"
+                      style={{ minHeight: "44px" }}
                     >
                       Zrušiť
                     </button>
