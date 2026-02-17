@@ -447,7 +447,7 @@ export default function SettingsPage() {
                 <button
                   onClick={handleExportSubscribers}
                   disabled={newsletterSubscribers.length === 0}
-                  className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto" 
+                  className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-lg hover:brightness-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
                   style={{ backgroundColor: "#c20003", minHeight: '44px' }}
                 >
                   <Download className="w-4 h-4" />
@@ -535,7 +535,7 @@ export default function SettingsPage() {
                           </div>
                           <div>
                             <div className="text-xs text-slate-400">Email</div>
-                            <div className="text-sm text-slate-300 break-all">{subscriber.email}</div>
+                            <div className="text-sm text-slate-300 break-words">{subscriber.email}</div>
                           </div>
                           {subscriber.city && (
                             <div>
